@@ -7,31 +7,34 @@
 
     <div class="wrapper">
       <div class="thesis_details_form">
-        <div class="course_details">
-          <div class="input-fields">
-            <h4>Course Details</h4>
-            <input type="text" class="input" name="course_name" placeholder="Course Name">
-            <input type="text" class="input" name="course_id" placeholder="Course Id">
-            <input type="text" class="input" name="section" placeholder="Section">
-            <input type="text" class="input" name="thesis_title" placeholder="Thesis Title">
-            <input type="text" class="input" name="ins_name" placeholder="Instructor's Name">
-            <input type="text" class="input" name="group_name" placeholder="Group Name">
-          </div>
-          <hr>
-          <div class="group_details">
-            <h4>Member Details</h4>
-            {% for i in allowed_range %}
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="course_details">
             <div class="input-fields">
-              <h5>Member {{ i }}</h5>
-              <input type="text" class="input" name="name_{{i}}" placeholder="Name">
-              <input type="number" class="input" name="id_{{i}}" placeholder="ID">
+              <h4>Course Details</h4>
+              <input type="text" class="input" name="course_name" placeholder="Course Name">
+              <input type="text" class="input" name="course_id" placeholder="Course Id">
+              <input type="text" class="input" name="section" placeholder="Section">
+              <input type="text" class="input" name="thesis_title" placeholder="Thesis Title">
+              <input type="text" class="input" name="ins_name" placeholder="Instructor's Name">
+              <input type="text" class="input" name="group_name" placeholder="Group Name">
             </div>
-            {% endfor %}
+            <hr>
+            <div class="group_details">
+              <h4>Member Details</h4>
+              {% for i in allowed_range %}
+              <div class="input-fields">
+                <h5>Member {{ i }}</h5>
+                <input type="text" class="input" name="name_{{i}}" placeholder="Name">
+                <input type="number" class="input" name="id_{{i}}" placeholder="ID">
+              </div>
+              {% endfor %}
+            </div>
           </div>
-        </div>
-        <div class="form_button">
-          <div class="button" name="btnsbm">Submit</div>
-        </div>
+          <div class="form_button">
+            <button class="btn button" type="submit">Submit</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
