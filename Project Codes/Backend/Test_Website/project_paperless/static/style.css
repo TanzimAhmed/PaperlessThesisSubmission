@@ -1,0 +1,129 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* section Create Cover Page Form by Fahad */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+
+.wrapper {
+  height: 100vh;
+  padding-bottom: 1rem;
+}
+
+.cover_page_form{
+  background: url('/static/images/bg.jpg') no-repeat top center;
+  background-size: cover;
+  font-family: 'Roboto', sans-serif;
+  color: rgba(0,0,0,0.8);;
+  text-align: center;
+  height: 100%;
+}
+
+.thesis_details_form {
+  max-width: 1200px;
+  width: 80%;
+  margin: 0 auto;
+  background: rgba(0,0,0,0.8);
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.course_details,
+.group_details {
+  display: flex;
+}
+
+
+.group_details {
+  flex-basis: 95%;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.input-fields{
+  margin-left: 2%;
+  margin-right: 2%;
+  flex-basis: 45%;
+  margin-bottom: 2rem;
+}
+.thesis_details_form h4, 
+.thesis_details_form h5 {
+  text-align: center;
+  color: #c5ecfd;
+}
+
+.group_details h4 {
+  flex-basis: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.form_button {
+  text-align: center;
+  margin: auto;
+  margin-top: 2rem;
+  width: 25%;
+}
+
+.input-fields .input {
+  margin: 10px 0;
+  background: transparent;
+  border: 0px;
+  border-bottom: 2px solid #c5ecfd;
+  padding: 10px;
+  color: #c5ecfd;
+  width: 100%;
+}
+
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #c5ecfd;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #c5ecfd;
+}
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #c5ecfd;
+}
+
+.button {
+    background: #39b7dd;
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 600px){
+  .thesis_details_form {
+    width: 98%;
+  }
+
+  .course_details,
+  .group_details {
+    flex-direction: column;
+  }
+
+  .input-fields,
+  .form_button{
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .course_details{
+    flex-direction: column;
+  }
+
+  .wrapper {
+    height: 100%;
+  }
+}
+/* endsection Create Cover Page Form by Fahad */
