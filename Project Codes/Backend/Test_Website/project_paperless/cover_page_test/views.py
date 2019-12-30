@@ -24,3 +24,7 @@ def index(request):
 
     context = {'allowed_range': allowed_range}
     return render(request, 'pages/cover_page.html', context=context)
+
+
+def demo_editor(request):
+    return render(request, 'pages/demo_editor.html')
