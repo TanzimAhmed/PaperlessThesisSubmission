@@ -28,3 +28,11 @@ def index(request):
 
 def demo_editor(request):
     return render(request, 'pages/demo_editor.html')
+
+
+def login(request):
+    return render(request, 'pages/login.html')
+
+
+def register(request):
+    return render(request, 'pages/register.html')

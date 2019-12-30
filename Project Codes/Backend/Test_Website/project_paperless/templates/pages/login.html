@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="cover_page_form">
+    <div class="wrapper">
+      <div class="form_container">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="input-fields">
+            <h2>Login</h2>
+            <input type="text" class="input" name="user_id" placeholder="Student ID">
+            <input type="password" class="input" name="password" placeholder="Password">
+          </div>
+          <div class="form_button">
+            <button class="btn button" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
