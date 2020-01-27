@@ -4,21 +4,25 @@
   <div class="cover_page_form">
     <div class="wrapper">
       <div class="thesis_details_form">
+        <h1 class="form_header">Enter Paper Details</h1>
         <form action="" method="POST">
           {% csrf_token %}
           <div class="course_details">
             <div class="input-fields">
               <h4>Course Details</h4>
-              <input type="text" class="input" name="course_name" placeholder="Course Name">
-              <input type="text" class="input" name="course_id" placeholder="Course Id">
-              <input type="text" class="input" name="section" placeholder="Section">
+              <select name="course" id="" class="input">
+                <option value="default.default" selected>Select Course</option>
+                <option value="CSE 499A.21">CSE 499A.21</option>
+                <option value="CSE 499B.15">CSE 499B.15</option>
+              </select>
               <input type="text" class="input" name="thesis_title" placeholder="Thesis Title">
+              <input type="text" class="input" name="thesis_sub_title" placeholder="Thesis Subtitle">
               <input type="text" class="input" name="ins_name" placeholder="Instructor's Name">
               <input type="text" class="input" name="group_name" placeholder="Group Name">
             </div>
             <hr>
             <div class="group_details">
-              <h4>Member Details</h4>
+              <h4>Group Members</h4>
               {% for i in allowed_range %}
               <div class="input-fields">
                 <h5>Member {{ i }}</h5>

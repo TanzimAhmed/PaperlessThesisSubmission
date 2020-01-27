@@ -5,47 +5,52 @@ body {
 }
 
 /* section Create Cover Page Form by Fahad */
+/**/
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 
 .wrapper {
   height: 100vh;
-  padding-top: 8rem;
+  padding-top: 4rem;
   padding-bottom: 1rem;
 }
 
 .cover_page_form{
-  background: url('/static/images/bg.jpg') no-repeat top center;
   background-size: cover;
   font-family: 'Roboto', sans-serif;
-  color: rgba(0,0,0,0.8);;
-  text-align: center;
+  color: rgba(0,0,0,0.8);
   height: 100%;
+}
+
+.form_header {
+  color: grey;
+  text-align: left;
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid grey;
 }
 
 .thesis_details_form {
   max-width: 1200px;
   width: 80%;
   margin: auto;
-  background: rgba(0,0,0,0.8);
   padding: 30px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  /* box-shadow: 0 0 10px rgba(0,0,0,0.3); */
 }
 
 .form_container {
   max-width: 500px;
   width: 80%;
   margin: auto;
-  background: rgba(0,0,0,0.8);
+  
   padding: 30px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  
 }
 
 .form_container h2 {
-  text-align: center;
-  color: #c5ecfd;
+  text-align: left;
 }
 
 .course_details,
@@ -56,6 +61,7 @@ body {
 
 .group_details {
   flex-basis: 95%;
+  padding-left: 2rem;
   flex-direction: row;
   flex-wrap: wrap;
 }
@@ -68,12 +74,12 @@ body {
 }
 .thesis_details_form h4, 
 .thesis_details_form h5 {
-  text-align: center;
-  color: #c5ecfd;
+  text-align: left;
 }
 
 .group_details h4 {
   flex-basis: 100%;
+  margin-left: 2%;
   margin-bottom: 1.5rem;
 }
 
@@ -85,30 +91,30 @@ body {
 }
 
 .input-fields .input {
-  margin: 10px 0;
+  margin: 1rem 0;
   background: transparent;
-  border: 0px;
-  border-bottom: 2px solid #c5ecfd;
-  padding: 10px;
-  color: #c5ecfd;
+  border: 1px solid grey;
+  padding: 1.2rem;
   width: 100%;
 }
 
+/*
 ::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
+  Chrome/Opera/Safari
   color: #c5ecfd;
 }
 ::-moz-placeholder {
-  /* Firefox 19+ */
+  Firefox 19+
   color: #c5ecfd;
 }
 :-ms-input-placeholder {
-  /* IE 10+ */
+  IE 10+
   color: #c5ecfd;
 }
+*/
 
 .button {
-    background: #39b7dd;
+    background: #00b894;
     text-align: center;
     padding: 15px;
     border-radius: 5px;
@@ -139,6 +145,10 @@ body {
     flex-direction: column;
   }
 
+  .group_details {
+    padding-left: 0;
+  }
+
   .wrapper {
     height: 100%;
   }
@@ -162,3 +172,100 @@ body {
   margin-bottom: 5rem;
 }
 /* endsection Demo Editor by Tanzim */
+
+/* section Navigation Bar by Tanzim */
+nav {
+  position: relative;
+  background-color: rgba(48, 48, 48, 0.25);
+  width: 100%;
+  height: 3.5rem;
+  z-index: 7;
+}
+
+.stick_nav_bar {
+  position: fixed;
+  top: 0;
+  background-color: rgba(48, 48, 48, 0.8);
+  border-bottom: 1px solid rgba(0, 184, 148,0.8);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+              0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#logo {
+  display: inline-block;
+  background-color: rgba(255, 255, 255,0.7);
+  height: 3.5rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+#logo a {
+  color: #00b894;
+  text-decoration: none;
+}
+
+#navigation_links {
+  display: inline-block;
+  position: absolute;
+  height: 3.5rem;
+  right: 0;
+}
+
+#navigation_links li {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 1rem;
+  margin: 0;
+}
+
+#navigation_links a {
+  color: white;
+}
+
+#navigation_links a:hover {
+  color: #00b894;
+  font-weight: bold;
+}
+
+#navigation_links a:active {
+  color: black;
+  font-weight: bold;
+}
+
+#navigation_links button {
+  color: #636e72;
+}
+
+#navigation_links button:hover {
+  color: hotpink;
+  font-weight: bold;
+}
+
+#navigation_links button:active {
+  color: #74b9ff;
+  font-weight: bold;
+}
+
+.temp {
+  height: 1200px;
+}
+/* section Navigation Bar by Tanzim */
+/* section Home Page by Tanzim */
+#hero_image {
+  position: relative;
+  top: -3.5rem;
+  background-image: url('/static/images/hero_image.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+}
+
+#hero_text {
+  color: white;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+}
+/* endsection Home Page by Tanzim */

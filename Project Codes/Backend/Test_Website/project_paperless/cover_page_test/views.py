@@ -4,6 +4,10 @@ from django.http import HttpResponse
 
 
 def index(request):
+    return render(request, 'pages/index.html')
+
+
+def cover_page(request):
     allowed_range = range(1, 6)
     if request.method == 'POST' and request.POST['thesis_title'] is not None:
         print(request.POST)
@@ -15,8 +19,8 @@ def index(request):
                 'name': student_name,
                 'id': student_id
             })
-        course_title = f"{request.POST['course_name']} {request.POST['course_id']}"
-        cover_page = CoverPage(course_title, request.POST['section'], request.POST['thesis_title'],
+        course_detail = request.POST['course'].split('.')
+        cover_page = CoverPage(course_detail[0], course_detail[1], request.POST['thesis_title'],
                                request.POST['ins_name'], request.POST['group_name'], members)
         cover_page.generate_page()
         print("Page Generated")
