@@ -4,6 +4,7 @@
 <div class="editor_wrapper">
   <div class="editor_items">
     <h1>Input Area</h1>
+    <button id="insert_text">Insert Text</button>
     <textarea name="input" id="input" cols="80" rows="10" data-sample-short></textarea>
   </div>
   <div class="editor_items">
@@ -26,7 +27,26 @@
     extraPlugins: 'ckeditor_wiris',
     removePlugins: 'uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
     height: 500,
-    allowedContent: true
+    allowedContent: true,
+    toolbarGroups: [
+      { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+      { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+      { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+      '/',
+      { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+      { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+      { name: 'links', groups: [ 'links' ] },
+      '/',
+      { name: 'styles', groups: [ 'styles' ] },
+      { name: 'colors', groups: [ 'colors' ] },
+      { name: 'tools', groups: [ 'tools' ] },
+      { name: 'others', groups: [ 'others' ] },
+      { name: 'about', groups: [ 'about' ] },
+      '/',
+      { name: 'insert', groups: [ 'insert' ] }
+    ],
+    removeButtons: 'Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CreateDiv'
+    
     // Update the ACF configuration with MathML syntax.
     //extraAllowedContent: mathElements.join(' ') + '(*)[*]{*};img[data-mathml,data-custom-editor,role](Wirisformula)'
   });
@@ -52,6 +72,13 @@
 
   MathJax = {
     loader: {load: ['input/asciimath', 'output/chtml']},
+  }
+
+  document.querySelector('#insert_text').addEventListener('click', insert_text);
+
+  function insert_text() {
+    alert("Insert Text");
+    CKEDITOR.instances.input.insertHtml('<div> some text here </div>');
   }
 </script>
 {% endblock %}
