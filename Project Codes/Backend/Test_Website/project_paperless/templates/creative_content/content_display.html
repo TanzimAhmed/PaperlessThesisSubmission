@@ -15,17 +15,13 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <script>
-  output = document.querySelector('#content');
-  MathJax.texReset();
-  MathJax.typesetClear();
-  MathJax.typesetPromise([output]).catch(function (err) {
-    latex_output.innerHTML = '';
-    latex_output.appendChild(document.createTextNode(err.message));
-    console.error(err);
-  }).then(function () {
-  });
-
   MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    },
     loader: {load: ['input/asciimath', 'output/chtml']},
   }
 </script>

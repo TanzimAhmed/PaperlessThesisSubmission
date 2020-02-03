@@ -11,13 +11,7 @@ def demo_editor(request):
 
 
 def editor(request):
-    if request.method == 'POST' and request.FILES['upload_file'] is not None:
-        uploaded_file = request.FILES['upload_file']
-        file_system = FileSystemStorage()
-        file_name = file_system.save(uploaded_file.name, uploaded_file)
-        url = f'/static/{file_system.url(file_name)}'
-        print(url)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         link = generate_link()
         user = 'User 1'
         course_id = request.POST['course_id'].split('.')
@@ -28,6 +22,16 @@ def editor(request):
         print(url)
         return redirect(url)
     return render(request, 'creative_content/editor.html')
+
+
+def upload_file(request):
+    if request.method == 'POST' and request.FILES is not None:
+        uploaded_file = request.FILES['upload_file']
+        file_system = FileSystemStorage()
+        file_name = file_system.save(uploaded_file.name, uploaded_file)
+        url = f'/static/{file_system.url(file_name)}'
+        print(url)
+        return
 
 
 def show(request, link):
