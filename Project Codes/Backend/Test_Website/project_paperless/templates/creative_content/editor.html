@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="editor_wrapper">
+  <div class="editor_items" id="left">
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="editor_inputs">
+        <input type="text" class="input" id="left" name="course_id" placeholder="Course Code with Section">
+        <input type="text" class="input" id="right" name="title" placeholder="Title">
+      </div>
+      <textarea name="content" id="input" cols="80" rows="10" data-sample-short></textarea>
+      <input type="submit" style="display: none;">
+    </form>
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="editor_inputs">
+        <input type="file" class="input" name="upload_file" id="">
+        <button type="submit" class="btn btn-outline-dark">Upload Image / Video</button>
+      </div>
+    </form>
+  </div>
+  <div class="editor_items" id="right">
+    <h3>Preview Here</h3>
+    <hr>
+    <p id="output"></p>
+  </div>
+</div>
+
+<!-- CK Editor JS includes-->
+<script src="//cdn.ckeditor.com/4.13.1/full/ckeditor.js"></script>
+<!-- MathJax JS includes -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script>
+  CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
+
+  let editor = CKEDITOR.replace('input', {
+    // For now, MathType is incompatible with CKEditor file upload plugins.
+    extraPlugins: 'ckeditor_wiris',
+    removePlugins: 'uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
+    height: 400,
+    allowedContent: true,
+    toolbarGroups: [
+      { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+      { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+      { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+      '/',
+      { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+      { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+      { name: 'links', groups: [ 'links' ] },
+      '/',
+      { name: 'styles', groups: [ 'styles' ] },
+      { name: 'colors', groups: [ 'colors' ] },
+      { name: 'tools', groups: [ 'tools' ] },
+      { name: 'others', groups: [ 'others' ] },
+      { name: 'about', groups: [ 'about' ] },
+      '/',
+      { name: 'insert', groups: [ 'insert' ] }
+    ],
+    removeButtons: 'Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CreateDiv'
+    
+    // Update the ACF configuration with MathML syntax.
+    //extraAllowedContent: mathElements.join(' ') + '(*)[*]{*};img[data-mathml,data-custom-editor,role](Wirisformula)'
+  });
+
+  let output = document.querySelector('#output');
+
+  editor.on( 'change', function(event) {
+    // getData() returns CKEditor's HTML content.
+    load_math(event);
+  });
+
+  function load_math(event) {
+    output.innerHTML = event.editor.getData();
+    MathJax.texReset();
+    MathJax.typesetClear();
+    MathJax.typesetPromise([output]).catch(function (err) {
+      latex_output.innerHTML = '';
+      latex_output.appendChild(document.createTextNode(err.message));
+      console.error(err);
+    }).then(function () {
+    });
+    document.querySelector('#right').style.borderLeft = '1px solid grey';
+  }
+
+  MathJax = {
+    loader: {load: ['input/asciimath', 'output/chtml']},
+  }
+
+  document.querySelector('#insert_text').addEventListener('click', insert_text);
+
+  function insert_text() {
+    alert("Insert Text");
+    CKEDITOR.instances.input.insertHtml('<div> some text here </div>');
+  }
+</script>
+{% endblock %}
