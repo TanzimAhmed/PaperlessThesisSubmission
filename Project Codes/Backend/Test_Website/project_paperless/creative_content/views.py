@@ -6,6 +6,13 @@ from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
 
+def index(request):
+    contents = Content.objects.all()
+    print(contents)
+    context = {'contents': contents}
+    return render(request, 'creative_content/index.html', context)
+
+
 def demo_editor(request):
     return render(request, 'pages/demo_editor.html')
 

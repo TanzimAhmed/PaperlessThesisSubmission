@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .cover_page import CoverPage
+from .pages import DocumentTest
 from django.http import HttpResponse
 
 
@@ -40,3 +41,7 @@ def login(request):
 
 def register(request):
     return render(request, 'pages/register.html')
+
+
+def test(request):
+    return
