@@ -24,5 +24,9 @@
     },
     loader: {load: ['input/asciimath', 'output/chtml']},
   }
+  
+  window.onload = function() {
+    document.querySelector('#content').style.display = 'block';
+  }
 </script>
 {% endblock %}
