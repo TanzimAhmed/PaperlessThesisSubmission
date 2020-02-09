@@ -187,11 +187,11 @@ body {
   border: 1px solid grey;
   padding: 1.2rem;
   margin: 1%;
-  width: 65%;
+  width: 75%;
 }
 
 .editor_inputs #left {
-  width: 30%;
+  width: 20%;
 }
 
 @media screen and (max-width: 1150px) {

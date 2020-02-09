@@ -6,7 +6,11 @@
     <form action="" method="POST">
       {% csrf_token %}
       <div class="editor_inputs">
-        <input type="text" class="input" id="left" name="course_id" placeholder="Course Code with Section">
+        <select name="course_id" id="left" class="input">
+          <option value="default.default" selected>Select Course</option>
+          <option value="CSE 499A.21">CSE 499A.21</option>
+          <option value="CSE 499B.15">CSE 499B.15</option>
+        </select>
         <input type="text" class="input" id="right" name="title" placeholder="Title">
       </div>
       <textarea name="content" id="input" cols="80" rows="10" data-sample-short></textarea>
