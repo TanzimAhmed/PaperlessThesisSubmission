@@ -333,7 +333,7 @@ nav {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
+  height: 100%;
 }
 
 #content_list_overlay {
@@ -352,6 +352,7 @@ nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  padding-bottom: 2.6rem;
 }
 
 #content_list_header {
