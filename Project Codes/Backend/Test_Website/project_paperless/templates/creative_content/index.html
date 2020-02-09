@@ -1,18 +1,25 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div class="container" style="padding-top: 5rem;">
-    <h1>Course Materials</h1>
-    {% if contents %}
-      {% for content in contents %}
-        <div class="card">
-          <div class="card-body">
-            <h2>{{ content.title }}</h2>
-            <h2>{{ content.course_code }} | {{ content.section }}</h2>
-            <a href="/content/{{ content.link }}/show/">View</a>
+  <div id="content_list_background">
+    <div id="content_list_overlay_">
+      <div class="container" id="content_list_container">
+        <h1 class="form_header" id="content_list_header">Course Materials</h1>
+        {% if contents %}
+          <div id="content_list">
+            {% for content in contents %}
+              <div class="content_card">
+                <div>
+                  <h2>{{ content.title }}</h2>
+                <hr>
+                <p> Course: {{ content.course_code }} <br> Section: {{ content.section }}</p>
+                </div>
+                <a href="/content/{{ content.link }}/show/" class="btn btn-outline-info"> View</a>
+              </div>
+            {% endfor %}
           </div>
-        </div>
-      {% endfor %}
-    {% endif %}
+        {% endif %}
+      </div>
+    </div>
   </div>
 {% endblock %}
