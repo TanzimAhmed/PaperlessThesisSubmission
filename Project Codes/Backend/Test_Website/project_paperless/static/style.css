@@ -364,12 +364,13 @@ nav {
 
 .content_card {
   width: 20rem;
-  background-color: rgba(48, 48, 48, 0.6);
+  background-color: rgba(48, 48, 48, 1);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
               0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border: 1px solid rgba(0, 184, 148,0.6);
+  border: 1px solid rgba(0, 184, 148,1);
   padding: 2rem;
   margin: 1rem;
+  opacity: 0.65;
 }
 
 .content_card div {
