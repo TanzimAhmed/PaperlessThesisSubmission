@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .cover_page import CoverPage
+from .pages import CoverPage
 from .pages import DocumentTest
 from django.http import HttpResponse
 

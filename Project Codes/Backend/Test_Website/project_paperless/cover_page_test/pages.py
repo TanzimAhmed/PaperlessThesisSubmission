@@ -1,14 +1,17 @@
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from django.conf import settings
+import os
 
 
 class CoverPage:
-    def __init__(self, course_title, section, title, instructor, group_members):
+    def __init__(self, course_title, section, title, instructor, group_name, group_members):
         self.course_title = course_title
         self.section = section
         self.title = title
         self.instructor = instructor
+        self.group_name = group_name
         self.group_members = group_members
         self.document = None
         self.table = None
@@ -48,14 +51,15 @@ class CoverPage:
         run.font.size = Pt(18)
         run.font.name = 'Calibri Light'
 
-        self.add_group_info('Bright Sparks')
+        self.add_group_info(self.group_name)
 
         section = self.document.sections[0]
         section.page_height = Inches(11.69)
         section.page_width = Inches(8.27)
 
+        destination = os.path.join(settings.BASE_DIR, 'static/files/test_cover_page.docx')
         print(self.document.paragraphs)
-        self.document.save('test_cover_page.docx')
+        self.document.save(destination)
 
     def add_paragraph(self, text, font_size=36, bold=True):
         paragraph = self.document.add_paragraph()
@@ -102,7 +106,8 @@ class CoverPage:
 
     def add_logo(self, width=1.5):
         paragraph = self.document.add_paragraph()
-        paragraph.add_run().add_picture('NSU_logo.png', width=Inches(width))
+        source = os.path.join(settings.BASE_DIR, 'static/images/NSU_logo.png')
+        paragraph.add_run().add_picture(source, width=Inches(width))
         paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
 

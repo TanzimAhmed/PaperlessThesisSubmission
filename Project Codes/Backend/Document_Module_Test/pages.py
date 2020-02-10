@@ -1,7 +1,6 @@
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from django.conf import settings
 import os
 
 
@@ -57,7 +56,7 @@ class CoverPage:
         section.page_height = Inches(11.69)
         section.page_width = Inches(8.27)
 
-        destination = os.path.join(settings.BASE_DIR, 'static/files/test_cover_page.docx')
+        destination = 'test_cover_page.docx'
         print(self.document.paragraphs)
         self.document.save(destination)
 
@@ -106,9 +105,65 @@ class CoverPage:
 
     def add_logo(self, width=1.5):
         paragraph = self.document.add_paragraph()
-        source = os.path.join(settings.BASE_DIR, 'static/images/NSU_logo.png')
+        source = 'NSU_logo.png'
         paragraph.add_run().add_picture(source, width=Inches(width))
         paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+
+class DocumentTest:
+    def __init__(self, file_name):
+        self.document = Document(file_name)
+        self.sections = self.document.sections
+
+    def check_properties(self):
+        styles = self.document.styles
+        i = 0
+        print("Printing Page Properties")
+        """
+        for style in styles:
+            print(f"Document Style name: {style.name}")
+            print(f"Document Style element: {style.element}")
+            print(f"Font: {styles['Heading 1'].font.name}")
+        """
+        for section in self.sections:
+            i += 1
+            print(f'\n\nFor section: {i}')
+            print(f'Start Type: {section.start_type}')
+            print(f'Orientation: {section.orientation}')
+            print(f'Page Height: {section.page_height.inches} inch(es)')
+            print(f'Page Width: {section.page_width.inches} inch(es)')
+            print(f'Top Margin: {section.top_margin.inches} inch(es)')
+            print(f'Right Margin: {section.right_margin.inches} inch(es)')
+            print(f'Left Margin: {section.left_margin.inches} inch(es)')
+            print(f'Bottom Margin: {section.bottom_margin.inches} inch(es)')
+
+    def check_paragraph_styles(self):
+        paragraphs = self.document.paragraphs
+        print('\nPrinting Heading Paragraph Properties')
+        print(f'Paragraphs Present: {len(paragraphs)}')
+        for paragraph in paragraphs:
+            style_name = paragraph.style.name
+            print(f'Paragraph Alignment: {self.document.styles[style_name].paragraph_format.alignment}')
+            print(f'Paragraph Line-Spacing: {self.document.styles[style_name].paragraph_format.line_spacing} inch(es)')
+            print(f'Paragraph style: {style_name}')
+            print(f'Font Name: {self.document.styles[style_name].font.name}')
+            if self.document.styles[style_name].font.size is not None:
+                print(f'Font Size: {self.document.styles[style_name].font.size.pt}')
+            print()
+            # self.check_fonts(paragraph)
+
+    def check_heading_styles(self):
+        pass
+
+    def check_fonts(self, paragraph):
+        runs = paragraph.runs
+        print('\nPrinting Run Properties')
+        print(f'Runs Present: {len(runs)}')
+        for run in runs:
+            print(f'Font Name: {run.font.name}')
+            print(f'Font Size: {run.font.size}')
+            print(f'Font Is Bold: {run.font.bold}')
+            print(f'Font Color: {run.font.color}')
 
 
 if __name__ == '__main__':
@@ -130,8 +185,7 @@ if __name__ == '__main__':
             'id': '162 1203 042'
         }
     ]
-    group_name = 'Bright Sparks'
 
-    cover_page = CoverPage('cse 499a', '21', 'paperless thesis submission', 'dr. md shahriar karim', group_name, members)
+    cover_page = CoverPage('cse 499a', '21', 'paperless thesis submission', 'dr. md shahriar karim', members)
     cover_page.generate_page()
     print('Page Generated')
