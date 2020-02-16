@@ -33,12 +33,13 @@ def editor(request):
 
 def upload_file(request):
     if request.method == 'POST' and request.FILES is not None:
+        print('Printing Files' + str(request.FILES))
         uploaded_file = request.FILES['upload_file']
         file_system = FileSystemStorage()
         file_name = file_system.save(uploaded_file.name, uploaded_file)
-        url = f'/static/{file_system.url(file_name)}'
+        url = file_system.url(file_name)
         print(url)
-        return
+        return redirect('/')
 
 
 def show(request, link):

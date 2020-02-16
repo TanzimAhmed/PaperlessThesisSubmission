@@ -16,7 +16,7 @@
       <textarea name="content" id="input" cols="80" rows="10" data-sample-short></textarea>
       <input type="submit" style="display: none;">
     </form>
-    <form action="/content/upload/" method="POST" enctype="multipart/form-data">
+    <form action="/content/upload/" id="image_upload_form" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="editor_inputs">
         <input type="file" class="input" name="upload_file" id="">
@@ -32,7 +32,7 @@
 </div>
 
 <!-- CK Editor JS includes-->
-<script src="//cdn.ckeditor.com/4.13.1/full/ckeditor.js"></script>
+<script src="//cdn.ckeditor.com/4.13.1/full-all/ckeditor.js"></script>
 <!-- MathJax JS includes -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -42,10 +42,18 @@
 
   let editor = CKEDITOR.replace('input', {
     // For now, MathType is incompatible with CKEditor file upload plugins.
-    extraPlugins: 'ckeditor_wiris',
-    removePlugins: 'uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
+    extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
+    removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
     height: 400,
+    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+
+    //filebrowserBrowseUrl: '/apps/ckfinder/3.4.5/ckfinder.html',
+    //filebrowserImageBrowseUrl: '/apps/ckfinder/3.4.5/ckfinder.html?type=Images',
+    //filebrowserUploadUrl: '/content/upload/',
+    //filebrowserImageUploadUrl: '/content/upload/',
+
     allowedContent: true,
+
     toolbarGroups: [
       { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
       { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
@@ -63,7 +71,14 @@
       '/',
       { name: 'insert', groups: [ 'insert' ] }
     ],
-    removeButtons: 'Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CreateDiv'
+    removeButtons: 'Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CreateDiv',
+    // Load the default contents.css file plus customizations for this sample.
+    contentsCss: [
+        'http://cdn.ckeditor.com/4.13.1/full-all/contents.css',
+        'https://ckeditor.com/docs/vendors/4.13.1/ckeditor/assets/css/widgetstyles.css'
+      ],
+    // Setup content provider. See https://ckeditor.com/docs/ckeditor4/latest/features/media_embed
+    embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}'
     
     // Update the ACF configuration with MathML syntax.
     //extraAllowedContent: mathElements.join(' ') + '(*)[*]{*};img[data-mathml,data-custom-editor,role](Wirisformula)'
@@ -93,11 +108,26 @@
     loader: {load: ['input/asciimath', 'output/chtml']},
   }
 
+  /*
   document.querySelector('#insert_text').addEventListener('click', insert_text);
 
   function insert_text() {
     alert("Insert Text");
     CKEDITOR.instances.input.insertHtml('<div> some text here </div>');
+  }
+  */
+
+  let form = document.querySelector('#image_upload_form');
+
+  form.onsubmit = function(event) {
+    event.preventDefault();
+    let form_data = new FormData(form);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', form.getAttribute('action'), true);
+    console.log(form_data.get('upload_file'));
+    xhr.send(form_data);
+    console.log('File Uploaded');
   }
 </script>
 {% endblock %}
