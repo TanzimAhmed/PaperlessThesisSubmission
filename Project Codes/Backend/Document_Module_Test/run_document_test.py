@@ -3,6 +3,8 @@ from pages import DocumentTest
 document_test = DocumentTest('Test_template.docx')
 print(document_test.get_page_properties())
 print(document_test.get_text_properties())
+print(document_test.is_valid_format())
+print(document_test.errors)
 # document_test.check_paragraph_styles()
 # document_test.check_heading_styles()
 

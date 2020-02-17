@@ -115,6 +115,19 @@ class DocumentTest:
         self.document = Document(file_name)
         self.sections = self.document.sections
         self.paragraphs = self.document.paragraphs
+        self.page_properties = None
+        self.text_properties = None
+        self.base_properties = {
+            'page_height': {11.69},
+            'page_width': {8.27},
+            'top_margin': {1.0},
+            'right_margin': {1.0},
+            'left_margin': {1.0},
+            'bottom_margin': {1.0},
+            'line_spacing': {1.15, None, 1.0},
+            'font_name': {'Cambria', None}
+        }
+        self.errors = None
 
     def check_properties(self):
         styles = self.document.styles
@@ -174,7 +187,8 @@ class DocumentTest:
             properties['right_margin'].add(round(section.right_margin.inches, 2))
             properties['left_margin'].add(round(section.left_margin.inches, 2))
             properties['bottom_margin'].add(round(section.bottom_margin.inches, 2))
-        return properties
+        self.page_properties = properties
+        return self.page_properties
 
     def get_text_properties(self):
         properties = {
@@ -190,11 +204,57 @@ class DocumentTest:
             properties['alignment'].add(self.document.styles[style_name].paragraph_format.alignment)
             properties['line_spacing'].add(self.document.styles[style_name].paragraph_format.line_spacing)
             properties['style_name'].add(style_name)
-            properties['font_name'].add(self.document.styles[style_name].font.name)
+            properties['font_name'].update(self.get_fonts(paragraph))
             if self.document.styles[style_name].font.size is not None:
                 properties['font_size'].add(self.document.styles[style_name].font.size.pt)
-            self.check_fonts(paragraph)
-        return properties
+        self.text_properties = properties
+        return self.text_properties
+
+    def get_fonts(self, paragraph):
+        fonts = set()
+        runs = paragraph.runs
+        style_name = paragraph.style.name
+        for run in runs:
+            if run.font.name is None:
+                fonts.add(self.document.styles[style_name].font.name)
+            fonts.add(run.font.name)
+        return list(fonts)
+
+    def is_valid_format(self):
+        self.get_page_properties()
+        self.get_text_properties()
+        errors = []
+        valid = True
+        if not self.page_properties['page_height'] == self.base_properties['page_height']:
+            errors.append(self.error_message('page height'))
+            valid = False
+        elif not self.page_properties['page_width'] == self.base_properties['page_width']:
+            errors.append(self.error_message('page width'))
+            valid = False
+        elif not self.page_properties['top_margin'] == self.base_properties['top_margin']:
+            errors.append(self.error_message('top margin'))
+            valid = False
+        elif not self.page_properties['right_margin'] == self.base_properties['right_margin']:
+            errors.append(self.error_message('right margin'))
+            valid = False
+        elif not self.page_properties['left_margin'] == self.base_properties['left_margin']:
+            errors.append(self.error_message('left margin'))
+            valid = False
+        elif not self.page_properties['bottom_margin'] == self.base_properties['bottom_margin']:
+            errors.append(self.error_message('bottom margin'))
+            valid = False
+        elif not self.text_properties['line_spacing'] <= self.base_properties['line_spacing']:
+            errors.append(self.error_message('line spacing present'))
+            valid = False
+        elif not self.text_properties['font_name'] <= self.base_properties['font_name']:
+            errors.append(self.error_message('fonts present'))
+            valid = False
+        if not valid:
+            self.errors = errors
+        return valid
+
+    def error_message(self, item):
+        return f'Invalid {item}'
 
     def check_heading_styles(self):
         pass
