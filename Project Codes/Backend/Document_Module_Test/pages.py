@@ -114,6 +114,7 @@ class DocumentTest:
     def __init__(self, file_name):
         self.document = Document(file_name)
         self.sections = self.document.sections
+        self.paragraphs = self.document.paragraphs
 
     def check_properties(self):
         styles = self.document.styles
@@ -151,6 +152,49 @@ class DocumentTest:
                 print(f'Font Size: {self.document.styles[style_name].font.size.pt}')
             print()
             # self.check_fonts(paragraph)
+
+    def get_page_properties(self):
+        properties = {
+            'length': len(self.sections),
+            'start_type': set(),
+            'orientation': set(),
+            'page_height': set(),
+            'page_width': set(),
+            'top_margin': set(),
+            'right_margin': set(),
+            'left_margin': set(),
+            'bottom_margin': set()
+        }
+        for section in self.sections:
+            properties['start_type'].add(section.start_type)
+            properties['orientation'].add(section.orientation)
+            properties['page_height'].add(round(section.page_height.inches, 2))
+            properties['page_width'].add(round(section.page_width.inches, 2))
+            properties['top_margin'].add(round(section.top_margin.inches, 2))
+            properties['right_margin'].add(round(section.right_margin.inches, 2))
+            properties['left_margin'].add(round(section.left_margin.inches, 2))
+            properties['bottom_margin'].add(round(section.bottom_margin.inches, 2))
+        return properties
+
+    def get_text_properties(self):
+        properties = {
+            'length': len(self.document.paragraphs),
+            'alignment': set(),
+            'line_spacing': set(),
+            'style_name': set(),
+            'font_name': set(),
+            'font_size': set()
+        }
+        for paragraph in self.paragraphs:
+            style_name = paragraph.style.name
+            properties['alignment'].add(self.document.styles[style_name].paragraph_format.alignment)
+            properties['line_spacing'].add(self.document.styles[style_name].paragraph_format.line_spacing)
+            properties['style_name'].add(style_name)
+            properties['font_name'].add(self.document.styles[style_name].font.name)
+            if self.document.styles[style_name].font.size is not None:
+                properties['font_size'].add(self.document.styles[style_name].font.size.pt)
+            self.check_fonts(paragraph)
+        return properties
 
     def check_heading_styles(self):
         pass
