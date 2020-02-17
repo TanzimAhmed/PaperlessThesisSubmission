@@ -124,47 +124,12 @@ class DocumentTest:
             'right_margin': {1.0},
             'left_margin': {1.0},
             'bottom_margin': {1.0},
-            'line_spacing': {1.15, None, 1.0},
-            'font_name': {'Cambria', None}
+            'line_spacing': {1.15, 1.0},
+            'font_name': {'Cambria'}
         }
         self.errors = None
-
-    def check_properties(self):
-        styles = self.document.styles
-        i = 0
-        print("Printing Page Properties")
-        """
-        for style in styles:
-            print(f"Document Style name: {style.name}")
-            print(f"Document Style element: {style.element}")
-            print(f"Font: {styles['Heading 1'].font.name}")
-        """
-        for section in self.sections:
-            i += 1
-            print(f'\n\nFor section: {i}')
-            print(f'Start Type: {section.start_type}')
-            print(f'Orientation: {section.orientation}')
-            print(f'Page Height: {section.page_height.inches} inch(es)')
-            print(f'Page Width: {section.page_width.inches} inch(es)')
-            print(f'Top Margin: {section.top_margin.inches} inch(es)')
-            print(f'Right Margin: {section.right_margin.inches} inch(es)')
-            print(f'Left Margin: {section.left_margin.inches} inch(es)')
-            print(f'Bottom Margin: {section.bottom_margin.inches} inch(es)')
-
-    def check_paragraph_styles(self):
-        paragraphs = self.document.paragraphs
-        print('\nPrinting Heading Paragraph Properties')
-        print(f'Paragraphs Present: {len(paragraphs)}')
-        for paragraph in paragraphs:
-            style_name = paragraph.style.name
-            print(f'Paragraph Alignment: {self.document.styles[style_name].paragraph_format.alignment}')
-            print(f'Paragraph Line-Spacing: {self.document.styles[style_name].paragraph_format.line_spacing} inch(es)')
-            print(f'Paragraph style: {style_name}')
-            print(f'Font Name: {self.document.styles[style_name].font.name}')
-            if self.document.styles[style_name].font.size is not None:
-                print(f'Font Size: {self.document.styles[style_name].font.size.pt}')
-            print()
-            # self.check_fonts(paragraph)
+        self.base_properties['line_spacing'].add(None)
+        self.base_properties['font_name'].add(None)
 
     def get_page_properties(self):
         properties = {
@@ -228,25 +193,25 @@ class DocumentTest:
         if not self.page_properties['page_height'] == self.base_properties['page_height']:
             errors.append(self.error_message('page height'))
             valid = False
-        elif not self.page_properties['page_width'] == self.base_properties['page_width']:
+        if not self.page_properties['page_width'] == self.base_properties['page_width']:
             errors.append(self.error_message('page width'))
             valid = False
-        elif not self.page_properties['top_margin'] == self.base_properties['top_margin']:
+        if not self.page_properties['top_margin'] == self.base_properties['top_margin']:
             errors.append(self.error_message('top margin'))
             valid = False
-        elif not self.page_properties['right_margin'] == self.base_properties['right_margin']:
+        if not self.page_properties['right_margin'] == self.base_properties['right_margin']:
             errors.append(self.error_message('right margin'))
             valid = False
-        elif not self.page_properties['left_margin'] == self.base_properties['left_margin']:
+        if not self.page_properties['left_margin'] == self.base_properties['left_margin']:
             errors.append(self.error_message('left margin'))
             valid = False
-        elif not self.page_properties['bottom_margin'] == self.base_properties['bottom_margin']:
+        if not self.page_properties['bottom_margin'] == self.base_properties['bottom_margin']:
             errors.append(self.error_message('bottom margin'))
             valid = False
-        elif not self.text_properties['line_spacing'] <= self.base_properties['line_spacing']:
+        if not self.text_properties['line_spacing'] <= self.base_properties['line_spacing']:
             errors.append(self.error_message('line spacing present'))
             valid = False
-        elif not self.text_properties['font_name'] <= self.base_properties['font_name']:
+        if not self.text_properties['font_name'] <= self.base_properties['font_name']:
             errors.append(self.error_message('fonts present'))
             valid = False
         if not valid:
@@ -258,6 +223,43 @@ class DocumentTest:
 
     def check_heading_styles(self):
         pass
+
+    def check_properties(self):
+        styles = self.document.styles
+        i = 0
+        print("Printing Page Properties")
+        """
+        for style in styles:
+            print(f"Document Style name: {style.name}")
+            print(f"Document Style element: {style.element}")
+            print(f"Font: {styles['Heading 1'].font.name}")
+        """
+        for section in self.sections:
+            i += 1
+            print(f'\n\nFor section: {i}')
+            print(f'Start Type: {section.start_type}')
+            print(f'Orientation: {section.orientation}')
+            print(f'Page Height: {section.page_height.inches} inch(es)')
+            print(f'Page Width: {section.page_width.inches} inch(es)')
+            print(f'Top Margin: {section.top_margin.inches} inch(es)')
+            print(f'Right Margin: {section.right_margin.inches} inch(es)')
+            print(f'Left Margin: {section.left_margin.inches} inch(es)')
+            print(f'Bottom Margin: {section.bottom_margin.inches} inch(es)')
+
+    def check_paragraph_styles(self):
+        paragraphs = self.document.paragraphs
+        print('\nPrinting Heading Paragraph Properties')
+        print(f'Paragraphs Present: {len(paragraphs)}')
+        for paragraph in paragraphs:
+            style_name = paragraph.style.name
+            print(f'Paragraph Alignment: {self.document.styles[style_name].paragraph_format.alignment}')
+            print(f'Paragraph Line-Spacing: {self.document.styles[style_name].paragraph_format.line_spacing} inch(es)')
+            print(f'Paragraph style: {style_name}')
+            print(f'Font Name: {self.document.styles[style_name].font.name}')
+            if self.document.styles[style_name].font.size is not None:
+                print(f'Font Size: {self.document.styles[style_name].font.size.pt}')
+            print()
+            # self.check_fonts(paragraph)
 
     def check_fonts(self, paragraph):
         runs = paragraph.runs

@@ -1,24 +1,13 @@
 from pages import DocumentTest
 
-document_test = DocumentTest('Test_template.docx')
+document_test = DocumentTest('test_template_.docx')
+print('Document Properties: ')
 print(document_test.get_page_properties())
 print(document_test.get_text_properties())
-print(document_test.is_valid_format())
-print(document_test.errors)
+print()
+if document_test.is_valid_format():
+    print('Format is Okay')
+else:
+    print(f'Sorry, The format contains errors. Errors: {document_test.errors}')
 # document_test.check_paragraph_styles()
 # document_test.check_heading_styles()
-
-
-"""
-set_x = {'apple', 'banana', 'coconut'}
-set_x.add('apple')
-set_x.remove('banana')
-set_x.update(['mango', 'orange'])
-print('apple' in set_x)
-print({'apple', 'orange'} <= set_x)
-print(set_x)
-
-set_y = set()
-set_y.update(['apple', 'mango', 'orange', 'banana'])
-print(set_y)
-"""
