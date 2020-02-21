@@ -1,6 +1,7 @@
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+import fitz
 import os
 
 
@@ -270,6 +271,21 @@ class DocumentTest:
             print(f'Font Size: {run.font.size}')
             print(f'Font Is Bold: {run.font.bold}')
             print(f'Font Color: {run.font.color}')
+
+
+class PdfDocumentTest:
+    def __init__(self, name):
+        self.document = fitz.Document(name)
+        self.page_count = self.document.pageCount
+
+    def print_properties(self):
+        print(self.document.metadata)
+        print(self.document.pageCount)
+        print(self.document.getToC())
+        for page_no in range(self.page_count):
+            page = self.document.loadPage(page_no)
+            print(f'Fonts: {page.getFontList()}')
+            print(f'Links: {page.getLinks()}')
 
 
 if __name__ == '__main__':
