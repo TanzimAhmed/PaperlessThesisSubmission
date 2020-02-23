@@ -294,38 +294,6 @@ class PdfDocumentTest:
             'font_name': ['Calibri', 'Cambria']
         }
 
-    def print_properties(self):
-        print(self.document.metadata)
-        print(self.document.pageCount)
-        print(self.document.getToC())
-        fonts = set()
-        x0, x1, y0, y1 = [], [], [], []
-        for page_no in range(self.page_count):
-            page = self.document.loadPage(page_no)
-            print(f'Bounds; CropBox; MediaBox:{page_no + 1}; {page.bound()}; {page.CropBox}; {page.MediaBox}; {page.rect}')
-
-            font_list = page.getFontList()
-            for font in font_list:
-                fonts.add(font[3])
-            # print(f'Links: {page.getLinks()}')
-            blocks = page.getText('blocks')
-            for block in blocks:
-                if 791.5 < round(block[3], 2) < 807:
-                    # print(block)
-                    continue
-                if round(block[3], 2) > 750:
-                    print(block)
-                x0.append(round(block[0], 2))
-                x1.append(round(block[2], 2))
-                y0.append(round(block[1], 2))
-                y1.append(round(block[3], 2))
-        print('X0, X1, Y0, Y1 :')
-        print(min(x0))
-        print(max(x1))
-        print(min(y0))
-        print(max(y1))
-        print(f'Fonts: {fonts}')
-
     def is_valid_format(self):
         dimensions, justified, fonts, margins = None, None, None, None
         for page_no in range(self.page_count):
@@ -449,6 +417,38 @@ class PdfDocumentTest:
             for error in errors:
                 self.errors.append(error)
         return valid
+
+    def print_properties(self):
+        print(self.document.metadata)
+        print(self.document.pageCount)
+        print(self.document.getToC())
+        fonts = set()
+        x0, x1, y0, y1 = [], [], [], []
+        for page_no in range(self.page_count):
+            page = self.document.loadPage(page_no)
+            print(f'Bounds; CropBox; MediaBox:{page_no + 1}; {page.bound()}; {page.CropBox}; {page.MediaBox}; {page.rect}')
+
+            font_list = page.getFontList()
+            for font in font_list:
+                fonts.add(font[3])
+            # print(f'Links: {page.getLinks()}')
+            blocks = page.getText('blocks')
+            for block in blocks:
+                if 791.5 < round(block[3], 2) < 807:
+                    # print(block)
+                    continue
+                if round(block[3], 2) > 750:
+                    print(block)
+                x0.append(round(block[0], 2))
+                x1.append(round(block[2], 2))
+                y0.append(round(block[1], 2))
+                y1.append(round(block[3], 2))
+        print('X0, X1, Y0, Y1 :')
+        print(min(x0))
+        print(max(x1))
+        print(min(y0))
+        print(max(y1))
+        print(f'Fonts: {fonts}')
 
 
 if __name__ == '__main__':
