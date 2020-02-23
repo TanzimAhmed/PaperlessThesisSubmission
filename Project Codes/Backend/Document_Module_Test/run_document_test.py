@@ -1,7 +1,19 @@
 from pages import DocumentTest, PdfDocumentTest
 
-pdf_test = PdfDocumentTest('test_template.pdf')
-pdf_test.print_properties()
+pdf_test = PdfDocumentTest('test_template_.pdf')
+# pdf_test.print_properties()
+if pdf_test.is_valid_format():
+    print('Format is Valid')
+else:
+    print('Format is NOT valid')
+    print('Errors: ')
+    for error in pdf_test.errors:
+        print(error)
+print('\n\n')
+print('Fonts:', pdf_test.fonts)
+print('Margins:', pdf_test.margin)
+print('Height, Width:', pdf_test.page_height, pdf_test.page_width)
+# print(pdf_test.line_height)
 
 """
 document_test = DocumentTest('test_template_.docx')

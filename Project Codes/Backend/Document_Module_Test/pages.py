@@ -277,6 +277,22 @@ class PdfDocumentTest:
     def __init__(self, name):
         self.document = fitz.Document(name)
         self.page_count = self.document.pageCount
+        self.fonts = None
+        self.margin = None
+        self.line_height = None
+        self.page_height = None
+        self.page_width = None
+        self.errors = None
+        self.base_properties = {
+            'page_height': 841.68,
+            'page_width': 595.44,
+            'top_margin': 72,
+            'right_margin': 72,
+            'left_margin': 72,
+            'bottom_margin': 72,
+            'line_spacing': [1.15, 1.0],
+            'font_name': ['Calibri', 'Cambria']
+        }
 
     def print_properties(self):
         print(self.document.metadata)
@@ -286,7 +302,8 @@ class PdfDocumentTest:
         x0, x1, y0, y1 = [], [], [], []
         for page_no in range(self.page_count):
             page = self.document.loadPage(page_no)
-            # print(f'Bounds; CropBox; MediaBox: {page.bound()}; {page.CropBox}; {page.MediaBox}; {page.rect}')
+            print(f'Bounds; CropBox; MediaBox:{page_no + 1}; {page.bound()}; {page.CropBox}; {page.MediaBox}; {page.rect}')
+
             font_list = page.getFontList()
             for font in font_list:
                 fonts.add(font[3])
@@ -294,8 +311,10 @@ class PdfDocumentTest:
             blocks = page.getText('blocks')
             for block in blocks:
                 if 791.5 < round(block[3], 2) < 807:
-                    print(block)
+                    # print(block)
                     continue
+                if round(block[3], 2) > 750:
+                    print(block)
                 x0.append(round(block[0], 2))
                 x1.append(round(block[2], 2))
                 y0.append(round(block[1], 2))
@@ -306,6 +325,130 @@ class PdfDocumentTest:
         print(min(y0))
         print(max(y1))
         print(f'Fonts: {fonts}')
+
+    def is_valid_format(self):
+        dimensions, justified, fonts, margins = None, None, None, None
+        for page_no in range(self.page_count):
+            page = self.document.loadPage(page_no)
+            dimensions = self.check_page_dimensions(page_no, page.bound())
+            data = page.getText('dict')
+            block_no = 1
+            for block in data['blocks']:
+                if block['type'] != 1:
+                    justified = self.is_justified(page_no + 1, block_no, block['lines'])
+                    fonts = self.check_fonts(page_no, block_no, block['lines'])
+                    self.get_margins(block['bbox'])
+                    block_no += 1
+        margins = self.check_margins()
+        if dimensions and justified and fonts and margins:
+            return True
+        else:
+            return False
+
+    def is_justified(self, page_no, block_no, lines):
+        if self.line_height is None:
+            self.line_height = 0
+        valid = True
+        for i in range(len(lines) - 2):
+            if page_no in [1, 5, 6, 7]:
+                continue
+            text = ''
+            for span in lines[i]['spans']:
+                text += span['text']
+            if len(text) < 70:
+                continue
+            line_height_min, line_height_max = 5000, 0
+            line_height_min = min(line_height_min, lines[i+1]['bbox'][1] - lines[i]['bbox'][3])
+            line_height_max = max(line_height_max, lines[i+1]['bbox'][1] - lines[i]['bbox'][3])
+            line_height = (line_height_max + line_height_min) / 2
+            self.line_height = round((self.line_height + line_height) / 2, 2)
+            if not (lines[i]['bbox'][0] < 72.5 and lines[i]['bbox'][2] > 522.5):
+                valid = False
+        if not valid:
+            if self.errors is None:
+                self.errors = []
+            self.errors.append(f'Line Not Justified: Page: {page_no}, Paragraph: {block_no}')
+        return valid
+
+    def check_fonts(self, page_no, block_no, lines):
+        if self.fonts is None:
+            self.fonts = set()
+        font = None
+        valid = True
+        for line in lines:
+            for span in line['spans']:
+                if span['text'].isspace():
+                    continue
+                font = span['font'].split('+')[-1]
+                font = font.split('-')[0]
+                self.fonts.add(font)
+                if font not in self.base_properties['font_name']:
+                    valid = False
+        if not valid:
+            if self.errors is None:
+                self.errors = []
+            self.errors.append(f'Contains illegal Font: {font}; Page: {page_no}, Paragraph: {block_no}')
+        return valid
+
+    def get_margins(self, coordinate):
+        if self.margin is None:
+            self.margin = {
+                'left': 5000,
+                'right': 0,
+                'top': 5000,
+                'bottom': 0
+            }
+        valid = True
+        if 791.5 < round(coordinate[3], 2) < 807:
+            return
+        self.margin['left'] = round(min(self.margin['left'], coordinate[0]), 2)
+        self.margin['right'] = round(max(self.margin['right'], coordinate[2]), 2)
+        self.margin['top'] = round(min(self.margin['top'], coordinate[1]), 2)
+        self.margin['bottom'] = round(max(self.margin['bottom'], coordinate[3]), 2)
+
+    def check_margins(self):
+        valid = True
+        errors = []
+        self.margin['right'] = round(self.base_properties['page_width'] - self.margin['right'], 2)
+        self.margin['bottom'] = round(self.base_properties['page_height'] - self.margin['bottom'], 2)
+        if not self.base_properties['left_margin'] - 5 < self.margin['left'] < self.base_properties['left_margin'] + 5:
+            valid = False
+            errors.append(f'Contains illegal Left Margin.')
+        if not self.base_properties['right_margin'] - 5 < self.margin['right'] \
+                < self.base_properties['right_margin'] + 5:
+            valid = False
+            errors.append(f'Contains illegal Right Margin.')
+        if not self.base_properties['top_margin'] - 5 < self.margin['top'] < self.base_properties['top_margin'] + 5:
+            valid = False
+            errors.append(f'Contains illegal Top Margin.')
+        if not self.base_properties['bottom_margin'] - 5 < self.margin['bottom'] \
+                < self.base_properties['bottom_margin'] + 5:
+            valid = False
+            errors.append(f'Contains illegal Bottom Margin.')
+        if not valid:
+            if self.errors is None:
+                self.errors = []
+            for error in errors:
+                self.errors.append(error)
+        return valid
+
+    def check_page_dimensions(self, page_no, coordinates):
+        errors = []
+        valid = True
+        self.page_height = round(coordinates[3], 2)
+        self.page_width = round(coordinates[2], 2)
+        if not self.base_properties['page_height'] - 5 < coordinates[3] < self.base_properties['page_height'] + 5:
+            valid = False
+            errors.append(f'Contains illegal Page Height; Page: {page_no}')
+        if not self.base_properties['page_width'] - 5 < coordinates[2] < self.base_properties['page_width'] + 5:
+            valid = False
+            errors.append(f'Contains illegal Page Width; Page: {page_no}')
+        if not valid:
+            if self.errors is None:
+                self.errors = []
+            for error in errors:
+                self.errors.append(error)
+        return valid
 
 
 if __name__ == '__main__':
