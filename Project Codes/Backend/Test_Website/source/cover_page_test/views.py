@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .pages import CoverPage
 from .pages import DocumentTest
 from django.http import HttpResponse
+from users.forms import RegistrationForm
 
 
 def index(request):
@@ -40,7 +41,8 @@ def login(request):
 
 
 def register(request):
-    return render(request, 'pages/register.html')
+    form = RegistrationForm(request.POST or None)
+    return render(request, 'pages/register.html', {'form': form})
 
 
 def test(request):

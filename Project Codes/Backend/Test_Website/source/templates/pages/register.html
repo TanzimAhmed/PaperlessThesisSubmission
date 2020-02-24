@@ -8,11 +8,25 @@
           {% csrf_token %}
           <div class="input-fields">
             <h1 class="form_header">Register</h1>
+            {{ form.username }}
+            {{ form.username.errors }}
+            {{ form.first_name }}
+            {{ form.first_name.errors }}
+            {{ form.last_name }}
+            {{ form.last_name.errors }}
+            {{ form.email }}
+            {{ form.email.errors }}
+            {{ form.password }}
+            {{ form.password.errors }}
+            {{ form.confirm_password }}
+            {{ form.confirm_password.errors }}
+            <!--
             <input type="text" class="input" name="user_id" placeholder="Student ID">
             <input type="text" class="input" name="first_name" placeholder="First Name">
             <input type="text" class="input" name="last_name" placeholder="Last Name">
             <input type="password" class="input" name="password" placeholder="Password">
             <input type="password" class="input" name="confirm_password" placeholder="Confirm Password">
+            -->
           </div>
           <div class="form_button">
             <button class="btn button" type="submit">Register</button>
