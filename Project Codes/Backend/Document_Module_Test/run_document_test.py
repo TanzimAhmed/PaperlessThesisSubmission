@@ -11,6 +11,7 @@ else:
         print(error)
 print('\n\n')
 print('Fonts:', pdf_test.fonts)
+print('Line Height:', pdf_test.line_height)
 print('Margins:', pdf_test.margin)
 print('Height, Width:', pdf_test.page_height, pdf_test.page_width)
 # print(pdf_test.line_height)
