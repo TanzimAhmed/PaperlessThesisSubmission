@@ -8,8 +8,18 @@
           {% csrf_token %}
           <div class="input-fields">
             <h1 class="form_header">Login</h1>
+            {% if error %}
+              <p class="errorlist">{{ error }}</p>
+            {% endif %}
+            {{ form.non_field_errors }}
+            {{ form.username }}
+            {{ form.username.errors }}
+            {{ form.password }}
+            {{ form.password.errors }}
+            <!--
             <input type="text" class="input" name="user_id" placeholder="Student ID">
             <input type="password" class="input" name="password" placeholder="Password">
+            -->
           </div>
           <div class="form_button">
             <button class="btn button" type="submit">Login</button>

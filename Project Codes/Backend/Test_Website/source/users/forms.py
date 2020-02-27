@@ -19,3 +19,19 @@ class RegistrationForm(forms.ModelForm):
         self.fields['password'].widget.attrs.update({'class': 'input', 'placeholder': 'Password'})
 
     confirm_password.widget.attrs.update({'class': 'input', 'placeholder': 'Confirm Password'})
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data['password']
+        confirmation = cleaned_data['confirm_password']
+
+        if password != confirmation:
+            self.add_error('password', 'Password does not match with the confirmation field')
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    username.widget.attrs.update({'class': 'input', 'placeholder': 'Student ID'})
+    password.widget.attrs.update({'class': 'input', 'placeholder': 'Password'})

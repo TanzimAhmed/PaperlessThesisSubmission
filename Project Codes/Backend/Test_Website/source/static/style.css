@@ -388,3 +388,7 @@ nav {
   border-top: 1px solid white;
 }
 /* endsection Content Display by Tanzim*/
+
+.errorlist {
+  color: red;
+}
