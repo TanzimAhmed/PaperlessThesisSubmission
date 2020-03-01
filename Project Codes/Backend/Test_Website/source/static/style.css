@@ -6,9 +6,8 @@ body {
 
 /* section Create Cover Page Form by Fahad */
 /**/
-@import url('https://fonts.googleapis.com/css?family=Roboto');
 
-
+/*
 .wrapper {
   height: 100vh;
   padding-top: 7rem;
@@ -36,7 +35,7 @@ body {
   margin: auto;
   padding: 30px;
   border-radius: 5px;
-  /* box-shadow: 0 0 10px rgba(0,0,0,0.3); */
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
 .form_container {
@@ -97,6 +96,7 @@ body {
   padding: 1.2rem;
   width: 100%;
 }
+*/
 
 /*
 ::-webkit-input-placeholder {
@@ -112,6 +112,7 @@ body {
   color: #c5ecfd;
 }
 */
+/*
 
 .button {
     background: #00b894;
@@ -153,7 +154,61 @@ body {
     height: 100%;
   }
 }
+*/
 /* endsection Create Cover Page Form by Fahad */
+
+/* section Forms by Fahad */
+.form_background {
+  background: url('/static/images/bg_2.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+.forms {
+  width: 450px;
+  background: rgba(255, 255, 255, 0.3);
+  color: #1c8adb;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  
+  padding: 3rem;
+}
+
+.submit_button_container {
+  position: relative;
+  width: 100%;
+  text-align: right;
+}
+
+.submit_button_container .btn {
+  width: 8rem;
+  height: 2.8rem;
+}
+
+.forms input {
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.6);
+  /* background-color: rgba(235, 235, 235, 0.6); */
+  padding: 1.5rem;
+  outline: none;
+  height: 40px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+@media screen and (max-width: 600px){
+  .forms {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+/* endsection Forms by Fahad */
 
 /* section Demo Editor by Tanzim */
 .editor_wrapper {
@@ -297,6 +352,14 @@ nav {
 .temp {
   height: 1200px;
 }
+
+.form_header {
+  color: rgba(0, 0, 0, 0.55);
+  text-align: left;
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+}
 /* section Navigation Bar by Tanzim */
 /* section Home Page by Tanzim */
 #hero_image {
@@ -391,4 +454,8 @@ nav {
 
 .errorlist {
   color: red;
+  background-color: rgba(216, 216, 216, 0.4);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
 }

@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-
+app_name = 'creative_contents'
 urlpatterns = [
     path('', views.index, name='index'),
     path('<str:link>/show/', views.show, name='content_display'),

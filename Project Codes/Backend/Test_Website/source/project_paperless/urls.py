@@ -19,7 +19,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', include('users.urls')),
     path('', include('cover_page_test.urls')),
+    path('paper/', include('documents.urls')),
     path('content/', include('creative_content.urls')),
     path('admin/', admin.site.urls),
 ]

@@ -1,0 +1,24 @@
+from django.core.files.storage import FileSystemStorage
+from django.db import models
+from os.path import join as join_dir
+from django.conf import settings
+
+
+# Create your models here.
+paper_storage = FileSystemStorage(location=join_dir(settings.BASE_DIR, 'storage/'))
+
+
+def user_directory_path(instance, file_name):
+    print('Printing instance', instance)
+    return f'{instance.username}/{file_name}'
+
+
+class Document(models.Model):
+    username = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    instructor_id = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='instructor_id')
+    paper = models.FileField(storage=paper_storage, upload_to=user_directory_path)
+    information = models.CharField(max_length=250)
+    status = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f'Paper: {self.paper.path}, submitted by: {self.username}, to {self.instructor_id}'
