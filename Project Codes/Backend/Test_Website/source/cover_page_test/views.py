@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from .pages import CoverPage
 from django.contrib.auth import authenticate, login, logout

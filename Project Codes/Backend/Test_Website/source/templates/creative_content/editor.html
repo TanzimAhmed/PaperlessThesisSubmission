@@ -19,7 +19,7 @@
     <form action="/content/upload/" id="image_upload_form" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="editor_inputs">
-        <input type="file" class="input" name="upload_file" id="">
+        {{ form.item }}
         <button type="submit" class="btn btn-outline-dark">Upload Image / Video</button>
       </div>
     </form>

@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+
+from django.contrib.messages import constants as message_constants
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -94,6 +96,9 @@ database = {
 DATABASES = {
     'default': database['sqlite3']
 }
+
+
+MESSAGE_TAGS = {message_constants.ERROR: 'danger'}
 
 
 # Password validation

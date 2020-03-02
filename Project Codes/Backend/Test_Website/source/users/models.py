@@ -12,5 +12,5 @@ class User(AbstractUser):
         max_length=10,
         unique=True,
         primary_key=True,
-        validators=[UnicodeUsernameValidator(), MinLengthValidator(8)],
+        validators=[UnicodeUsernameValidator(), MinLengthValidator(3)],
         verbose_name='username')

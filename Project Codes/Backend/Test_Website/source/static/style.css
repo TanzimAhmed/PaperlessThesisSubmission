@@ -451,7 +451,7 @@ nav {
   border-top: 1px solid white;
 }
 /* endsection Content Display by Tanzim*/
-
+/* section Error Messages by Tanzim */
 .errorlist {
   color: red;
   background-color: rgba(216, 216, 216, 0.4);
@@ -459,3 +459,13 @@ nav {
   padding-bottom: 0.5rem;
   padding-right: 0.5rem;
 }
+
+.flash_messages {
+  position: absolute; 
+  top: 3.5rem;
+  width: 100%; 
+  text-align: center;
+  z-index: 4; 
+}
+/* endsection Error Messages by Tanzim */
+

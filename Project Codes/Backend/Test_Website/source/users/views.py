@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegistrationForm, LoginForm
@@ -14,14 +15,11 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                messages.success(request, "You're Logged in SUCCESSFULLY")
                 return redirect('/')
         else:
-            error = 'Username or Password Does Not match'
-    context = {
-        'form': form,
-        'error': error
-    }
-    return render(request, 'users/login.html', context)
+            messages.error(request, 'Username or Password Does Not match')
+    return render(request, 'users/login.html', {'form': form})
 
 
 def register(request):
@@ -34,10 +32,12 @@ def register(request):
         password = form.cleaned_data['password']
         user.set_password(password)
         user.save()
-        form = RegistrationForm()
+        messages.success(request, "Account created SUCCESSFULLY")
+        return redirect('users:login')
     return render(request, 'users/register.html', {'form': form})
 
 
 def logout_user(request):
     logout(request)
+    messages.success(request, "You're Logged out SUCCESSFULLY")
     return redirect('/')

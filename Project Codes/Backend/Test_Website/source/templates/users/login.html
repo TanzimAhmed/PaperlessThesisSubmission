@@ -7,9 +7,6 @@
         {% csrf_token %}
         <div class="input-fields">
           <h1 class="form_header">Login</h1>
-          {% if error %}
-            <p class="errorlist">{{ error }}</p>
-          {% endif %}
           {{ form.non_field_errors }}
           {{ form.username }}
           {{ form.username.errors }}

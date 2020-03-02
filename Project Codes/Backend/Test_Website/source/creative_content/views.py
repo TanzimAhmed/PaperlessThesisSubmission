@@ -1,12 +1,14 @@
-from django.shortcuts import render, redirect, Http404
-from .models import Content
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, Http404, HttpResponse
+from .models import Content, Resource
 from .methods import generate_link
-from django.core.files.storage import FileSystemStorage
+from .forms import ResourceForm
 
 # Create your views here.
 
 
 def index(request):
+    print(Resource.objects.all().delete())
     contents = Content.objects.all()
     print(contents)
     context = {'contents': contents}
@@ -17,7 +19,9 @@ def demo_editor(request):
     return render(request, 'pages/demo_editor.html')
 
 
+@login_required(login_url='users:login')
 def editor(request):
+    form = ResourceForm()
     if request.method == 'POST':
         link = generate_link()
         user = 'User 1'
@@ -28,18 +32,16 @@ def editor(request):
         url = f'/content/{link}/show'
         print(url)
         return redirect(url)
-    return render(request, 'creative_content/editor.html')
+    return render(request, 'creative_content/editor.html', {'form': form})
 
 
 def upload_file(request):
-    if request.method == 'POST' and request.FILES is not None:
-        print('Printing Files' + str(request.FILES))
-        uploaded_file = request.FILES['upload_file']
-        file_system = FileSystemStorage()
-        file_name = file_system.save(uploaded_file.name, uploaded_file)
-        url = file_system.url(file_name)
-        print(url)
-        return redirect('/')
+    form = ResourceForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        resource = form.save(commit=False)
+        resource.user = request.user
+        resource.save()
+    return redirect('/')
 
 
 def show(request, link):

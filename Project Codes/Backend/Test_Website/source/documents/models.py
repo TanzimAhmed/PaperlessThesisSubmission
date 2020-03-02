@@ -9,12 +9,12 @@ paper_storage = FileSystemStorage(location=join_dir(settings.BASE_DIR, 'storage/
 
 
 def user_directory_path(instance, file_name):
-    return f'{instance.username}/{file_name}'
+    return f'{instance.user}/{file_name}'
 
 
 class Document(models.Model):
-    username = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    instructor_id = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='instructor')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    instructor = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='instructor')
     paper = models.FileField(storage=paper_storage, upload_to=user_directory_path)
     information = models.CharField(max_length=250)
     status = models.CharField(max_length=10)
