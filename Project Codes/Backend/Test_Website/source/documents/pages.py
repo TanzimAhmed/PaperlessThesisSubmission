@@ -308,6 +308,7 @@ class PdfDocumentTest:
                     self.get_margins(block['bbox'])
                     block_no += 1
         margins = self.check_margins() and margins
+        self.document.close()
         if dimensions and justified and fonts and margins:
             return True
         else:
@@ -449,28 +450,3 @@ class PdfDocumentTest:
         print(min(y0))
         print(max(y1))
         print(f'Fonts: {fonts}')
-
-
-if __name__ == '__main__':
-    members = [
-        {
-            'name': 'sumiya noorjahan',
-            'id': '151 2065 642'
-        }, {
-            'name': 'fareha alamgir',
-            'id': '152 1464 642'
-        }, {
-            'name': 'fahad bin bari shovo',
-            'id': '161 0162 042'
-        }, {
-            'name': 'shadat hossain pabel',
-            'id': '161 2332 042'
-        }, {
-            'name': 'tanzim al din ahmed',
-            'id': '162 1203 042'
-        }
-    ]
-
-    cover_page = CoverPage('cse 499a', '21', 'paperless thesis submission', 'dr. md shahriar karim', members)
-    cover_page.generate_page()
-    print('Page Generated')

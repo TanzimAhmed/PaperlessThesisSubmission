@@ -1,6 +1,6 @@
 from pages import DocumentTest, PdfDocumentTest
 
-pdf_test = PdfDocumentTest('test_template_.pdf')
+pdf_test = PdfDocumentTest('test_template.pdf')
 # pdf_test.print_properties()
 if pdf_test.is_valid_format():
     print('Format is Valid')
