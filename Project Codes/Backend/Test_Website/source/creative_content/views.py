@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, Http404, HttpResponse
+from django.core.exceptions import PermissionDenied
 from .models import Content, Resource
 from .methods import generate_link
-from .forms import ResourceForm
+from .forms import ContentForm, ResourceForm
 
 # Create your views here.
 
@@ -10,7 +11,6 @@ from .forms import ResourceForm
 def index(request):
     print(Resource.objects.all())
     contents = Content.objects.all()
-    print(contents)
     context = {'contents': contents}
     return render(request, 'creative_content/index.html', context)
 
@@ -20,39 +20,71 @@ def demo_editor(request):
 
 
 @login_required(login_url='users:login')
-def edit(request, link):
-    form = ResourceForm()
+def editor(request):
+    content_form = ContentForm(request.POST or None)
+    resource_form = ResourceForm()
     resources = request.user.resource_set.all()
-    print(request.user, resources)
-    try:
-        content = Content.objects.get(link=link)
-    except Content.DoesNotExist:
-        raise Http404('Link does not exist')
-    else:
-        context = {
-            'edit': True,
-            'form': form,
-            'resources': resources,
-            'content': content
-        }
+
+    if content_form.is_valid():
+        link = generate_link()
+        content = content_form.save(commit=False)
+        content.user = request.user
+        content.link = link
+        course = content_form.cleaned_data['course'].split('.')
+        content.course_code = course[0]
+        content.section = course[1]
+        content.save()
+        url = f'/content/{link}/show/'
+        return redirect(url)
+
+    context = {
+        'content_form': content_form,
+        'resource_form': resource_form,
+        'resources': resources
+    }
     return render(request, 'creative_content/editor.html', context)
 
 
 @login_required(login_url='users:login')
-def editor(request):
-    form = ResourceForm()
+def edit(request, link):
+    try:
+        content = Content.objects.get(link=link)
+    except Content.DoesNotExist:
+        raise Http404('Link does not exist')
+
+    if content.user != request.user:
+        raise PermissionDenied
+
+    data = {
+        'content': content.content,
+        'title': content.title,
+        'course': f'{content.course_code}.{content.section}'
+    }
+    content_form = ContentForm(data)
+    resource_form = ResourceForm()
     resources = request.user.resource_set.all()
+
     if request.method == 'POST':
-        link = generate_link()
-        user = 'User 1'
-        course_id = request.POST['course_id'].split('.')
-        content = Content(link=link, title=request.POST['title'], content=request.POST['content'], user=request.user,
-                          course_code=course_id[0], section=course_id[1])
-        content.save()
-        url = f'/content/{link}/show'
-        print(url)
-        return redirect(url)
-    return render(request, 'creative_content/editor.html', {'form': form, 'resources': resources})
+        content_form = ContentForm(request.POST)
+        if content_form.is_valid():
+            edited_data = content_form.cleaned_data
+            content.content = edited_data['content']
+            content.title = edited_data['title']
+            course = edited_data['course'].split('.')
+            content.course_code = course[0]
+            content.section = course[1]
+            content.save()
+            url = f'/content/{link}/show/'
+            return redirect(url)
+
+    context = {
+        'edit': True,
+        'content_form': content_form,
+        'resource_form': resource_form,
+        'resources': resources,
+        'content': content
+    }
+    return render(request, 'creative_content/editor.html', context)
 
 
 def upload_file(request):
