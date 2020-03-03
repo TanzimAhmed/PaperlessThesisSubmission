@@ -11,9 +11,15 @@
           <option value="CSE 499A.21">CSE 499A.21</option>
           <option value="CSE 499B.15">CSE 499B.15</option>
         </select>
-        <input type="text" class="input" id="right" name="title" placeholder="Title">
+        <input type="text" class="input" id="right" name="title" 
+        value={% if edit %} {{ content.title }} {% endif %} 
+        placeholder="Title">
       </div>
-      <textarea name="content" id="input" cols="80" rows="10" data-sample-short></textarea>
+      <textarea name="content" id="input" cols="80" rows="10" data-sample-short>
+        {% if edit %}
+          {{ content.content }}
+        {% endif %}
+      </textarea>
       <input type="submit" style="display: none;">
     </form>
     <form action="/content/upload/" id="image_upload_form" method="POST" enctype="multipart/form-data">
@@ -27,8 +33,24 @@
   <div class="editor_items" id="right">
     <h3>Preview Here</h3>
     <hr>
-    <p id="output"></p>
+    <p id="output">
+      {% if edit %}
+        {{ content.content | safe }}
+      {% endif %}
+    </p>
   </div>
+</div>
+
+<div>
+  <h1>Your Images</h1>
+  <h2>Recently Uploaded</h2>
+  <ul id="resources"></ul>
+  <h2>Previous Uploads</h2>
+  <ul>
+    {% for resource in resources %}
+      <li>{{ resource.item.url }}</li>
+    {% endfor %}
+  </ul>
 </div>
 
 <!-- CK Editor JS includes-->
@@ -126,6 +148,13 @@
     let xhr = new XMLHttpRequest();
     xhr.open('POST', form.getAttribute('action'), true);
     console.log(form_data.get('upload_file'));
+    xhr.onload = function() {
+      if (this.status == 200) {
+        let item_node = document.createElement('li');
+            item_node.innerHTML = this.responseText;
+            document.querySelector('#resources').appendChild(item_node);
+      }
+    }
     xhr.send(form_data);
     console.log('File Uploaded');
   }

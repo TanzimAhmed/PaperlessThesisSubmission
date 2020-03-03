@@ -8,7 +8,7 @@ from .forms import ResourceForm
 
 
 def index(request):
-    print(Resource.objects.all().delete())
+    print(Resource.objects.all())
     contents = Content.objects.all()
     print(contents)
     context = {'contents': contents}
@@ -20,19 +20,39 @@ def demo_editor(request):
 
 
 @login_required(login_url='users:login')
+def edit(request, link):
+    form = ResourceForm()
+    resources = request.user.resource_set.all()
+    print(request.user, resources)
+    try:
+        content = Content.objects.get(link=link)
+    except Content.DoesNotExist:
+        raise Http404('Link does not exist')
+    else:
+        context = {
+            'edit': True,
+            'form': form,
+            'resources': resources,
+            'content': content
+        }
+    return render(request, 'creative_content/editor.html', context)
+
+
+@login_required(login_url='users:login')
 def editor(request):
     form = ResourceForm()
+    resources = request.user.resource_set.all()
     if request.method == 'POST':
         link = generate_link()
         user = 'User 1'
         course_id = request.POST['course_id'].split('.')
-        content = Content(link=link, title=request.POST['title'], content=request.POST['content'], user_name=user,
+        content = Content(link=link, title=request.POST['title'], content=request.POST['content'], user=request.user,
                           course_code=course_id[0], section=course_id[1])
         content.save()
         url = f'/content/{link}/show'
         print(url)
         return redirect(url)
-    return render(request, 'creative_content/editor.html', {'form': form})
+    return render(request, 'creative_content/editor.html', {'form': form, 'resources': resources})
 
 
 def upload_file(request):
@@ -41,7 +61,9 @@ def upload_file(request):
         resource = form.save(commit=False)
         resource.user = request.user
         resource.save()
-    return redirect('/')
+        return HttpResponse(resource.item.url)
+    else:
+        return HttpResponse('Resource not valid, please upload again')
 
 
 def show(request, link):
