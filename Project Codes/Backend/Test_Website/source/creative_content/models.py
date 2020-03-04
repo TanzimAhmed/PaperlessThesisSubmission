@@ -1,8 +1,7 @@
 from django.db import models
 
+
 # Create your models here.
-
-
 def user_directory_path(instance, file_name):
     return f'uploads/{instance.user}/{file_name}'
 

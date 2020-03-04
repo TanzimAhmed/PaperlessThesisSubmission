@@ -1,25 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegistrationForm, LoginForm
-
-
-def login_user(request):
-    if request.user.is_authenticated:
-        return redirect('/')
-    form = LoginForm(request.POST or None)
-    error = None
-    if form.is_valid():
-        data = form.cleaned_data
-        user = authenticate(username=data['username'], password=data['password'])
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                messages.success(request, "You're Logged in SUCCESSFULLY")
-                return redirect('/')
-        else:
-            messages.error(request, 'Username or Password Does Not match')
-    return render(request, 'users/login.html', {'form': form})
+from .forms import RegistrationForm, LoginForm, CreateGroupForm
+from .models import Group, User
 
 
 def register(request):
@@ -37,7 +20,49 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
+def login_user(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    form = LoginForm(request.POST or None)
+    if form.is_valid():
+        data = form.cleaned_data
+        user = authenticate(username=data['username'], password=data['password'])
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                messages.success(request, "You're Logged in SUCCESSFULLY")
+                return redirect('/')
+        else:
+            messages.error(request, 'Username or Password Does Not match')
+    return render(request, 'users/login.html', {'form': form})
+
+
 def logout_user(request):
     logout(request)
     messages.success(request, "You're Logged out SUCCESSFULLY")
     return redirect('/')
+
+
+def dashboard(request):
+    print(Group.objects.first().members.all())
+    group_form = CreateGroupForm()
+    return render(request, 'users/dashboard.html', {'group_form': group_form})
+
+
+def add_group(request):
+    group_form = CreateGroupForm(request.POST)
+    group_form.set_user(request.user.username)
+    print(request.user.username)
+    if group_form.is_valid():
+        group = group_form.save(commit=False)
+        cleaned_data = group_form.cleaned_data
+        course = cleaned_data['course'].split('.')
+        group.course_code = course[0]
+        group.section = course[1]
+        group.upload = False
+        group.save()
+        group.members.add(request.user)
+        for member in cleaned_data['members']:
+            group.members.add(member)
+        print(group.members.all())
+    return render(request, 'users/dashboard.html', {'group_form': group_form})

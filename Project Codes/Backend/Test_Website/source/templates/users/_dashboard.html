@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="container">
+  <h1>Welcome {{ request.user.first_name }}</h1>
+  {% if errors %}
+    <p>Errors</p>
+    <ul>
+      {% for error in errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <form action="/groups/add/" method="POST">
+    {% csrf_token %}
+    {{ group_form.as_p }}
+    <button type="submit">Add Members</button>
+  </form>
+</div>
+{% endblock %}
