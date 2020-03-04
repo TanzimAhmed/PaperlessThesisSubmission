@@ -521,7 +521,7 @@ background-color: #f1f1f1;
 width: 500px;
 margin: 20px;
 height: 500px;
-font-size: 30px;
+/*font-size: 30px;*/
 }
 .flex-containerse {
 display: flex;
@@ -532,7 +532,7 @@ background-color: #f1f1f1;
 width: 48.2%;
 margin: 5px;
 height: 100%;
-font-size: 30px;
+/* font-size: 30px; */
 }
 .card {
 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */

@@ -85,3 +85,16 @@ class CreateGroupForm(forms.ModelForm):
                     if member in cleaned_data['members']:
                         self.add_error(f'member_{i}', f"Student ID: {cleaned_data[f'member_{i}']} is entered before.")
                     cleaned_data['members'].append(member)
+
+
+class GroupSelectForm(forms.Form):
+    GROUPS = []
+
+    groups = forms.ChoiceField(choices=GROUPS)
+
+    def update_choice(self, user):
+        self.GROUPS = []
+        groups = user.group_set.all()
+        for group in groups:
+            self.GROUPS.append((group.id, group.get_string()))
+        self.fields['groups'].choices = self.GROUPS

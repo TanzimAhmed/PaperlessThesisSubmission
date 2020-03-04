@@ -5,9 +5,8 @@
   <div class="info">
 
     <div class="stcard">
-      <h1>Student Info</h1>
-      <p>Student Name</p>
-      <p>Student Id</p>
+      <h1>{{ request.user.get_full_name }}</h1>
+      <p>{{ request.user.username }}</p>
       <p>Student Semester </p>
   </div>
   </div>
@@ -101,12 +100,14 @@
       <h5 class="card-title">Session</h5>
     </div>
     <div class="card">
-      <form>
-      <div class="form-group">
-        <input type="file"class="form-control-file" id="exampleFormControlFile1">
-      </div>
-    </form>
-      <a href="#" class="btn btn-primary">Submit your Paper</a>
+      <a href="{% url 'users:add_group' %}" class="btn btn-primary">Create New Group</a>
+      <form action="" method="POST">
+        <div class="form-group">
+          <p>Select a Group and Submit your paper</p>
+          {{ groups_form.as_p }}
+          <button type="submit" class="btn btn-primary">Go to Submit Paper</button>
+        </div>
+      </form>
     </div>
   </div>
   </div></div>
