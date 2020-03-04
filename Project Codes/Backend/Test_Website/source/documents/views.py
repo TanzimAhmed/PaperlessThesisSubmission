@@ -11,7 +11,7 @@ def upload_paper(request):
     form = DocumentForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         document = form.save(commit=False)
-        document.user = request.user
+        document.group = None
         document.instructor = request.user
         document.status = 'UPLOADED'
         document.information = 'None'

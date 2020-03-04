@@ -100,8 +100,9 @@
       <h5 class="card-title">Session</h5>
     </div>
     <div class="card">
-      <a href="{% url 'users:add_group' %}" class="btn btn-primary">Create New Group</a>
+      <a href="{% url 'learners:add_group' %}" class="btn btn-primary">Create New Group</a>
       <form action="" method="POST">
+        {% csrf_token %}
         <div class="form-group">
           <p>Select a Group and Submit your paper</p>
           {{ groups_form.as_p }}
