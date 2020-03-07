@@ -1,15 +1,18 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, Http404
 from .forms import CreateGroupForm, GroupSelectForm
+from documents.forms import DocumentForm
 from .models import Group
 
 
 # Create your views here.
 def dashboard(request):
-    print(Group.objects.all())
+    print(request.user.group_set.all())
     groups_form = GroupSelectForm(request.POST or None)
     groups_form.update_choice(request.user)
     if groups_form.is_valid():
-        return render(request, 'learners/request_submission.html', {'groups_form': groups_form})
+        group_id = groups_form.cleaned_data['groups']
+        return process_submission(request, group_id)
     return render(request, 'learners/dashboard.html', {'groups_form': groups_form})
 
 
@@ -28,18 +31,31 @@ def add_group(request):
         group.members.add(request.user)
         for member in cleaned_data['members']:
             group.members.add(member)
-        print(group.members.all())
-    return render(request, 'learners/_dashboard.html', {'group_form': group_form})
+        messages.success(request, "Group has been SUCCESSFULLY added, thank you!")
+        return redirect('learners:dashboard')
+    return render(request, 'learners/add_group.html', {'group_form': group_form})
 
 
-def request_submission(request):
-    groups_form = GroupSelectForm(request.POST)
-    groups_form.update_choice(request.user)
-    if groups_form.is_valid():
-        try:
-            group = Group.objects.get(id=groups_form.cleaned_data['groups'])
-        except Group.DoesNotExist:
-            raise Http404('Group Not Found')
-        else:
-            group.status = 'REQUESTED'
-    return redirect('documents:upload_paper')
+def process_submission(request, group_id):
+    try:
+        group = request.user.group_set.get(id=group_id)
+    except Group.DoesNotExist:
+        return Http404('Requested Group does Not exist')
+    if group.status == 'ACCEPTED':
+        form = DocumentForm(initial={'group_id': group_id})
+        return render(request, 'documents/demo_submission.html', {'form': form})
+    elif group.status == 'REQUESTED':
+        messages.info(
+            request,
+            "Your permission for paper submission request is Pending."
+            "To submit your paper, please visit again after the request has been accepted."
+        )
+    else:
+        group.status = 'REQUESTED'
+        group.save()
+        messages.info(
+            request,
+            "Request to Approve Submission had been sent to your Instructor."
+            "To submit your paper, please visit again after the request has been accepted."
+        )
+    return redirect('learners:dashboard')

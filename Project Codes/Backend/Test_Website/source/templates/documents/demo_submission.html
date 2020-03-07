@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="forms">
-  <form action="" method="POST" enctype="multipart/form-data">
+  <form action="{% url 'documents:upload_paper' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
     <button type="submit">Submit</button>

@@ -3,6 +3,8 @@ from .models import Document
 
 
 class DocumentForm(forms.ModelForm):
+    group_id = forms.IntegerField(widget=forms.HiddenInput())
+
     class Meta:
         model = Document
         fields = ['paper']

@@ -13,6 +13,8 @@ class Content(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     course_code = models.CharField(max_length=15)
     section = models.IntegerField()
+    date_created = models.DateTimeField(auto_now_add=True, editable=False)
+    date_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.link

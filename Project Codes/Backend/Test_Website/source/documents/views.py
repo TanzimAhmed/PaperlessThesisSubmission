@@ -1,34 +1,32 @@
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, Http404
+from django.core.exceptions import PermissionDenied
 from .forms import DocumentForm
-from .models import Document
 from .pages import PdfDocumentTest
+from learners.models import Group
+
 
 # Create your views here.
-
-
 def upload_paper(request):
     form = DocumentForm(request.POST or None, request.FILES or None)
     if form.is_valid():
+        try:
+            group = request.user.group_set.get(id=form.cleaned_data['group_id'])
+        except Group.DoesNotExist:
+            raise Http404('Group Not found')
+        if group.status != 'ACCEPTED':
+            raise PermissionDenied
+        print('uploading paper')
         document = form.save(commit=False)
-        document.group = None
-        document.instructor = request.user
-        document.status = 'UPLOADED'
-        document.information = 'None'
+        document.group = group
+        document.information = ''
         document.save()
         document_test = PdfDocumentTest(document.paper.path)
         if document_test.is_valid_format():
-            document.status = 'PENDING'
-            document.save()
-            messages.success(
-                request,
-                "Your Paper is successfully submitted to the instructor. Please wait for instructor's approval "
-                "and visit your dashboard again, later."
-            )
+            messages.success(request, "Your Paper is SUCCESSFULLY uploaded, thank you!")
             return render(request, 'documents/log.html')
         else:
             messages.warning(request, "Your paper contains errors")
             document.delete()
             return render(request, 'documents/log.html', {'errors': document_test.errors})
-    print('Documents', Document.objects.all())
     return render(request, 'documents/demo_submission.html', {'form': form})
