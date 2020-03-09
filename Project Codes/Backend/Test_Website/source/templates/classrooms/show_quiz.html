@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="ceiling"></div>
+  <h1>Your Classroom</h1>
+  <p>{{ classroom.get_string }}</p>
+  <h1>{{ quiz }}</h1>
+  <h1>Questions</h1>
+  {% for question in questions %}
+    <ul>
+      <li>
+        Question: {{ question }}
+        Options: {{ question.options }} <br>
+        Correct Answer: {{ question.answer }} <br>
+        Points: {{ question.points }} points <br>
+        Time: {{ question.time }} seconds <br>
+        ** Available after quiz is taken <br>
+        Total Responses: {{ question.total_responses }} <br>
+        Correct Responses: {{ question.correct_responses }} <br>
+      </li>
+    </ul>
+  {% endfor %}
+  <h1>Add Question</h1>
+  <form action="{% url 'classrooms:show_quiz' classroom.id quiz.id %}" method="POST">
+    {% csrf_token %}
+    {{ question_form.as_p }}
+    <button type="submit">Add Question</button>
+  </form>
+{% endblock %}

@@ -1,6 +1,6 @@
-from django.shortcuts import render, Http404
+from django.shortcuts import render, redirect, Http404
 from .models import Classroom, Quiz
-from .forms import CreateClassForm
+from .forms import CreateClassForm, QuizForm, QuestionForm
 from project_paperless.extras import unique_id
 from datetime import date
 
@@ -17,7 +17,20 @@ def show(request, class_id):
         classroom = request.user.classroom.get(id=class_id)
     except Classroom.DoesNotExist:
         raise Http404('Classroom Not found')
-    return render(request, 'classrooms/show.html', {'classroom': classroom})
+    quiz_form = QuizForm(request.POST or None)
+    if quiz_form.is_valid():
+        quiz = quiz_form.save(commit=False)
+        quiz.classroom = classroom
+        quiz.save()
+        return redirect('classrooms:show', class_id=class_id)
+    quizzes = classroom.quiz.all()
+    print(quizzes)
+    context = {
+        'classroom': classroom,
+        'quizzes': quizzes,
+        'quiz_form': quiz_form
+    }
+    return render(request, 'classrooms/show.html', context)
 
 
 def create(request):
@@ -34,27 +47,30 @@ def create(request):
     return render(request, 'classrooms/create.html', {'create_form': create_form})
 
 
-def test_create(request):
-    classroom = Classroom.objects.create(
-        id=unique_id(model=Classroom, length=4),
-        name='Class 1',
-        course_code='CSE 499B',
-        section='15',
-        instructor=request.user
-    )
-    classroom.save()
-    return render(request, 'classrooms/create.html')
-
-
-def add_quiz(request):
-    classroom = Classroom.objects.first()
-    quiz = classroom.quiz.create(title='Quiz 2', due_date=date(2020, 3, 9))
-    quiz.save()
-    question = quiz.question.create(text='This is question 1', options='Mango, Orange, Banana', answer='apple')
-    question.save()
-    print(classroom.quiz.all())
-    print(quiz.question.all())
-    return render(request, 'classrooms/create.html')
+def show_quiz(request, class_id, quiz_id):
+    try:
+        classroom = request.user.classroom.get(id=class_id)
+        quiz = classroom.quiz.get(id=quiz_id)
+    except Classroom.DoesNotExist:
+        raise Http404('Classroom Not found')
+    except Quiz.DoesNotExist:
+        raise Http404('Quiz Not found')
+    print(quiz)
+    question_form = QuestionForm(request.POST or None)
+    if question_form.is_valid():
+        question = question_form.save(commit=False)
+        question.quiz = quiz
+        question.save()
+        return redirect('classrooms:show_quiz', class_id=class_id, quiz_id=quiz_id)
+    questions = quiz.question.all()
+    print(questions)
+    context = {
+        'classroom': classroom,
+        'quiz': quiz,
+        'questions': questions,
+        'question_form': question_form
+    }
+    return render(request, 'classrooms/show_quiz.html', context)
 
 
 def participate_quiz(request):

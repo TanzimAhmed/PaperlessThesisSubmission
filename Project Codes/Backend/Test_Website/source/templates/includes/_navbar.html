@@ -5,6 +5,7 @@
       <li><a href="/content/">Content (Trial)</a></li>
       <li><a href="/content/editor/">Editor (Trial)</a></li>
       {% if request.user.is_authenticated %}
+        <li><a href="/classroom/">Classes (Trial)</a></li>
         <li><a href="/dashboard/">{{ request.user.first_name }}</a></li>
         <li><a href="/logout/">Logout</a></li>
       {% else %}

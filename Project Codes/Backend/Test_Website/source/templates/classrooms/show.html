@@ -4,4 +4,19 @@
   <div class="ceiling"></div>
   <h1>Your Classroom</h1>
   <p>{{ classroom.get_string }}</p>
+  <h1>Quizzes</h1>
+  {% for quiz in quizzes %}
+    <ul>
+      <li>
+        {{ quiz }} 
+        <a href="{% url 'classrooms:show_quiz' classroom.id quiz.id %}">view</a>
+      </li>
+    </ul>
+  {% endfor %}
+  <h1>Add Quiz</h1>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ quiz_form.as_p }}
+    <button type="submit">Add Quiz</button>
+  </form>
 {% endblock %}

@@ -46,6 +46,9 @@ class Quiz(models.Model):
                 performance.points += question.points
                 performance.correct_responses += 1
 
+    def get_string(self):
+        return f'{self.classroom.get_string()}, {self.title}'
+
     def __str__(self):
         return f'{self.title}'
 
