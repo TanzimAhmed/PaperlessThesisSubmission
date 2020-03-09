@@ -11,6 +11,14 @@ class Classroom(models.Model):
     students = models.ManyToManyField('users.User', related_name='classrooms')
     instructor = models.ForeignKey('users.User', related_name='classroom', on_delete=models.CASCADE)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['course_code', 'section', 'semester'], name='unique_classroom')
+        ]
+
+    def get_string(self):
+        return f'{self.course_code}.{self.section} ({self.semester}): {self.name}'
+
     def __str__(self):
         return f'{self.id}_{self.name}'
 

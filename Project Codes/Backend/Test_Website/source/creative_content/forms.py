@@ -1,12 +1,10 @@
 from django import forms
 from .models import Content, Resource
+from project_paperless.extras import COURSE_CHOICE_LIST
 
 
 class ContentForm(forms.ModelForm):
-    COURSES = [
-        ('CSE 499A.21', 'CSE 499A, Section 21'),
-        ('CSE 499B.15', 'CSE 499B, Section 15'),
-    ]
+    COURSES = COURSE_CHOICE_LIST
 
     course = forms.ChoiceField(choices=COURSES)
 

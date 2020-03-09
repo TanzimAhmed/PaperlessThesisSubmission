@@ -1,5 +1,20 @@
 import random
 import string
+from django.utils.timezone import datetime
+
+
+COURSE_CHOICE_LIST = [
+    ('CSE 499A.21', 'CSE 499A, Section 21'),
+    ('CSE 499B.15', 'CSE 499B, Section 15'),
+]
+
+year = datetime.now().year
+
+SEMESTER_CHOICE_LIST = [
+    (f'SP_{year}', f'Spring {year}'),
+    (f'SM_{year}', f'Summer {year}'),
+    (f'FL_{year}', f'Fall {year}'),
+]
 
 
 def unique_id(model, target_column='id', length=8):
