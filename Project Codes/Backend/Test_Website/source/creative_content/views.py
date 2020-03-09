@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, Http404, HttpResponse
 from django.core.exceptions import PermissionDenied
 from .models import Content, Resource
-from .methods import generate_link
+from project_paperless.extras import unique_id
 from .forms import ContentForm, ResourceForm
 
 # Create your views here.
@@ -26,7 +26,7 @@ def editor(request):
     resources = request.user.resource_set.all()
 
     if content_form.is_valid():
-        link = generate_link()
+        link = unique_id(model=Content, target_column='link')
         content = content_form.save(commit=False)
         content.user = request.user
         content.link = link

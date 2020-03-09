@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'users',
     'learners',
     'documents',
-    'creative_content'
+    'creative_content',
+    'classrooms'
 ]
 
 MIDDLEWARE = [

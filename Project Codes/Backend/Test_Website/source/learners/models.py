@@ -7,7 +7,7 @@ class Group(models.Model):
     section = models.IntegerField()
     name = models.CharField(max_length=128)
     status = models.CharField(max_length=12)
-    instructor = models.ForeignKey('users.User', related_name='course_instructor', on_delete=models.CASCADE)
+    instructor = models.ForeignKey('users.User', related_name='submission_group', on_delete=models.CASCADE)
     members = models.ManyToManyField('users.User')
 
     class Meta:

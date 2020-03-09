@@ -23,5 +23,8 @@ class Document(models.Model):
         self.paper.storage.delete(self.paper.name)
         super().delete(using=using, keep_parents=keep_parents)
 
+    def get_string(self):
+        return f'{self.group}_{self.paper.name}'
+
     def __str__(self):
         return f'Paper: {self.paper.name}, submitted by: {self.group}, to {self.group.instructor}'

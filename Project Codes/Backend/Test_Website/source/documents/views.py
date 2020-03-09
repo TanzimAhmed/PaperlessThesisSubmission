@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, Http404
+from django.http import FileResponse
 from django.core.exceptions import PermissionDenied
 from .forms import DocumentForm
 from .pages import PdfDocumentTest
@@ -30,3 +31,10 @@ def upload_paper(request):
             document.delete()
             return render(request, 'documents/log.html', {'errors': document_test.errors})
     return render(request, 'documents/demo_submission.html', {'form': form})
+
+
+def show(request):
+    document = request.user.group_set.first().document_set.first()
+    print(document.paper.path)
+    file = open(document.paper.path, 'rb')
+    return FileResponse(file, filename=document.paper.name, as_attachment=False)
