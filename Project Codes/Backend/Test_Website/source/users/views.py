@@ -1,4 +1,5 @@
 from django.core.mail import EmailMultiAlternatives
+from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect, Http404
 from django.views import View
@@ -6,14 +7,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
 from .models import Verification
-from .forms import StudentRegistrationForm, TeacherRegistrationForm, RegistrationForm, VerificationForm, LoginForm
-from project_paperless.utils import UserAuthenticationViews, random_code
+from .forms import StudentRegistrationVerificationForm, TeacherRegistrationVerificationForm, \
+    StudentRegistrationForm, TeacherRegistrationForm, VerificationForm, LoginForm
+from project_paperless.utils import UserAuthenticationViews, random_code, fetch_email_address
 
 
 class RegistrationView(UserAuthenticationViews):
     student_template = teacher_template = 'users/registration.html'
-    student_form_class = StudentRegistrationForm
-    teacher_form_class = TeacherRegistrationForm
+    student_form_class = StudentRegistrationVerificationForm
+    teacher_form_class = TeacherRegistrationVerificationForm
     email_html = 'emails/verification_email.html'
     email_text = 'emails/verification_email.txt'
     from_email = 'project.paperless20@gmail.com'
@@ -21,13 +23,25 @@ class RegistrationView(UserAuthenticationViews):
 
     def student_form_valid(self):
         token = random_code()
-        Verification.add_token(self.student_form.cleaned_data['username'], token)
-        form = VerificationForm()
+        print(token)
+        student_id = self.student_form.cleaned_data['username']
+        Verification.add_token(student_id, token)
+        email_address = f'{student_id}@northsouth.edu'
+        # self.send_verification_email(email_address, token)
+        form = VerificationForm(initial={'username': student_id})
+        messages.success(self.request, 'A Verification Code has been sent to your North South email address.')
         return render(self.request, 'users/verification.html', {'form': form})
 
     def teacher_form_valid(self):
-        print(self.teacher_form.cleaned_data['username'])
-        return render(self.request, 'emails/verification_email.html', {'token': 1234})
+        token = random_code()
+        print(token)
+        data = self.teacher_form.cleaned_data
+        email_address = fetch_email_address(data['department'], data['username'])
+        print(email_address)
+        Verification.add_token(email_address, token)
+        form = VerificationForm(initial={'username': email_address})
+        messages.success(self.request, 'A Verification Code has been sent to your North South email address.')
+        return render(self.request, 'users/verification.html', {'form': form})
 
     def send_verification_email(self, to_email, token):
         html = get_template(self.email_html)
@@ -42,26 +56,51 @@ class RegistrationView(UserAuthenticationViews):
 
 class RegistrationConfirmView(UserAuthenticationViews):
     student_template = teacher_template = 'users/register.html'
-    student_form_class = teacher_form_class = RegistrationForm
+    student_form_class = StudentRegistrationForm
+    teacher_form_class = TeacherRegistrationForm
+
+    def get(self, request, user_type):
+        raise Http404('Page Not Found')
 
     def student_form_valid(self):
+        token = self.student_form.cleaned_data['verification_code']
         user = self.student_form.save(commit=False)
-        print(user)
-        password = self.student_form.cleaned_data['password']
-        user.set_password(password)
-        user.save()
-        messages.success(self.request, "Account created SUCCESSFULLY")
-        return redirect('users:login')
+        try:
+            verification = Verification.objects.get(username=user.username)
+        except Verification.DoesNotExist:
+            messages.error(self.request, 'Invalid Verification Code')
+        else:
+            if verification.check_token(token) and not verification.is_educator:
+                password = self.student_form.cleaned_data['password']
+                user.set_password(password)
+                user.email = f'{user.username}@northsouth.edu'
+                user.save()
+                verification.delete()
+                messages.success(self.request, "Account created SUCCESSFULLY")
+            else:
+                messages.error(self.request, 'Invalid Verification Code')
+            return redirect('users:login student')
+        return self.student_view()
 
     def teacher_form_valid(self):
-        user = self.student_form.save(commit=False)
-        print(user)
-        password = self.student_form.cleaned_data['password']
-        user.set_password(password)
-        user.is_educator = True
-        user.save()
-        messages.success(self.request, "Account created SUCCESSFULLY")
-        return redirect('users:login')
+        token = self.teacher_form.cleaned_data['verification_code']
+        user = self.teacher_form.save(commit=False)
+        try:
+            verification = Verification.objects.get(username=user.email)
+        except Verification.DoesNotExist:
+            messages.error(self.request, 'Invalid Verification Code')
+        else:
+            if verification.check_token(token) and not verification.is_educator:
+                password = self.student_form.cleaned_data['password']
+                user.set_password(password)
+                user.is_educator = True
+                user.save()
+                verification.delete()
+                messages.success(self.request, "Account created SUCCESSFULLY")
+            else:
+                messages.error(self.request, 'Invalid Verification Code')
+            return redirect('users:login teacher')
+        return self.teacher_view()
 
 
 class LoginView(UserAuthenticationViews):
@@ -102,7 +141,27 @@ class VerificationView(View):
     def post(self, request):
         form = VerificationForm(request.POST)
         if form.is_valid():
-            pass
+            data = form.cleaned_data
+            try:
+                verification = Verification.objects.get(username=data['username'])
+            except Verification.DoesNotExist:
+                messages.error(request, 'Invalid Verification Code')
+            else:
+                if verification.check_token(data['code']):
+                    if verification.is_educator:
+                        form = TeacherRegistrationForm(initial={'email': data['username']})
+                        register_url = reverse('users:registration', args=['teacher'])
+                    else:
+                        form = StudentRegistrationForm(initial={'username': data['username']})
+                        register_url = reverse('users:registration', args=['student'])
+                    verification.update_time()
+                    context = {
+                        'form': form,
+                        'register_url': register_url
+                    }
+                    return render(request, 'users/register.html', context)
+                else:
+                    messages.error(request, 'Invalid Verification Code')
         return render(request, self.template, {'form': form})
 
 

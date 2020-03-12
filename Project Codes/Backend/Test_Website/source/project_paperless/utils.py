@@ -1,3 +1,4 @@
+from django.core.exceptions import SuspiciousOperation
 from django.views import View
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -92,6 +93,13 @@ def random_code(length=5):
 
 
 # Fetch Email Address from NSU Website
+def fetch_email_address(department, profile_url):
+    if department == 'ece':
+        return get_email_address_ece(profile_url)
+    elif department == 'others':
+        return get_email_address(profile_url)
+
+
 def get_email_address_ece(profile_url):
     try:
         response = requests.get(profile_url)
@@ -101,11 +109,9 @@ def get_email_address_ece(profile_url):
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             email = soup.find('a', {'class': 'email'})
-            print('Email Address is: ', email.text)
-        elif response.status_code == 404:
-            print('Requested Profile is Not Found')
+            return email.text
         else:
-            print('Server didnot send a correct response')
+            raise SuspiciousOperation('Profile Not Found')
 
 
 def get_email_address(profile_url):
@@ -117,11 +123,9 @@ def get_email_address(profile_url):
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             email = soup.select('td')[0].text.split('Email')[-1].split('Office')[0].strip(': ')
-            print(email)
-        elif response.status_code == 404:
-            print('Requested Profile is Not Found')
+            return email
         else:
-            print('Server didnot send a correct response')
+            raise SuspiciousOperation('Profile Not Found')
 
 
 # profile = input('Please enter your North South Profile URL: ')

@@ -3,7 +3,7 @@
 {% block body %}
   <div class="form_background">
     <div class="forms">
-      <form action="" method="POST">
+      <form action="{{ register_url }}" method="POST">
         {% csrf_token %}
         <div class="input-fields">
           <h1 class="form_header">Register</h1>
@@ -20,6 +20,8 @@
           {{ form.password.errors }}
           {{ form.confirm_password }}
           {{ form.confirm_password.errors }}
+          {{ form.verification_code }}
+          {{ form.verification_code.errors }}
           <!--
           <input type="text" class="input" name="user_id" placeholder="Student ID">
           <input type="text" class="input" name="first_name" placeholder="First Name">

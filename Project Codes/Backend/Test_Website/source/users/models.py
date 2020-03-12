@@ -21,7 +21,7 @@ class User(AbstractUser):
 class Verification(models.Model):
     username = models.CharField(primary_key=True, max_length=10)
     token = models.CharField(max_length=10)
-    is_verified = models.BooleanField(default=False)
+    is_educator = models.BooleanField(default=False)
     time_stamp = models.DateTimeField(auto_now=True)
 
     @classmethod
@@ -37,5 +37,15 @@ class Verification(models.Model):
             verification.save()
             return verification
 
-    def time_check(self):
-        return (self.time_stamp + timedelta(minutes=5)) >= current_time()
+    def update_time(self):
+        self.time_stamp = current_time()
+        self.save()
+
+    def check_token(self, token):
+        if (self.time_stamp + timedelta(minutes=5)) <= current_time():
+            self.delete()
+            return False
+        elif self.token != token:
+            return False
+        else:
+            return True

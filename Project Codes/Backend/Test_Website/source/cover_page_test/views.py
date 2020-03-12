@@ -4,7 +4,6 @@ from .pages import CoverPage
 from django.contrib.auth import authenticate, login, logout
 from .pages import DocumentTest
 from django.http import HttpResponse
-from users.forms import RegistrationForm, LoginForm
 
 
 def index(request):
@@ -57,25 +56,3 @@ def login_user(request):
         'error': error
     }
     return render(request, 'pages/login.html', context)
-
-
-def register(request):
-    if request.user.is_authenticated:
-        return redirect('/')
-    form = RegistrationForm(request.POST or None)
-    if form.is_valid():
-        user = form.save(commit=False)
-        password = form.cleaned_data['password']
-        user.set_password(password)
-        user.save()
-        form = RegistrationForm()
-    return render(request, 'pages/register.html', {'form': form})
-
-
-def logout_user(request):
-    logout(request)
-    return redirect('/')
-
-
-def test(request):
-    return
