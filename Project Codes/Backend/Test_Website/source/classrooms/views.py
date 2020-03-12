@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, Http404
+from django.http import JsonResponse
 from .models import Classroom, Quiz
 from .forms import CreateClassForm, QuizForm, QuestionForm
 from project_paperless.extras import unique_id
@@ -78,3 +79,33 @@ def participate_quiz(request):
     performance = quiz.performance_set.get(student=request.user)
     print(performance)
     return render(request, 'classrooms/create.html')
+
+
+def test_api(request):
+    questions = [
+        {
+            'question': 'Which is your favourite animal?',
+            'options': ['cat', 'dog', 'cow', 'goat'],
+            'points': 1,
+            'time': 60
+        },
+        {
+            'question': 'Which is your favourite color?',
+            'options': ['red', 'blue', 'green', 'orange'],
+            'points': 1,
+            'time': 60
+        },
+        {
+            'question': 'Which is your favourite food?',
+            'options': ['biriyani', 'tehari', 'khichuri', 'fried-rice'],
+            'points': 1,
+            'time': 60
+        },
+        {
+            'question': 'Which is your favourite fruit?',
+            'options': ['mango', 'orange', 'apple', 'banana'],
+            'points': 1,
+            'time': 60
+        }
+    ]
+    return JsonResponse({'questions': questions})
