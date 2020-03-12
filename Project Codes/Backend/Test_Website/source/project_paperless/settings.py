@@ -99,6 +99,13 @@ DATABASES = {
     'default': database['sqlite3']
 }
 
+# Email Settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'project.paperless20@gmail.com'
+EMAIL_HOST_PASSWORD = 'yosotivexrvarpsb'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 
 MESSAGE_TAGS = {message_constants.ERROR: 'danger'}
 

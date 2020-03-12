@@ -2,6 +2,42 @@ from django import forms
 from .models import User
 
 
+class StudentRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'class': 'input', 'placeholder': 'Student ID'})
+
+
+class TeacherRegistrationForm(forms.Form):
+    username = forms.URLField()
+
+    username.widget.attrs.update({'class': 'input', 'placeholder': 'North South Profile URL'})
+
+    def clean(self):
+        cleaned_data = super().clean()
+        length = len(cleaned_data['username'].strip('/').split('/'))
+        if ((cleaned_data['username'].find('http://ece.northsouth.edu/people/') != -1) and length != 5) or \
+           ((cleaned_data['username'].find('http://www.northsouth.edu/faculty-members/') != -1) and length != 7):
+            self.add_error('username', 'Please provide a Valid North South University Profile URL ')
+
+
+class VerificationForm(forms.Form):
+    code = forms.CharField()
+
+    code.widget.attrs.update({'class': 'input', 'placeholder': 'Verification Code'})
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not cleaned_data['code'].isnumeric():
+            self.add_error('code', 'Code Must be a Numeric value')
+        if len(cleaned_data['code']) != 5:
+            self.add_error('code', 'Code Must be a 5 Characters long')
+
+
 class RegistrationForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
