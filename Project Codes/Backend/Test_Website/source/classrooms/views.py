@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, Http404
 from django.http import JsonResponse
 from .models import Classroom, Quiz
 from .forms import CreateClassForm, QuizForm, QuestionForm
-from project_paperless.extras import unique_id
+from project_paperless.utils import unique_id
 from datetime import date
 
 

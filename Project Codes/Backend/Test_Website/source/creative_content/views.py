@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, Http404, HttpResponse
 from django.core.exceptions import PermissionDenied
 from .models import Content, Resource
-from project_paperless.extras import unique_id
+from project_paperless.utils import unique_id
 from .forms import ContentForm, ResourceForm
 
 # Create your views here.

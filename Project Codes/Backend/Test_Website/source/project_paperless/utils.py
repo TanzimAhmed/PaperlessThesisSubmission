@@ -1,9 +1,11 @@
 from django.views import View
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
+from django.utils.timezone import datetime
 import random
 import string
-from django.utils.timezone import datetime
+import requests
+from bs4 import BeautifulSoup
 from .decorators import anonymous_user, educator_required, learner_required
 
 
@@ -87,6 +89,44 @@ def random_string(string_length):
 def random_code(length=5):
     digits = string.digits
     return ''.join(random.choice(digits) for i in range(length))
+
+
+# Fetch Email Address from NSU Website
+def get_email_address_ece(profile_url):
+    try:
+        response = requests.get(profile_url)
+    except requests.exceptions.MissingSchema:
+        print('Invalid URL')
+    else:
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            email = soup.find('a', {'class': 'email'})
+            print('Email Address is: ', email.text)
+        elif response.status_code == 404:
+            print('Requested Profile is Not Found')
+        else:
+            print('Server didnot send a correct response')
+
+
+def get_email_address(profile_url):
+    try:
+        response = requests.get(profile_url)
+    except requests.exceptions.MissingSchema:
+        print('Invalid URL')
+    else:
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            email = soup.select('td')[0].text.split('Email')[-1].split('Office')[0].strip(': ')
+            print(email)
+        elif response.status_code == 404:
+            print('Requested Profile is Not Found')
+        else:
+            print('Server didnot send a correct response')
+
+
+# profile = input('Please enter your North South Profile URL: ')
+# get_email_address_ece(profile.strip())
+# get_email_address(profile.strip())
 
 
 """

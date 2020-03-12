@@ -1,6 +1,6 @@
 from django import forms
 from .models import Classroom, Quiz, Question
-from project_paperless.extras import COURSE_CHOICE_LIST, SEMESTER_CHOICE_LIST
+from project_paperless.utils import COURSE_CHOICE_LIST, SEMESTER_CHOICE_LIST
 
 
 class CreateClassForm(forms.ModelForm):

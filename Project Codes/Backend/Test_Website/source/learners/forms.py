@@ -1,7 +1,7 @@
 from django import forms
 from users.models import User
 from .models import Group
-from project_paperless.extras import COURSE_CHOICE_LIST
+from project_paperless.utils import COURSE_CHOICE_LIST
 
 
 class CreateGroupForm(forms.ModelForm):

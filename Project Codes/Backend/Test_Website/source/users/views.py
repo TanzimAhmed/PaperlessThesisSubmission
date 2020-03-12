@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
 from .models import Verification
 from .forms import StudentRegistrationForm, TeacherRegistrationForm, RegistrationForm, VerificationForm, LoginForm
-from project_paperless.extras import UserAuthenticationViews, random_code
+from project_paperless.utils import UserAuthenticationViews, random_code
 
 
 class RegistrationView(UserAuthenticationViews):
