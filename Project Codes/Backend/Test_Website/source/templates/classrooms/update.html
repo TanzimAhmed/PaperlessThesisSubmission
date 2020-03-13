@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="ceiling"></div>
+  <h1>Your Classroom</h1>
+  <p>{{ question.quiz.classroom.get_string }}</p>
+  <h1>{{ question.quiz }}</h1>
+  <h1>Edit Quiz</h1>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Edit Quiz</button>
+  </form>
+{% endblock %}

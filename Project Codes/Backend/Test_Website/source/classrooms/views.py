@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, Http404
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views import View
 from .models import Classroom, Quiz, Performance
 from .forms import CreateClassForm, QuizForm, QuestionForm
 from project_paperless.utils import unique_id, UserViews
@@ -134,6 +135,96 @@ class ShowQuizView(UserViews):
         return quiz
 
 
+class UpdateQuizView(View):
+    template_name = 'classrooms/update.html'
+
+    @method_decorator(login_required(login_url='users:login'))
+    @method_decorator(educator_required)
+    def get(self, request, class_id, quiz_id):
+        quiz = self.get_quiz(class_id, quiz_id)
+        form = QuizForm(instance=quiz)
+        context = {
+            'quiz': quiz,
+            'form': form
+        }
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url='users:login'))
+    @method_decorator(educator_required)
+    def post(self, request, class_id, quiz_id):
+        quiz = self.get_quiz(class_id, quiz_id)
+        form = QuizForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            quiz.title = data['title']
+            quiz.due_date = data['due_date']
+            quiz.is_open = data['is_open']
+            quiz.save()
+            return redirect('classrooms:show_quiz', class_id=class_id, quiz_id=quiz_id)
+        context = {
+            'quiz': quiz,
+            'form': form
+        }
+        return render(request, self.template_name, context)
+
+    def get_quiz(self, class_id, quiz_id):
+        try:
+            classroom = self.request.user.classroom.get(id=class_id)
+            quiz = classroom.quiz.get(id=quiz_id)
+
+        except Classroom.DoesNotExist:
+            raise Http404('Classroom Not found')
+        except Quiz.DoesNotExist:
+            raise Http404('Quiz Not found')
+        return quiz
+
+
+class UpdateQuestionView(View):
+    template_name = 'classrooms/update.html'
+
+    @method_decorator(login_required(login_url='users:login'))
+    @method_decorator(educator_required)
+    def get(self, request, class_id, quiz_id, question_id):
+        question = self.get_question(class_id, quiz_id, question_id)
+        form = QuestionForm(instance=question)
+        context = {
+            'question': question,
+            'form': form
+        }
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url='users:login'))
+    @method_decorator(educator_required)
+    def post(self, request, class_id, quiz_id, question_id):
+        question = self.get_question(class_id, quiz_id, question_id)
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            question.text = data['text']
+            question.options = data['options']
+            question.answer = data['answer']
+            question.points = data['points']
+            question.time = data['time']
+            question.save()
+            return redirect('classrooms:show_quiz', class_id=class_id, quiz_id=quiz_id)
+        context = {
+            'question': question,
+            'form': form
+        }
+        return render(request, self.template_name, context)
+
+    def get_question(self, class_id, quiz_id, question_id):
+        try:
+            classroom = self.request.user.classroom.get(id=class_id)
+            quiz = classroom.quiz.get(id=quiz_id)
+            question = quiz.question.get(id=question_id)
+        except Classroom.DoesNotExist:
+            raise Http404('Classroom Not found')
+        except Quiz.DoesNotExist:
+            raise Http404('Quiz Not found')
+        return question
+
+
 @login_required(login_url='users:login')
 @educator_required
 def create(request):
@@ -150,11 +241,40 @@ def create(request):
     return render(request, 'classrooms/create.html', {'create_form': create_form})
 
 
-def participate_quiz(request):
-    quiz = Quiz.objects.last()
+@login_required(login_url='users:login')
+@educator_required
+def quiz_status(request, class_id, quiz_id, status):
+    if request.method == 'GET':
+        raise Http404('Page Not Found')
+    try:
+        classroom = request.user.classroom.get(id=class_id)
+        quiz = classroom.quiz.get(id=quiz_id)
+    except Classroom.DoesNotExist:
+        raise Http404('Classroom Not found')
+    except Quiz.DoesNotExist:
+        raise Http404('Quiz Not found')
+    if status == 'start':
+        quiz.is_running = True
+        quiz.save()
+    elif status == 'stop':
+        quiz.is_running = False
+        quiz.save()
+    return redirect('classrooms:show_quiz', class_id=class_id, quiz_id=quiz_id)
+
+
+@login_required(login_url='users:login')
+@learner_required
+def participate_quiz(request, class_id, quiz_id):
+    try:
+        classroom = request.user.classroom.get(id=class_id)
+        quiz = classroom.quiz.get(id=quiz_id)
+    except Classroom.DoesNotExist:
+        raise Http404('Classroom Not found')
+    except Quiz.DoesNotExist:
+        raise Http404('Quiz Not found')
     performance = quiz.performance_set.get(student=request.user)
     print(performance)
-    return render(request, 'classrooms/create.html')
+    return render(request, 'classrooms/index.html')
 
 
 def test_api(request):
