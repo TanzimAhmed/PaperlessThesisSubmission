@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="ceiling"></div>
+  <h1>Your Classroom</h1>
+  <p>{{ classroom.get_string }}</p>
+  <h1>Quizzes</h1>
+  {% for quiz in quizzes %}
+    <ul>
+      {% if quiz.is_open %}
+      <li>
+        {{ quiz }} 
+        <a href="{% url 'classrooms:show_quiz' classroom.id quiz.id %}">view</a>
+      </li>
+      {% endif %}
+    </ul>
+  {% endfor %}
+{% endblock %}

@@ -27,6 +27,8 @@ class Quiz(models.Model):
     title = models.CharField(max_length=128)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='quiz')
     students = models.ManyToManyField('users.User', related_name='quizzes', through='Performance')
+    is_open = models.BooleanField(default=False)
+    is_running = models.BooleanField(default=False)
     due_date = models.DateField()
 
     class Meta:
@@ -59,6 +61,7 @@ class Performance(models.Model):
     points = models.IntegerField(default=0)
     response = models.CharField(max_length=25, default='')
     correct_responses = models.IntegerField(default=0)
+    time_stamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.quiz.classroom}_{self.quiz}_{self.points}'

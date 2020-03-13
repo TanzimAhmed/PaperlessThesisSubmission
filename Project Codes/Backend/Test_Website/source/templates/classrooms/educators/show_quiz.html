@@ -5,6 +5,10 @@
   <h1>Your Classroom</h1>
   <p>{{ classroom.get_string }}</p>
   <h1>{{ quiz }}</h1>
+  <ul>
+    <li>Open: {{ quiz.is_open }}</li>
+    <li>Running: {{ quiz.is_running }}</li>
+  </ul>
   <h1>Questions</h1>
   {% for question in questions %}
     <ul>

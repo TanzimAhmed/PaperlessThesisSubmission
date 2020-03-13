@@ -3,6 +3,7 @@ from django.views import View
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.timezone import datetime
+from django.contrib.auth.decorators import login_required
 import random
 import string
 import requests
@@ -68,6 +69,40 @@ class UserAuthenticationViews(View):
 
     def teacher_view(self):
         return render(self.request, self.teacher_template, {'form': self.teacher_form})
+
+
+class UserViews(View):
+    student_template = None
+    teacher_template = None
+    request = None
+    context = None
+
+    @method_decorator(login_required(login_url='users:login'))
+    def get(self, request):
+        self.request = request
+        return self.user_view()
+
+    @method_decorator(login_required(login_url='users:login'))
+    def post(self, request):
+        self.request = request
+        return self.user_view()
+
+    def user_view(self):
+        if self.request.user.is_educator:
+            return self.teacher_view()
+        else:
+            return self.student_view()
+
+    def set_context(self, context=None):
+        self.context = context
+
+    def student_view(self):
+        self.set_context()
+        return render(self.request, self.student_template, self.context)
+
+    def teacher_view(self):
+        self.set_context()
+        return render(self.request, self.teacher_template, self.context)
 
 
 def unique_id(model, target_column='id', length=8):

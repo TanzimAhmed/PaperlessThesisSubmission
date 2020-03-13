@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="ceiling"></div>
+  <h1>Your Classroom</h1>
+  <p>{{ quiz.classroom.get_string }}</p>
+  <h1>{{ quiz }}</h1>
+  {% if quiz %}
+    <h1>Questions</h1>
+    {% for question in questions %}
+      <ul>
+        <li>
+          Question: {{ question }} <br>
+          Options: {{ question.options }} <br>
+          Points: {{ question.points }} points <br>
+          Time: {{ question.time }} seconds <br>
+          Correct Answer: {{ question.answer }} <br>
+          Your Answer: 
+        </li>
+      </ul>
+    {% endfor %}
+    <h2>Your Answers: </h2>
+    {{ answers }}
+  {% endif %}
+{% endblock %}
