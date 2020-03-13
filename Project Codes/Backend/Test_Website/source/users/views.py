@@ -79,7 +79,7 @@ class RegistrationConfirmView(UserAuthenticationViews):
                 messages.success(self.request, "Account created SUCCESSFULLY")
             else:
                 messages.error(self.request, 'Invalid Verification Code')
-            return redirect('users:login student')
+            return redirect('users:login')
         return self.student_view()
 
     def teacher_form_valid(self):
@@ -99,16 +99,28 @@ class RegistrationConfirmView(UserAuthenticationViews):
                 messages.success(self.request, "Account created SUCCESSFULLY")
             else:
                 messages.error(self.request, 'Invalid Verification Code')
-            return redirect('users:login teacher')
+            return redirect('users:login')
         return self.teacher_view()
 
 
-class LoginView(UserAuthenticationViews):
-    student_template = teacher_template = 'users/login.html'
-    student_form_class = teacher_form_class = LoginForm
+class LoginView(View):
+    template_name = 'users/login.html'
+    form = None
+    request = None
 
-    def student_form_valid(self):
-        data = self.student_form.cleaned_data
+    def get(self, request):
+        self.request = request
+        self.form = LoginForm()
+        return self.default_view()
+
+    def post(self, request):
+        self.request = request
+        self.form = LoginForm(request.POST)
+        if self.form.is_valid():
+            data = self.form.cleaned_data
+            return self.valid_form(data)
+
+    def valid_form(self, data):
         user = authenticate(username=data['username'], password=data['password'])
         if user is not None:
             if user.is_active:
@@ -117,19 +129,10 @@ class LoginView(UserAuthenticationViews):
                 return redirect('/')
         else:
             messages.error(self.request, 'Username or Password Does Not match')
-            return self.student_view()
+            return self.default_view()
 
-    def teacher_form_valid(self):
-        data = self.teacher_form.cleaned_data
-        user = authenticate(username=data['username'], password=data['password'])
-        if user is not None:
-            if user.is_active:
-                login(self.request, user)
-                messages.success(self.request, "You're Logged in SUCCESSFULLY")
-                return redirect('/')
-        else:
-            messages.error(self.request, 'Username or Password Does Not match')
-            return self.teacher_view()
+    def default_view(self):
+        return render(self.request, self.template_name, {'form': self.form})
 
 
 class VerificationView(View):
@@ -165,7 +168,7 @@ class VerificationView(View):
         return render(request, self.template, {'form': form})
 
 
-@login_required(login_url='/')
+@login_required(login_url='users:login')
 def logout_user(request):
     logout(request)
     messages.success(request, "You're Logged out SUCCESSFULLY")
