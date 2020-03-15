@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="ceiling"></div>
+  <h1>Create Classroom</h1>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Join Class</button>
+  </form>
+{% endblock %}

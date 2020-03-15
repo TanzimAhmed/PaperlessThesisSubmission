@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from .models import Classroom, Quiz, Performance
-from .forms import CreateClassForm, QuizForm, QuestionForm
+from .forms import CreateClassForm, QuizForm, QuestionForm, JoinClassForm
 from project_paperless.utils import unique_id, UserViews
 from project_paperless.decorators import educator_required, learner_required
 
@@ -275,6 +275,19 @@ def participate_quiz(request, class_id, quiz_id):
     performance = quiz.performance_set.get(student=request.user)
     print(performance)
     return render(request, 'classrooms/index.html')
+
+
+@login_required(login_url='users:login')
+def join_class(request):
+    form = JoinClassForm(request.POST)
+    if form.is_valid():
+        try:
+            classroom = Classroom.objects.get(id=form.cleaned_data['classroom'])
+        except Classroom.DoesNotExist:
+            raise Http404('Classroom Not Found')
+        classroom.students.add(request.user)
+        classroom.save()
+    return render(request, 'classrooms/join.html', {'form': form})
 
 
 def test_api(request):

@@ -1,21 +1,40 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, Http404
-from .forms import CreateGroupForm, GroupSelectForm
 from documents.forms import DocumentForm
+from classrooms.forms import JoinClassForm
+from project_paperless.decorators import learner_required
+from .forms import CreateGroupForm, GroupSelectForm
 from .models import Group
 
 
 # Create your views here.
+@login_required(login_url='users:login')
 def dashboard(request):
-    print(request.user.group_set.all())
-    groups_form = GroupSelectForm(request.POST or None)
+    # Fetching information
+    groups = request.user.group_set.all()
+    classrooms = request.user.classroom.all()
+    papers = []
+    for group in groups:
+        papers.append(group.document.all())
+
+    # Creating forms
+    groups_form = GroupSelectForm()
     groups_form.update_choice(request.user)
-    if groups_form.is_valid():
-        group_id = groups_form.cleaned_data['groups']
-        return process_submission(request, group_id)
-    return render(request, 'learners/dashboard.html', {'groups_form': groups_form})
+    class_form = JoinClassForm()
+
+    context = {
+        'classrooms': classrooms,
+        'groups': groups,
+        'papers': papers,
+        'groups_form': groups_form,
+        'class_form': class_form
+    }
+    return render(request, 'learners/dashboard.html', context)
 
 
+@login_required(login_url='users:login')
+@learner_required
 def add_group(request):
     group_form = CreateGroupForm(request.POST or None)
     group_form.set_user(request.user.username)
@@ -36,6 +55,8 @@ def add_group(request):
     return render(request, 'learners/add_group.html', {'group_form': group_form})
 
 
+@login_required(login_url='users:login')
+@learner_required
 def process_submission(request, group_id):
     try:
         group = request.user.group_set.get(id=group_id)

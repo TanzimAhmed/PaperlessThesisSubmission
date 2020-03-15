@@ -574,4 +574,162 @@ font-size: 18px;
 height: 100%;
 }
 /* endsection Student Dashboard by Fahad */
+/* section Student Dashboard by Tanzim*/
+.student_dashboard {
+  width: 100%;
+  padding-top: 3.5rem;
+}
 
+.student_dashboard .header {
+  width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  margin-bottom: 4rem;
+  background-color: #FFC676;
+}
+
+.student_dashboard .welcome {
+  padding-right: 2rem;
+}
+
+.student_dashboard .dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: #807361;
+}
+
+.student_dashboard .container {
+  max-width: 1275px;
+}
+
+.header .student_info {
+  margin-top: 5rem;
+  width: 100%;
+  padding: 1rem 2.4rem 0.5rem 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard .area {
+  width: 38rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  padding-bottom: 1rem;
+}
+
+.dashboard .area_header {
+  width: 100%;
+  background-color: #999484;
+  padding: 1rem 2.4rem 0.5rem 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard .card_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dashboard .items_card {
+  width: 18rem;
+  height: 20rem;
+  /*background-color: rgba(48, 48, 48, 1);*/
+  background-color: rgba(35, 199, 232, 0.2);
+  /*background-color: rgba(13, 42, 64, 0.247);*/
+  /*background-color: rgba(45, 62, 64, 0.315);*/
+  
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+              0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  /*border: 1px solid rgba(0, 184, 148,1);*/
+  padding: 2rem;
+  margin: 0.5rem;
+}
+
+.dashboard .items_card .items {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard .items_card .items .card_info {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.dashboard .items_card a,
+.dashboard .items_card button {
+  width: 100%;
+}
+
+.dashboard .items_card_fluid {
+  position: relative;
+  width: 100%;
+  height: 6.5rem;
+  margin-bottom: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.dashboard .items_card_fluid a {
+  width: 7rem;
+  margin-left: 2rem;
+  display: inline-block;
+}
+.dashboard .items_card_fluid h5 {
+  margin-top: 1rem;
+}
+
+.dashboard .paper_submission {
+  width: 100%;
+  text-align: center;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+  height: auto;
+}
+
+.items .text-right {
+  position: absolute;
+  display: inline-block;
+  right: 0;
+  top: 0rem;
+}
+
+.dashboard .input {
+  background: transparent;
+  border: 1px solid #343a40;
+  border-radius: 0.25rem;
+  padding: 1.2rem;
+  margin: 1%;
+  width: 75%;
+}
+
+.dashboard .paper_submission .input {
+  width: 86%;
+}
+
+.paper_submission .item_header {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.paper_submission button {
+  margin-top: 1rem;
+  width: 40% !important;
+  padding: 1rem;
+}
+
+.paper_submission a {
+  width: 40% !important;
+  padding: 1rem;
+}
+
+.paper_list a {
+  margin-top: 1rem;
+}
+/* endsection Student Dashboard by Tanzim*/

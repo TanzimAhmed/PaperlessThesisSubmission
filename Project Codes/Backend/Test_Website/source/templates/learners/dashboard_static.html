@@ -1,0 +1,249 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="student_dashboard">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1>Welcome User</h1>
+    </div>
+    <div class="student_info">
+      <h3>
+        <strong>Student Name</strong> 
+        <br>
+        xxx xxxx xxx
+      </h3>
+    </div>
+  </div>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Your Classes </h2>
+        <br>
+        <p>Session</p>
+      </div>
+      <div class="card_container">
+        <div class="items_card">
+          <div class="items">
+            <h3>Class Title</h3>
+            <div class="card_info">
+              <p>
+                Course Code <br>
+                Sections <br>
+                Session <br>
+              </p>
+              <h5>Lecturer</h5>
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+        <div class="items_card">
+          <div class="items">
+            <h3>Class Title</h3>
+            <div class="card_info">
+              <p>
+                Course Code <br>
+                Sections <br>
+                Session <br>
+              </p>
+              <h5>Lecturer</h5>
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+        <div class="items_card">
+          <div class="items">
+            <h3>Class Title</h3>
+            <div class="card_info">
+              <p>
+                Course Code <br>
+                Sections <br>
+                Session <br>
+              </p>
+              <h5>Lecturer</h5>
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+        <div class="items_card">
+          <div class="items">
+            <h3>Class Title</h3>
+            <div class="card_info">
+              <p>
+                Course Code <br>
+                Sections <br>
+                Session <br>
+              </p>
+              <h5>Lecturer</h5>
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="area">
+      <div class="area_header">
+        <h2> Your Quizzes </h2>
+        <br>
+        <p>Session</p>
+      </div>
+      <div class="card_container">
+        <div class="items_card items_card_fluid">
+          <div class="items">
+            <p>
+              <strong>Quiz Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <h5>
+                Marks: xx 
+                <a href="" class="btn btn-outline-dark"> View</a>
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="items_card items_card_fluid">
+          <div class="items">
+            <p>
+              <strong>Quiz Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <h5>
+                Marks: xx 
+                <a href="" class="btn btn-outline-dark"> View</a>
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="items_card items_card_fluid">
+          <div class="items">
+            <p>
+              <strong>Quiz Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <h5>
+                Marks: xx 
+                <a href="" class="btn btn-outline-dark"> View</a>
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="items_card items_card_fluid">
+          <div class="items">
+            <p>
+              <strong>Quiz Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <h5>
+                Marks: xx 
+                <a href="" class="btn btn-outline-dark"> View</a>
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="area">
+      <div class="area_header">
+        <h2> Submit Your Papers </h2>
+        <br>
+        <p>Session</p>
+      </div>
+      <div class="card_container">
+        <div class="items_card paper_submission">
+          <div class="items">
+            <h3 class="item_header">Select a group and submit your paper</h3>
+            <form action="" method="POST">
+              {% csrf_token %}
+              {{ groups_form.groups }}
+              {{ groups_form.groups.errors }}
+              <button type="submit" class="btn btn-dark">Go to Submit Paper</button>
+            </form>
+            <h3 class="item_header">Create a new Project Group</h3>
+            <a href="{% url 'learners:add_group' %}" class="btn btn-outline-dark">Create New Group</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="area">
+      <div class="area_header">
+        <h2> Your Papers </h2>
+        <br>
+        <p>Session</p>
+      </div>
+      <div class="card_container">
+        <div class="items_card items_card_fluid paper_list">
+          <div class="items">
+            <p>
+              <strong>Paper Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+        <div class="items_card items_card_fluid paper_list">
+          <div class="items">
+            <p>
+              <strong>Paper Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+        <div class="items_card items_card_fluid paper_list">
+          <div class="items">
+            <p>
+              <strong>Paper Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+        <div class="items_card items_card_fluid paper_list">
+          <div class="items">
+            <p>
+              <strong>Paper Title</strong> 
+              <br>
+              <br>
+              Course Code,
+              Section
+            </p>
+            <div class="text-right">
+              <a href="" class="btn btn-outline-dark"> View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

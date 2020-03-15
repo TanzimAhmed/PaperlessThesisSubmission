@@ -62,6 +62,8 @@ class GroupSelectForm(forms.Form):
 
     groups = forms.ChoiceField(choices=GROUPS)
 
+    groups.widget.attrs.update({'class': 'input'})
+
     def update_choice(self, user):
         self.GROUPS = []
         groups = user.group_set.all()
@@ -71,3 +73,4 @@ class GroupSelectForm(forms.Form):
 
     def update_initial_choice(self, choice):
         self.fields['groups'].initial = choice
+

@@ -43,3 +43,9 @@ class QuestionForm(forms.ModelForm):
         self.fields['answer'].widget.attrs.update({'placeholder': 'Correct Choice', 'class': 'input'})
         self.fields['points'].widget.attrs.update({'placeholder': 'Points', 'class': 'input'})
         self.fields['time'].widget.attrs.update({'placeholder': 'Time (in seconds)', 'class': 'input'})
+
+
+class JoinClassForm(forms.Form):
+    classroom = forms.CharField()
+
+    classroom.widget.attrs.update({'placeholder': 'Class Code', 'class': 'input'})
