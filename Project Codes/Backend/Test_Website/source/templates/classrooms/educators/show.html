@@ -1,22 +1,76 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div class="ceiling"></div>
-  <h1>Your Classroom</h1>
-  <p>{{ classroom.get_string }}</p>
-  <h1>Quizzes</h1>
-  {% for quiz in quizzes %}
-    <ul>
-      <li>
-        {{ quiz }} 
-        <a href="{% url 'classrooms:show_quiz' classroom.id quiz.id %}">view</a>
-      </li>
-    </ul>
-  {% endfor %}
-  <h1>Add Quiz</h1>
-  <form action="" method="POST">
-    {% csrf_token %}
-    {{ quiz_form.as_p }}
-    <button type="submit">Add Quiz</button>
-  </form>
+<div class="user_dashboard">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1><strong>Classroom</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ classroom.name }}</strong> 
+      </h3>
+      <p>
+        {{ classroom.course_code }}, 
+        Section: {{ classroom.course_code }} <br>
+        Session: {{ classroom.semester }}
+      </p>
+    </div>
+  </div>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Your Quizzes </h2>
+        <br>
+        <p>Session</p>
+      </div>
+      <div class="card_container">
+        {% for quiz in quizzes %}
+          <div class="items_card items_card_fluid paper_list">
+            <div class="items">
+              <p>
+                <strong>{{ quiz.title }}</strong> 
+                <br>
+                <br>
+                {{ quiz.classroom.course_code }},
+                Section: {{ quiz.classroom.section }}
+              </p>
+              <div class="text-right">
+                <a href="{% url 'classrooms:show_quiz' classroom.id quiz.id %}" class="btn btn-outline-dark">
+                  View
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="area">
+      <div class="area_header">
+        <h2> Add Quiz </h2>
+        <br>
+        <p>Session</p>
+      </div>
+      <div class="card_container">
+        <div class="items_card paper_submission dashboard_forms">
+          <div class="items">
+            <h3 class="item_header">Add Quiz</h3>
+            <form action="" method="POST">
+              {% csrf_token %}
+              {{ quiz_form.title }}
+              {{ quiz_form.title.errors }}
+              {{ quiz_form.due_date }}
+              {{ quiz_form.due_date.errors }}
+              <br>
+              {{ quiz_form.is_open.label }}
+              {{ quiz_form.is_open }}
+              {{ quiz_form.is_open.errors }}
+              <button type="submit" class="btn btn-dark">Add Quiz</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,36 +1,75 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div class="ceiling"></div>
-  <h1>Your Classroom</h1>
-  <p>{{ quiz.classroom.get_string }}</p>
-  <h1>{{ quiz }}</h1>
-  <ul>
-    <li>Open: {{ quiz.is_open }}</li>
-    <li>Running: {{ quiz.is_running }}</li>
-  </ul>
-  <h1>Questions</h1>
-  {% for question in questions %}
-    <ul>
-      <li>
-        Question: {{ question }} <br>
-        Options: {{ question.options }} <br>
-        Correct Answer: {{ question.answer }} <br>
-        Points: {{ question.points }} points <br>
-        Time: {{ question.time }} seconds <br>
-        ** Available after quiz is taken <br>
-        Total Responses: {{ question.total_responses }} <br>
-        Correct Responses: {{ question.correct_responses }} <br>
-        <a href="{% url 'classrooms:update_question' quiz.classroom.id quiz.id question.id %}">
-          View
-        </a>
-      </li>
-    </ul>
-  {% endfor %}
-  <h1>Add Question</h1>
-  <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST">
-    {% csrf_token %}
-    {{ question_form.as_p }}
-    <button type="submit">Add Question</button>
-  </form>
+<div class="user_dashboard">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1><strong>Classroom</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ quiz.title }}</strong> 
+        <br>
+        <br>
+        {{ quiz.classroom.name }}
+      </h3>
+      <p>
+        {{ quiz.classroom.course_code }}, 
+        Section: {{ quiz.classroom.course_code }} <br>
+        Session: {{ quiz.classroom.semester }}
+      </p>
+    </div>
+  </div>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Questions </h2>
+        <br>
+        <p></p>
+      </div>
+      <div class="card_container">
+        {% for question in questions %}
+          <div class="items_card items_card_fluid paper_list question_list">
+            <div class="items">
+              <strong>Question: </strong>{{ question }} <br>
+              <strong>Options: </strong>{{ question.options }} <br>
+              <strong>Correct Answer: </strong>{{ question.answer }} <br>
+              <strong>Points: </strong>{{ question.points }} points <br>
+              <strong>Time: </strong> {{ question.time }} seconds <br>
+              <strong>Is Open: </strong>{{ question.is_open }} <br>
+              <strong>Is Taken: </strong>{{ question.is_taken }} <br>
+              ** Available after quiz is taken <br>
+              <strong>Total Responses: </strong>{{ question.total_responses }} <br>
+              <strong>Correct Responses: </strong>{{ question.correct_responses }} <br>
+              <div class="text-right">
+                <a href="{% url 'classrooms:update_question' quiz.classroom.id quiz.id question.id %}" class="btn btn-outline-dark">
+                  Update
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="area">
+      <div class="area_header">
+        <h2> Add Quiz </h2>
+        <br>
+        <p>Session</p>
+      </div>
+      <div class="card_container">
+        <div class="items_card paper_submission dashboard_forms">
+          <div class="items">
+            <h3 class="item_header">Add Quiz</h3>
+            <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST">
+              {% csrf_token %}
+              {{ question_form.as_p }}
+              <button type="submit" class="btn btn-dark">Add Quiz</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

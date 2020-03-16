@@ -1,11 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div class="ceiling"></div>
-  <h1>Create Classroom</h1>
-  <form action="" method="POST">
-    {% csrf_token %}
-    {{ create_form.as_p }}
-    <button type="submit">Create Class</button>
-  </form>
+<div class="user_dashboard form_page">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1>Classroom</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ request.user.get_full_name }}</strong> 
+        <br>
+        {{ request.user.username }}
+      </h3>
+    </div>
+  </div>
+  <div class="form_container container">
+    <div class="form">
+      <div>
+        <h1 class="form_header">Create New Classroom</h1>
+      </div>
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ create_form.course }}
+        {{ create_form.course.errors }}
+        {{ create_form.semester }}
+        {{ create_form.semester.errors }}
+        {{ create_form.name }}
+        {{ create_form.name.errors }}
+        <button type="submit" class="btn btn-dark">Create Class</button>
+      </form>
+    </div>
+  </div>
+  <div class="footer container"></div>
+</div>
 {% endblock %}

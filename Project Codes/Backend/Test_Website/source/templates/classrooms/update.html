@@ -1,14 +1,37 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div class="ceiling"></div>
-  <h1>Your Classroom</h1>
-  <p>{{ question.quiz.classroom.get_string }}</p>
-  <h1>{{ question.quiz }}</h1>
-  <h1>Edit Quiz</h1>
-  <form action="" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Edit Quiz</button>
-  </form>
+<div class="user_dashboard form_page">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1><strong>Classroom</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ quiz.title }}</strong> 
+        <br>
+        <br>
+        {{ quiz.classroom.name }}
+      </h3>
+      <p>
+        {{ quiz.classroom.course_code }}, 
+        Section: {{ quiz.classroom.course_code }} <br>
+        Session: {{ quiz.classroom.semester }}
+      </p>
+    </div>
+  </div>
+  <div class="form_container container">
+    <div class="form">
+      <div>
+        <h1 class="form_header">Update Quiz</h1>
+      </div>
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-dark">Update</button>
+      </form>
+    </div>
+  </div>
+  <div class="footer container"></div>
+</div>
 {% endblock %}

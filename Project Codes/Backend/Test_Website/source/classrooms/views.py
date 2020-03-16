@@ -122,6 +122,7 @@ class ShowQuizView(UserViews):
             'questions': questions,
             'question_form': question_form
         }
+        print(context)
         return render(self.request, self.teacher_template, context)
 
     def get_quiz(self):
