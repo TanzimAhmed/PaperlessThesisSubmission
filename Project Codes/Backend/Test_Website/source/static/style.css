@@ -575,35 +575,36 @@ height: 100%;
 }
 /* endsection Student Dashboard by Fahad */
 /* section Student Dashboard by Tanzim*/
-.student_dashboard {
+.user_dashboard {
   width: 100%;
   padding-top: 3.5rem;
 }
 
-.student_dashboard .header {
+.user_dashboard .header {
   width: 100%;
   padding-top: 2rem;
   padding-bottom: 2rem;
   margin-bottom: 4rem;
   background-color: #FFC676;
+  color: #343a40;
 }
 
-.student_dashboard .welcome {
+.user_dashboard .welcome {
   padding-right: 2rem;
 }
 
-.student_dashboard .dashboard {
+.user_dashboard .dashboard {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   background-color: #807361;
 }
 
-.student_dashboard .container {
+.user_dashboard .container {
   max-width: 1275px;
 }
 
-.header .student_info {
+.header .user_info {
   margin-top: 5rem;
   width: 100%;
   padding: 1rem 2.4rem 0.5rem 2.4rem;
@@ -624,6 +625,7 @@ height: 100%;
   background-color: #999484;
   padding: 1rem 2.4rem 0.5rem 2.4rem;
   margin-bottom: 1rem;
+  color: #343a40;
 }
 
 .dashboard .card_container {
@@ -700,7 +702,8 @@ height: 100%;
   top: 0rem;
 }
 
-.dashboard .input {
+.dashboard .input,
+.form_container .input {
   background: transparent;
   border: 1px solid #343a40;
   border-radius: 0.25rem;
@@ -731,5 +734,42 @@ height: 100%;
 
 .paper_list a {
   margin-top: 1rem;
+}
+
+.form_container {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.form_container .form {
+  width: 500px;
+  text-align: center;
+}
+
+.form_container form {
+  width: 500px;
+  text-align: center;
+}
+
+.form_container button {
+  margin-top: 1rem;
+  width: 50% !important;
+  padding: 1rem;
+}
+
+.user_dashboard .footer {
+  background-color: #FFC676;
+  height: 2rem;
+  margin-top: 4rem;
+}
+
+.form_page .header {
+  background-color: #807361;
+}
+
+.user_dashboard .paper_request_buttons a {
+  margin-left: 0.2rem;
+  width: 5.5rem;
 }
 /* endsection Student Dashboard by Tanzim*/

@@ -4,7 +4,7 @@
 <div class="user_dashboard form_page">
   <div class="header container">
     <div class="text-right welcome">
-      <h1><strong>Classrooms</strong></h1>
+      <h1>Hello <strong>{{ request.user.first_name }}</strong></h1>
     </div>
     <div class="user_info">
       <h3>
@@ -15,15 +15,15 @@
     </div>
   </div>
   <div class="form_container container">
-    <div>
+    <div class="form">
       <div>
-        <h1 class="form_header">Join A Class</h1>
+        <h1 class="form_header">Create New Group</h1>
       </div>
-      <form action="" method="POST">
+      <form action="{% url 'documents:upload_paper' %}" method="POST">
         {% csrf_token %}
-        {{ form.classroom }}
-        {{ form.classroom.errors }}
-        <button type="submit" class="btn btn-dark">Join</button>
+        {{ form.paper }}
+        {{ form.paper.errors }}
+        <button type="submit" class="btn btn-dark">Upload Paper</button>
       </form>
     </div>
   </div>

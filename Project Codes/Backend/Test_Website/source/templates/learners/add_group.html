@@ -1,20 +1,46 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="container">
-  <h1>Welcome {{ request.user.first_name }}</h1>
-  {% if errors %}
-    <p>Errors</p>
-    <ul>
-      {% for error in errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  <form action="/groups/add/" method="POST">
-    {% csrf_token %}
-    {{ group_form.as_p }}
-    <button type="submit">Add Members</button>
-  </form>
+<div class="user_dashboard form_page">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1>Hello <strong>{{ request.user.first_name }}</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ request.user.get_full_name }}</strong> 
+        <br>
+        {{ request.user.username }}
+      </h3>
+    </div>
+  </div>
+  <div class="form_container container">
+    <div class="form">
+      <div>
+        <h1 class="form_header">Create New Group</h1>
+      </div>
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ group_form.course }}
+        {{ group_form.course.errors }}
+        {{ group_form.name }}
+        {{ group_form.name.errors }}
+        {{ group_form.instructor }}
+        {{ group_form.instructor.errors }}
+        {{ group_form.member_1 }}
+        {{ group_form.member_1.errors }}
+        {{ group_form.member_2 }}
+        {{ group_form.member_2.errors }}
+        {{ group_form.member_3 }}
+        {{ group_form.member_3.errors }}
+        {{ group_form.member_4 }}
+        {{ group_form.member_4.errors }}
+        {{ group_form.member_5 }}
+        {{ group_form.member_5.errors }}
+        <button type="submit" class="btn btn-dark">Add Members</button>
+      </form>
+    </div>
+  </div>
+  <div class="footer container"></div>
 </div>
 {% endblock %}

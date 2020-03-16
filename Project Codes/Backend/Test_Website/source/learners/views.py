@@ -16,7 +16,8 @@ def dashboard(request):
     classrooms = request.user.classroom.all()
     papers = []
     for group in groups:
-        papers.append(group.document.all())
+        for paper in group.document.all():
+            papers.append(paper)
 
     # Creating forms
     groups_form = GroupSelectForm()
@@ -30,11 +31,12 @@ def dashboard(request):
         'groups_form': groups_form,
         'class_form': class_form
     }
+    print(papers)
     return render(request, 'learners/dashboard.html', context)
 
 
 @login_required(login_url='users:login')
-@learner_required
+
 def add_group(request):
     group_form = CreateGroupForm(request.POST or None)
     group_form.set_user(request.user.username)
@@ -51,7 +53,7 @@ def add_group(request):
         for member in cleaned_data['members']:
             group.members.add(member)
         messages.success(request, "Group has been SUCCESSFULLY added, thank you!")
-        return redirect('learners:dashboard')
+        return redirect('users:dashboard')
     return render(request, 'learners/add_group.html', {'group_form': group_form})
 
 
@@ -79,4 +81,4 @@ def process_submission(request, group_id):
             "Request to Approve Submission had been sent to your Instructor."
             "To submit your paper, please visit again after the request has been accepted."
         )
-    return redirect('learners:dashboard')
+    return redirect('users:dashboard')

@@ -30,11 +30,11 @@ def upload_paper(request):
             messages.warning(request, "Your paper contains errors")
             document.delete()
             return render(request, 'documents/log.html', {'errors': document_test.errors})
-    return render(request, 'documents/demo_submission.html', {'form': form})
+    return render(request, 'documents/submission.html', {'form': form})
 
 
 def show(request):
-    document = request.user.group_set.first().document_set.first()
+    document = request.user.group_set.first().document.first()
     print(document.paper.path)
     file = open(document.paper.path, 'rb')
     return FileResponse(file, filename=document.paper.name, as_attachment=False)

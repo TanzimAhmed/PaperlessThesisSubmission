@@ -279,7 +279,7 @@ def participate_quiz(request, class_id, quiz_id):
 
 @login_required(login_url='users:login')
 def join_class(request):
-    form = JoinClassForm(request.POST)
+    form = JoinClassForm(request.POST or None)
     if form.is_valid():
         try:
             classroom = Classroom.objects.get(id=form.cleaned_data['classroom'])

@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include('users.urls')),
     path('', include('cover_page_test.urls')),
     path('', include('learners.urls')),
+    path('', include('educators.urls')),
     path('classroom/', include('classrooms.urls')),
     path('paper/', include('documents.urls')),
     path('content/', include('creative_content.urls')),

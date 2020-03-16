@@ -47,101 +47,53 @@
         <p>Session</p>
       </div>
       <div class="card_container">
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
+        {% for quiz in quizzes %}
+          <div class="items_card items_card_fluid paper_list">
+            <div class="items">
+              <p>
+                <strong>{{ quiz.title }}</strong> 
+                <br>
+                <br>
+                {{ quiz.classroom.course_code }},
+                Section: {{ quiz.classroom.section }}
+              </p>
+              <div class="text-right">
                 <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
-                <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
-            </div>
-          </div>
-        </div>
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
-                <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
-            </div>
-          </div>
-        </div>
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
-                <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
     <div class="area">
       <div class="area_header">
-        <h2> Submit Your Papers </h2>
+        <h2> Paper Submission Requests </h2>
         <br>
         <p>Session</p>
       </div>
       <div class="card_container">
-        <div class="items_card paper_submission">
-          <div class="items">
-            <h3 class="item_header">Select a group and submit your paper</h3>
-            <form action="" method="POST">
-              {% csrf_token %}
-              {{ groups_form.groups }}
-              {{ groups_form.groups.errors }}
-              <button type="submit" class="btn btn-dark">Go to Submit Paper</button>
-            </form>
-            <h3 class="item_header">Create a new Project Group</h3>
-            <a href="{% url 'learners:add_group' %}" class="btn btn-outline-dark">Create New Group</a>
+        {% for paper in papers %}
+          <div class="items_card items_card_fluid paper_list">
+            <div class="items">
+              <p>
+                <strong>{{ paper.group.name }}</strong> 
+                <br>
+                <br>
+                {{ paper.group.course_code }},
+                Section: {{ paper.group.section }}
+              </p>
+              <div class="text-right paper_request_buttons">
+                <a href="" class="btn btn-danger">Reject</a>
+                <a href="" class="btn btn-outline-dark">Accept</a>
+              </div>
+            </div>
           </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
     <div class="area">
       <div class="area_header">
-        <h2> Your Papers </h2>
+        <h2> Papers Submitted to You </h2>
         <br>
         <p>Session</p>
       </div>

@@ -6,10 +6,12 @@ from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
+from educators.views import dashboard as teacher_dashboard
+from learners.views import dashboard as learner_dashboard
 from .models import Verification
 from .forms import StudentRegistrationVerificationForm, TeacherRegistrationVerificationForm, \
     StudentRegistrationForm, TeacherRegistrationForm, VerificationForm, LoginForm
-from project_paperless.utils import UserAuthenticationViews, random_code, fetch_email_address
+from project_paperless.utils import UserAuthenticationViews, UserViews, random_code, fetch_email_address
 
 
 class RegistrationView(UserAuthenticationViews):
@@ -133,6 +135,15 @@ class LoginView(View):
 
     def default_view(self):
         return render(self.request, self.template_name, {'form': self.form})
+
+
+class DashboardView(UserViews):
+
+    def teacher_view(self):
+        return teacher_dashboard(self.request)
+
+    def student_view(self):
+        return learner_dashboard(self.request)
 
 
 class VerificationView(View):

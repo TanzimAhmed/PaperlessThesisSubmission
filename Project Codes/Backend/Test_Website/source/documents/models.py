@@ -14,6 +14,7 @@ def user_directory_path(instance, file_name):
 
 class Document(models.Model):
     group = models.ForeignKey('learners.Group', on_delete=models.CASCADE, related_name='document')
+    title = models.CharField(max_length=250)
     paper = models.FileField(storage=paper_storage, upload_to=user_directory_path)
     information = models.CharField(max_length=250, null=True)
     date_uploaded = models.DateTimeField(auto_now_add=True, editable=False)
