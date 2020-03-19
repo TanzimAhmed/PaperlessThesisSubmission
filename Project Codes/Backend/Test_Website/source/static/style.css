@@ -585,8 +585,9 @@ height: 100%;
   padding-top: 2rem;
   padding-bottom: 2rem;
   margin-bottom: 4rem;
-  background-color: #FFC676;
-  color: #343a40;
+  background-color: rgb(39,40,44);
+  /*color: #343a40;*/
+  color: white;
 }
 
 .user_dashboard .welcome {
@@ -597,7 +598,6 @@ height: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  background-color: #807361;
 }
 
 .user_dashboard .container {
@@ -638,9 +638,11 @@ height: 100%;
   width: 18rem;
   height: 20rem;
   /*background-color: rgba(48, 48, 48, 1);*/
-  background-color: rgba(35, 199, 232, 0.2);
+  /*background-color: rgba(35, 199, 232, 0.2);*/
   /*background-color: rgba(13, 42, 64, 0.247);*/
   /*background-color: rgba(45, 62, 64, 0.315);*/
+
+  background-color: rgb(109,132,124);
   
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
               0 6px 20px 0 rgba(0, 0, 0, 0.19);
