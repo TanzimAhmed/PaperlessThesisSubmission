@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, Http404
 from documents.forms import DocumentForm
-from classrooms.forms import JoinClassForm
 from project_paperless.decorators import learner_required
 from .forms import CreateGroupForm, GroupSelectForm
 from .models import Group
@@ -20,16 +19,17 @@ def dashboard(request):
             papers.append(paper)
 
     # Creating forms
-    groups_form = GroupSelectForm()
+    groups_form = GroupSelectForm(request.POST or None)
     groups_form.update_choice(request.user)
-    class_form = JoinClassForm()
+
+    if groups_form.is_valid():
+        return process_submission(request, groups_form.cleaned_data['groups'])
 
     context = {
         'classrooms': classrooms,
         'groups': groups,
         'papers': papers,
-        'groups_form': groups_form,
-        'class_form': class_form
+        'groups_form': groups_form
     }
     print(papers)
     return render(request, 'learners/dashboard.html', context)

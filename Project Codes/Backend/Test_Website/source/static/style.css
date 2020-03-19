@@ -780,4 +780,18 @@ height: 100%;
 .area .question_list {
   height: auto;
 }
+
+.content_display {
+  
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  padding-bottom: 1rem;
+}
+
+.content_display .items_card {
+  width: 22rem;
+  height: 25rem;
+}
 /* endsection Student Dashboard by Tanzim*/

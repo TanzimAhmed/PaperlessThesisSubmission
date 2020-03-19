@@ -1,25 +1,51 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div id="content_list_background">
-    <div id="content_list_overlay_">
-      <div class="container" id="content_list_container">
-        <h1 class="form_header" id="content_list_header">Course Materials</h1>
-        {% if contents %}
-          <div id="content_list">
-            {% for content in contents %}
-              <div class="content_card">
-                <div>
-                  <h3>{{ content.title }}</h3>
-                <hr>
-                <p> Course: {{ content.course_code }} <br> Section: {{ content.section }}</p>
-                </div>
-                <a href="/content/{{ content.link }}/show/" class="btn btn-outline-info"> View</a>
+<div class="user_dashboard">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1><strong>Contents</strong></h1>
+    </div>
+    <div class="user_info">
+      {% if request.user.is_authenticated %}
+        <h3>
+          <strong>{{ request.user.get_full_name }}</strong> 
+          <br>
+          {{ request.user.username }}
+        </h3>
+      {% else %}
+        <h3>
+          <strong>Hello Visitor</strong> 
+          <br>
+
+        </h3>
+      {% endif %}
+    </div>
+  </div>
+  <div class="dashboard container">
+    <div class="content_display">
+      <div class="area_header">
+        <h2> Course Materials </h2>
+        <br>
+      </div>
+      <div class="card_container">
+        {% for content in contents %}
+          <div class="items_card">
+            <div class="items">
+              <h3>{{ content.title }}</h3>
+              <div class="card_info">
+                <p>
+                  Course: {{ content.course_code }} <br>
+                  Section: {{ content.section }} <br>
+                </p>
+                <h5>{{ content.user.get_full_name }}</h5>
+                <a href="/content/{{ content.link }}/show/" class="btn btn-outline-dark"> View</a>
               </div>
-            {% endfor %}
+            </div>
           </div>
-        {% endif %}
+        {% endfor %}
       </div>
     </div>
   </div>
+</div>
 {% endblock %}
