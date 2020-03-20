@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, Http404
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from .models import Classroom, Quiz, Performance
-from .forms import CreateClassForm, QuizForm, QuestionForm, JoinClassForm
+from .forms import CreateClassForm, QuizForm, QuestionForm, JoinClassForm, TakeQuizForm
 from project_paperless.utils import unique_id, UserViews
 from project_paperless.decorators import educator_required, learner_required
 
@@ -224,6 +225,37 @@ class UpdateQuestionView(View):
         except Quiz.DoesNotExist:
             raise Http404('Quiz Not found')
         return question
+
+
+class QuizView(View):
+    template_name = 'classrooms/learners/quiz.html'
+
+    @method_decorator(login_required(login_url='users:login'))
+    @method_decorator(educator_required)
+    def get(self, request, class_id, quiz_id):
+        form = TakeQuizForm()
+        try:
+            classroom = request.user.classroom.get(id=class_id)
+            quiz = classroom.quiz.get(id=quiz_id)
+            if not quiz.is_running:
+                raise PermissionDenied
+            questions = quiz.question.all()
+        except Classroom.DoesNotExist:
+            raise Http404('Classroom Not found')
+        except Quiz.DoesNotExist:
+            raise Http404('Quiz Not found')
+        context = {
+            'quiz': quiz,
+            'questions': questions,
+            'form': form
+        }
+        print(context)
+        return render(request, self.template_name, context)
+
+    @method_decorator(login_required(login_url='users:login'))
+    @method_decorator(educator_required)
+    def post(self, request, class_id, quiz_id):
+        pass
 
 
 @login_required(login_url='users:login')

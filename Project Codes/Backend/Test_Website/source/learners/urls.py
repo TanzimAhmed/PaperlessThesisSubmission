@@ -1,5 +1,5 @@
 from django.urls import path
-from.views import dashboard, add_group
+from.views import add_group
 
 app_name = 'learners'
 urlpatterns = [

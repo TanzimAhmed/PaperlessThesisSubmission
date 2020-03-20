@@ -58,7 +58,9 @@
                 Section: {{ quiz.classroom.section }}
               </p>
               <div class="text-right">
-                <a href="" class="btn btn-outline-dark"> View</a>
+                <a href="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" class="btn btn-outline-dark">
+                  View
+                </a>
               </div>
             </div>
           </div>
