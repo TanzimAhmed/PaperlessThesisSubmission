@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="{% static 'style.css' %}">
   <title>Project Paperless</title>
 </head>
-<body>
+<body class="{% block background_class %}{% endblock %}">
   {% include 'includes/_navbar.html' %}
   {% include 'includes/_messages.html' %}
 

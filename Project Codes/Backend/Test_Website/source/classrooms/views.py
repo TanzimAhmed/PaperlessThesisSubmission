@@ -185,6 +185,7 @@ class UpdateQuizView(View):
 
 class UpdateQuestionView(View):
     template_name = 'classrooms/update.html'
+    quiz = None
 
     @method_decorator(login_required(login_url='users:login'))
     @method_decorator(educator_required)
@@ -192,6 +193,7 @@ class UpdateQuestionView(View):
         question = self.get_question(class_id, quiz_id, question_id)
         form = QuestionForm(instance=question)
         context = {
+            'quiz': self.quiz,
             'question': question,
             'form': form
         }
@@ -212,6 +214,7 @@ class UpdateQuestionView(View):
             question.save()
             return redirect('classrooms:show_quiz', class_id=class_id, quiz_id=quiz_id)
         context = {
+            'quiz': self.quiz,
             'question': question,
             'form': form
         }
@@ -220,8 +223,8 @@ class UpdateQuestionView(View):
     def get_question(self, class_id, quiz_id, question_id):
         try:
             classroom = self.request.user.classroom.get(id=class_id)
-            quiz = classroom.quiz.get(id=quiz_id)
-            question = quiz.question.get(id=question_id)
+            self.quiz = classroom.quiz.get(id=quiz_id)
+            question = self.quiz.question.get(id=question_id)
         except Classroom.DoesNotExist:
             raise Http404('Classroom Not found')
         except Quiz.DoesNotExist:
@@ -325,7 +328,7 @@ def participate_quiz(request, class_id, quiz_id):
     except Quiz.DoesNotExist:
         raise Http404('Quiz Not found')
     performance = quiz.performance_set.get(student=request.user)
-    
+    # performance.delete()
     print(performance.correct_responses)
     return render(request, 'classrooms/index.html')
 

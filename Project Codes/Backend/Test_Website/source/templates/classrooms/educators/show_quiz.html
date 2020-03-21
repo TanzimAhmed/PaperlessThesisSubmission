@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% block background_class %}
+  dashboard_background
+{% endblock %}
+
 {% block body %}
 <div class="user_dashboard">
   <div class="header container">
@@ -15,7 +19,7 @@
       </h3>
       <p>
         {{ quiz.classroom.course_code }}, 
-        Section: {{ quiz.classroom.course_code }} <br>
+        Section: {{ quiz.classroom.section }} <br>
         Session: {{ quiz.classroom.semester }}
       </p>
     </div>
@@ -25,7 +29,6 @@
       <div class="area_header">
         <h2> Questions </h2>
         <br>
-        <p></p>
       </div>
       <div class="card_container">
         {% for question in questions %}
@@ -53,14 +56,12 @@
     </div>
     <div class="area">
       <div class="area_header">
-        <h2> Add Quiz </h2>
+        <h2> Add Question </h2>
         <br>
-        <p>Session</p>
       </div>
       <div class="card_container">
         <div class="educator_forms dashboard_forms">
           <div class="items">
-            <h3 class="item_header">Add Quiz</h3>
             <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST">
               {% csrf_token %}
               <br>
@@ -77,13 +78,15 @@
               <p><strong>Correct Choice:</strong></p>
               {{ question_form.answer }}
               {{ question_form.answer.errors }}
+              <br>
               <p><strong>Points:</strong></p>
               {{ question_form.points }}
               {{ question_form.points.errors }}
+              <br>
               <p><strong>Time (in seconds):</strong></p>
               {{ question_form.time }}
               {{ question_form.time.errors }}
-              <button type="submit" class="btn btn-dark">Add Quiz</button>
+              <button type="submit" class="btn btn-dark">Add Question</button>
             </form>
           </div>
         </div>

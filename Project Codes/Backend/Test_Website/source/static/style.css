@@ -575,19 +575,32 @@ height: 100%;
 }
 /* endsection Student Dashboard by Fahad */
 /* section Student Dashboard by Tanzim*/
+.dashboard_background {
+  background-image: url('/static/images/bg_4.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100vh;
+}
+
 .user_dashboard {
+  position: relative;
   width: 100%;
   padding-top: 3.5rem;
+  background-color: rgba(39, 40, 44, 0.5);
 }
 
 .user_dashboard .header {
   width: 100%;
   padding-top: 2rem;
   padding-bottom: 2rem;
-  margin-bottom: 0.2rem;
-  background-color: rgb(39,40,44);
+  margin-bottom: 1rem;
+  background-color: rgba(39, 40, 44);
   /*color: #343a40;*/
   color: white;
+  opacity: 0.85;
 }
 
 .user_dashboard .welcome {
@@ -599,7 +612,7 @@ height: 100%;
   flex-wrap: wrap;
   justify-content: center;
   padding-top: 2rem;
-  background-color: rgb(39,40,44);
+  background-color: rgba(39, 40, 44, 0.4);
 }
 
 .user_dashboard .container {
@@ -761,25 +774,31 @@ height: 100%;
 }
 
 .form_container .form {
-  width: 500px;
+  width: 700px;
   text-align: center;
 }
 
 .form_container form {
-  width: 500px;
+  width: 700px;
   text-align: center;
+  padding-bottom: 4rem;
+}
+
+.form_container .input {
+  width: 50%;
 }
 
 .form_container button {
   margin-top: 1rem;
   width: 50% !important;
+  margin-top: 4rem;
   padding: 1rem;
 }
 
 .user_dashboard .footer {
-  background-color: rgb(39,40,44);
+  background-color: rgba(39, 40, 44, 0.85);
   height: 2rem;
-  margin-top: 4rem;
+  margin-top: 1rem;
 }
 
 .user_dashboard .paper_request_buttons a {

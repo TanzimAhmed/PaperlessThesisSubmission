@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% block background_class %}
+  dashboard_background
+{% endblock %}
+
 {% block body %}
 <div class="user_dashboard form_page">
   <div class="header container">
@@ -15,7 +19,7 @@
       </h3>
       <p>
         {{ quiz.classroom.course_code }}, 
-        Section: {{ quiz.classroom.course_code }} <br>
+        Section: {{ quiz.classroom.section }} <br>
         Session: {{ quiz.classroom.semester }}
       </p>
     </div>
@@ -41,12 +45,15 @@
         <p><strong>Correct Choice:</strong></p>
         {{ form.answer }}
         {{ form.answer.errors }}
+        <br>
         <p><strong>Points:</strong></p>
         {{ form.points }}
         {{ form.points.errors }}
+        <br>
         <p><strong>Time (in seconds):</strong></p>
         {{ form.time }}
         {{ form.time.errors }}
+        <br>
         <button type="submit" class="btn btn-dark">Update</button>
       </form>
     </div>
@@ -66,7 +73,7 @@
     // For now, MathType is incompatible with CKEditor file upload plugins.
     extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
     removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
-    height: 200,
+    height: 300,
     mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
     allowedContent: true
   });
@@ -74,7 +81,7 @@
     // For now, MathType is incompatible with CKEditor file upload plugins.
     extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
     removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
-    height: 200,
+    height: 300,
     mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
     allowedContent: true
   });
