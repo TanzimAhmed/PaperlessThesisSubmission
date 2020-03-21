@@ -599,6 +599,8 @@ height: 100%;
   flex-wrap: wrap;
   justify-content: center;
   padding-top: 2rem;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
   background-color: rgb(39,40,44);
 }
 
@@ -620,10 +622,6 @@ height: 100%;
   margin-left: 0.5%;
   margin-right: 0.5%;
   padding-bottom: 1rem;
-}
-
-.dashboard .quiz_area {
-  width: 75%;
 }
 
 .dashboard .area_header {
@@ -788,23 +786,6 @@ height: 100%;
 
 .area .question_list {
   height: auto;
-}
-
-.quiz_area .button_right button {
-  width: 10rem;
-}
-
-.quiz_area .button_right {
-  width: 100%;
-  text-align: right;
-}
-
-.quiz_area label {
-  padding-left: 0.75rem;
-}
-
-.quiz_area .text-right {
-  text-align: left !important;
 }
 
 .content_display {

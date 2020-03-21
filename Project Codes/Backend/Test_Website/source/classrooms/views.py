@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, Http404
 from django.http import JsonResponse
-from django.core.serializers import serialize
 from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -245,13 +244,12 @@ class QuizView(View):
             raise Http404('Classroom Not found')
         except Quiz.DoesNotExist:
             raise Http404('Quiz Not found')
-        questions = serialize('json', questions, fields=('text', 'options', 'time', 'points'))
-        print(questions)
         context = {
             'quiz': quiz,
             'questions': questions,
             'form': form
         }
+        print(context)
         return render(request, self.template_name, context)
 
     @method_decorator(login_required(login_url='users:login'))
