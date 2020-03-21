@@ -31,8 +31,8 @@
         {% for question in questions %}
           <div class="items_card items_card_fluid paper_list question_list">
             <div class="items">
-              <strong>Question: </strong>{{ question }} <br>
-              <strong>Options: </strong>{{ question.options }} <br>
+              <strong>Question: </strong>{{ question | safe }} <br>
+              <strong>Options: </strong>{{ question.options | safe }} <br>
               <strong>Correct Answer: </strong>{{ question.answer }} <br>
               <strong>Points: </strong>{{ question.points }} points <br>
               <strong>Time: </strong> {{ question.time }} seconds <br>
@@ -58,12 +58,31 @@
         <p>Session</p>
       </div>
       <div class="card_container">
-        <div class="items_card paper_submission dashboard_forms">
+        <div class="educator_forms dashboard_forms">
           <div class="items">
             <h3 class="item_header">Add Quiz</h3>
             <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST">
               {% csrf_token %}
-              {{ question_form.as_p }}
+              <br>
+              <p><strong>Question Text:</strong></p>
+              {{ question_form.text }}
+              {{ question_form.text.errors }}
+              <br>
+              <br>
+              <p><strong>Options </strong>(Seperate each option with // characters in a new line):</p>
+              {{ question_form.options }}
+              {{ question_form.options.errors }}
+              <br>
+              <br>
+              <p><strong>Correct Choice:</strong></p>
+              {{ question_form.answer }}
+              {{ question_form.answer.errors }}
+              <p><strong>Points:</strong></p>
+              {{ question_form.points }}
+              {{ question_form.points.errors }}
+              <p><strong>Time (in seconds):</strong></p>
+              {{ question_form.time }}
+              {{ question_form.time.errors }}
               <button type="submit" class="btn btn-dark">Add Quiz</button>
             </form>
           </div>
@@ -72,4 +91,30 @@
     </div>
   </div>
 </div>
+
+<!-- CK Editor JS includes-->
+<script src="//cdn.ckeditor.com/4.13.1/standard-all/ckeditor.js"></script>
+<!-- MathJax JS includes -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script>
+  CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
+  CKEDITOR.replace('question', {
+    // For now, MathType is incompatible with CKEditor file upload plugins.
+    extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
+    removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
+    height: 200,
+    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+    allowedContent: true
+  });
+  CKEDITOR.replace('options', {
+    // For now, MathType is incompatible with CKEditor file upload plugins.
+    extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
+    removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
+    height: 200,
+    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+    allowedContent: true
+  });
+</script>
 {% endblock %}

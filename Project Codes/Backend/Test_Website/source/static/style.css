@@ -642,7 +642,8 @@ height: 100%;
   justify-content: center;
 }
 
-.dashboard .items_card {
+.dashboard .items_card,
+.dashboard .educator_forms {
   width: 18rem;
   height: 20rem;
   /*background-color: rgba(48, 48, 48, 1);*/
@@ -661,7 +662,8 @@ height: 100%;
   margin: 0.5rem;
 }
 
-.dashboard .items_card .items {
+.dashboard .items_card .items,
+.dashboard .educator_forms .items {
   position: relative;
   width: 100%;
   height: 100%;
@@ -697,7 +699,8 @@ height: 100%;
   margin-top: 1rem;
 }
 
-.dashboard .paper_submission {
+.dashboard .paper_submission,
+.dashboard .educator_forms {
   width: 100%;
   text-align: center;
   padding-top: 1rem;
@@ -728,12 +731,14 @@ height: 100%;
   width: 86%;
 }
 
-.paper_submission .item_header {
+.paper_submission .item_header,
+.educator_forms .item_header {
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
-.paper_submission button {
+.paper_submission button,
+.educator_forms button {
   margin-top: 1rem;
   width: 40% !important;
   padding: 1rem;
@@ -782,10 +787,6 @@ height: 100%;
   width: 5.5rem;
 }
 
-.area .dashboard_forms {
-  background-color: rgba(255, 255, 255, 0.6);
-}
-
 .area .question_list {
   height: auto;
 }
@@ -805,6 +806,11 @@ height: 100%;
 
 .quiz_area .text-right {
   text-align: left !important;
+}
+
+.quiz_area label p,
+.quiz_area #question_tag p {
+  display: inline;
 }
 
 .content_display {

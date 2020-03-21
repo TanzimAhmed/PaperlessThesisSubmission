@@ -38,8 +38,8 @@ class QuestionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['text'].widget.attrs.update({'placeholder': 'Quiz Title', 'class': 'input'})
-        self.fields['options'].widget.attrs.update({'placeholder': 'Choices', 'class': 'input'})
+        self.fields['text'].widget.attrs.update({'placeholder': 'Question Text', 'id': 'question'})
+        self.fields['options'].widget.attrs.update({'placeholder': 'Choices', 'id': 'options'})
         self.fields['answer'].widget.attrs.update({'placeholder': 'Correct Choice', 'class': 'input'})
         self.fields['points'].widget.attrs.update({'placeholder': 'Points', 'class': 'input'})
         self.fields['time'].widget.attrs.update({'placeholder': 'Time (in seconds)', 'class': 'input'})

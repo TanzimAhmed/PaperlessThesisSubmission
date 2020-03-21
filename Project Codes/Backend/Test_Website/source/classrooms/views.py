@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from .models import Classroom, Quiz, Performance
@@ -230,34 +231,51 @@ class UpdateQuestionView(View):
 
 class QuizView(View):
     template_name = 'classrooms/learners/quiz.html'
+    request = None
 
     @method_decorator(login_required(login_url='users:login'))
     @method_decorator(educator_required)
     def get(self, request, class_id, quiz_id):
+        self.request = request
         form = TakeQuizForm()
+        quiz = self.get_quiz(class_id, quiz_id)
         try:
-            classroom = request.user.classroom.get(id=class_id)
-            quiz = classroom.quiz.get(id=quiz_id)
-            if not quiz.is_running:
-                raise PermissionDenied
-            questions = quiz.question.all()
-        except Classroom.DoesNotExist:
-            raise Http404('Classroom Not found')
-        except Quiz.DoesNotExist:
-            raise Http404('Quiz Not found')
+            quiz.performance_set.get(student=request.user)
+        except Performance.DoesNotExist:
+            quiz.students.add(request.user)
+        else:
+            raise PermissionDenied('Quiz already given')
+        questions = quiz.question.all()
         questions = serialize('json', questions, fields=('text', 'options', 'time', 'points'))
-        print(questions)
         context = {
             'quiz': quiz,
             'questions': questions,
             'form': form
         }
+        messages.warning(request, "Do Not Reload or Leave this page. Your quiz will be cancelled otherwise.")
         return render(request, self.template_name, context)
 
     @method_decorator(login_required(login_url='users:login'))
     @method_decorator(educator_required)
     def post(self, request, class_id, quiz_id):
-        pass
+        form = TakeQuizForm(request.POST)
+        quiz = self.get_quiz(class_id, quiz_id)
+        if form.is_valid():
+            quiz.evaluate_response(request.user, form.cleaned_data['answers'])
+        messages.success(request, "Your Quiz has been evaluated Successfully")
+        return redirect('users:dashboard')
+
+    def get_quiz(self, class_id, quiz_id):
+        try:
+            classroom = self.request.user.classroom.get(id=class_id)
+            quiz = classroom.quiz.get(id=quiz_id)
+            if not quiz.is_running:
+                raise PermissionDenied
+        except Classroom.DoesNotExist:
+            raise Http404('Classroom Not found')
+        except Quiz.DoesNotExist:
+            raise Http404('Quiz Not found')
+        return quiz
 
 
 @login_required(login_url='users:login')
@@ -298,7 +316,6 @@ def quiz_status(request, class_id, quiz_id, status):
 
 
 @login_required(login_url='users:login')
-@learner_required
 def participate_quiz(request, class_id, quiz_id):
     try:
         classroom = request.user.classroom.get(id=class_id)
@@ -308,7 +325,8 @@ def participate_quiz(request, class_id, quiz_id):
     except Quiz.DoesNotExist:
         raise Http404('Quiz Not found')
     performance = quiz.performance_set.get(student=request.user)
-    print(performance)
+    
+    print(performance.correct_responses)
     return render(request, 'classrooms/index.html')
 
 

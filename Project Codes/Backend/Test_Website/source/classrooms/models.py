@@ -37,16 +37,20 @@ class Quiz(models.Model):
         ]
 
     def evaluate_response(self, user, response):
-        performance = self.performace_set.get(student=user)
+        performance = self.performance_set.get(student=user)
+        response = response.strip(', ')
         performance.response = response
-        response = response.split('.')
+        response = response.split(', ')
         i = 0
         for question in self.question.all():
-            self.question.total_responses += 1
+            question.total_responses += 1
             if question.answer == response[i]:
-                self.question.correct_responses += 1
+                question.correct_responses += 1
                 performance.points += question.points
                 performance.correct_responses += 1
+            performance.save()
+            question.save()
+            i += 1
 
     def get_string(self):
         return f'{self.classroom.get_string()}, {self.title}'
@@ -68,9 +72,9 @@ class Performance(models.Model):
 
 
 class Question(models.Model):
-    text = models.CharField(max_length=255)
+    text = models.TextField()
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='question')
-    options = models.CharField(max_length=255)
+    options = models.TextField()
     answer = models.CharField(max_length=128)
     points = models.IntegerField(default=1)
     time = models.IntegerField(default=60, help_text='Time in Seconds')

@@ -27,11 +27,56 @@
       </div>
       <form action="" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        <br>
+        <p><strong>Question Text:</strong></p>
+        {{ form.text }}
+        {{ form.text.errors }}
+        <br>
+        <br>
+        <p><strong>Options </strong>(Seperate each option with // characters in a new line):</p>
+        {{ form.options }}
+        {{ form.options.errors }}
+        <br>
+        <br>
+        <p><strong>Correct Choice:</strong></p>
+        {{ form.answer }}
+        {{ form.answer.errors }}
+        <p><strong>Points:</strong></p>
+        {{ form.points }}
+        {{ form.points.errors }}
+        <p><strong>Time (in seconds):</strong></p>
+        {{ form.time }}
+        {{ form.time.errors }}
         <button type="submit" class="btn btn-dark">Update</button>
       </form>
     </div>
   </div>
   <div class="footer container"></div>
 </div>
+
+<!-- CK Editor JS includes-->
+<script src="//cdn.ckeditor.com/4.13.1/standard-all/ckeditor.js"></script>
+<!-- MathJax JS includes -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script>
+  CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
+  CKEDITOR.replace('question', {
+    // For now, MathType is incompatible with CKEditor file upload plugins.
+    extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
+    removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
+    height: 200,
+    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+    allowedContent: true
+  });
+  CKEDITOR.replace('options', {
+    // For now, MathType is incompatible with CKEditor file upload plugins.
+    extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
+    removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
+    height: 200,
+    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+    allowedContent: true
+  });
+</script>
 {% endblock %}
