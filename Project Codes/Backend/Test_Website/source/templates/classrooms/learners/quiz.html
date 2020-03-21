@@ -1,5 +1,134 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  Take Quiz
+<div class="user_dashboard">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1><strong>Classroom</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ quiz.title }}</strong> 
+        <br>
+        <br>
+        {{ quiz.classroom.name }}
+      </h3>
+      <p>
+        {{ quiz.classroom.course_code }}, 
+        Section: {{ quiz.classroom.course_code }} <br>
+        Session: {{ quiz.classroom.semester }}
+      </p>
+    </div>
+  </div>
+  <div class="dashboard container">
+    <div class="area quiz_area">
+      <div class="area_header">
+        <h2> Questions </h2>
+      </div>
+      <div class="card_container">
+        <div class="items_card items_card_fluid paper_list question_list">
+          <div class="items">
+            <form action="" method="POST">
+              {% csrf_token %}
+              {{ form.answers }}
+              <div class="text-right">
+                <strong>Points: </strong><span id="points_tag"></span> <br>
+                <strong>Time Remaining: </strong><span id="timer_tag"></span> seconds
+              </div>
+              <br>
+              <br>
+              <br>
+              <p id="question_tag"></p>
+              <p id="options_tag"></p>
+              <br>
+              <div class="button_right">
+                <button type="submit" class="btn btn-dark">
+                  Next
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const question_tag = document.querySelector('#question_tag');
+  const option_tag = document.querySelector('#options_tag');
+  const points_tag = document.querySelector('#points_tag');
+  const timer_tag = document.querySelector('#timer_tag');
+  const form = document.querySelector('form');
+  const questions = JSON.parse('{{questions | safe}}');
+  let ques_no = 1;
+
+  function set_question() {
+    question = questions.shift();
+    question_tag.innerHTML = `${ques_no}. ${question.fields.text}`;
+    points_tag.innerHTML = question.fields.points;
+    timer_tag.innerHTML = question.fields.time;
+    option_tag.innerHTML = '';
+    ques_no++;
+
+    let option_no = 'A';
+    question.fields.options.split(', ').forEach(option => {
+      const option_node = document.createElement('input');
+      const label_node = document.createElement('label');
+      const line_break = document.createElement('br');
+      option_node.type = 'radio';
+      option_node.name = 'options';
+      option_node.value = option_no;
+      label_node.innerHTML = `${option_no}: ${option}`;
+      option_tag.appendChild(option_node);
+      option_tag.appendChild(label_node);
+      option_tag.appendChild(line_break);
+      option_no = String.fromCharCode(option_no.charCodeAt(0) + 1);
+    });
+
+    let time_left = question.fields.time;
+    let timer = setInterval(() => {
+      if (time_left != 0){
+        time_left--;
+        timer_tag.innerHTML = time_left;
+        if (time_left < 20) 
+          timer_tag.style.color = 'red';
+      } else {
+        clearInterval(timer);
+        console.log('Interval Cleared');
+        timer_tag.style.color = 'black';
+        next_question();
+      }
+    }, 1000);
+  }
+
+  form.onsubmit = function(event){
+    if (form.options.value.length == 0)
+      form.answers.value += 'NONE, ';
+    else 
+      form.answers.value += `${form.options.value}, `;
+    console.log(form.answers.value);
+    console.log(questions.length);
+
+    if (questions.length != 0) {
+      event.preventDefault();
+      set_question();
+    }
+  }
+
+  function next_question() {
+    if (form.options.value.length == 0)
+      form.answers.value += 'NONE, ';
+    else 
+      form.answers.value += `${form.options.value}, `;
+    console.log(form.answers.value);
+    console.log(questions.length);
+
+    if (questions.length == 0)
+      form.submit();
+    set_question();
+  }
+
+  set_question();
+</script>
 {% endblock %}
