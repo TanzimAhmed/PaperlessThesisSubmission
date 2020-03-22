@@ -328,7 +328,7 @@ def participate_quiz(request, class_id, quiz_id):
     except Quiz.DoesNotExist:
         raise Http404('Quiz Not found')
     performance = quiz.performance_set.get(student=request.user)
-    # performance.delete()
+    performance.delete()
     print(performance.correct_responses)
     return render(request, 'classrooms/index.html')
 
