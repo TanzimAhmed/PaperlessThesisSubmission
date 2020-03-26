@@ -470,7 +470,7 @@ nav {
   top: 3.5rem;
   width: 100%; 
   text-align: center;
-  z-index: 4; 
+  z-index: 4;
 }
 /* endsection Error Messages by Tanzim */
 /* section Student Dashboard by Fahad */
@@ -716,10 +716,7 @@ height: 100%;
 .dashboard .educator_forms {
   width: 100%;
   text-align: center;
-  padding-top: 1rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-bottom: 2rem;
+  padding: 1rem 2rem 2rem;
   height: auto;
 }
 
@@ -789,7 +786,6 @@ height: 100%;
 }
 
 .form_container button {
-  margin-top: 1rem;
   width: 50% !important;
   margin-top: 4rem;
   padding: 1rem;
@@ -833,11 +829,7 @@ height: 100%;
 }
 
 .content_display {
-  
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  margin-left: 0.5%;
-  margin-right: 0.5%;
+  margin: 1rem 0.5%;
   padding-bottom: 1rem;
 }
 

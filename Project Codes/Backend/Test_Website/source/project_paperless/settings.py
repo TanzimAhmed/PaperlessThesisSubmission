@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'users',
     'educators',
     'learners',
@@ -76,6 +77,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project_paperless.wsgi.application'
+ASGI_APPLICATION = 'project_paperless.asgi_application.application'
 
 
 # Database

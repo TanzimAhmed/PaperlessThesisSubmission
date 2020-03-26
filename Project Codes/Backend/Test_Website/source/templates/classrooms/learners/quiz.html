@@ -83,7 +83,7 @@
     }
     timer_tag.style.color = 'black';
 
-    question = questions.shift();
+    let question = questions.shift();
     question_tag.innerHTML = `${ques_no}. ${question.fields.text}`;
     points_tag.innerHTML = question.fields.points;
     timer_tag.innerHTML = question.fields.time;
@@ -148,7 +148,7 @@
   }
 
   function load_math() {
-    node = document.querySelector('#question_area')
+    let node = document.querySelector('#question_area')
     MathJax.texReset();
     MathJax.typesetClear();
     MathJax.typesetPromise([node]).catch(function (err) {
