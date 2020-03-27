@@ -1,12 +1,75 @@
 {% extends 'layout.html' %}
 
+{% block background_class %}
+  dashboard_background
+{% endblock %}
+
 {% block body %}
-<div id="content_display">
-  <div class="container" id="content">
-    {% if content %}
-      {{ content.content | safe }}
-      <!-- Add HTML for Comment Section HERE -->
-    {% endif %}
+<div class="user_dashboard">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1><strong>{{ content.title }}</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ content.user.get_full_name }}</strong>
+        <br>
+      </h3>
+      <strong>Created: </strong> {{ content.date_created }} <br>
+      <strong>Updated:  </strong> {{ content.date_updated }} <br>
+      <br>
+      <h4>
+        <strong>
+          {{ content.course_code }},
+          Section: {{ content.section }}
+        </strong>
+        {% if request.user == content.user %}
+          <div class="text-right">
+            <a href="#" class="btn btn-danger">Delete</a>
+            <a href="#" class="btn btn-outline-info">Edit</a>
+          </div>
+        {% endif %}
+      </h4>
+    </div>
+  </div>
+  <div class="dashboard container content_area_container">
+    <div class="content_area">
+      <div class="container" id="content">
+        {% if content %}
+          {{ content.content | safe }}
+          <!-- Add HTML for Comment Section HERE -->
+        {% endif %}
+      </div>
+    </div>
+    <div class="comment_section">
+      <div class="comment_header">
+        <h2>Discussion</h2>
+      </div>
+      <div class="comment_container">
+        <div class="comment_card">
+          <div class="comment_info">
+            <h5>Name</h5>
+            <div class="text-right">
+              Date
+            </div>
+          </div>
+          <div class="comment_body">
+            Comment
+          </div>
+        </div>
+        <div class="comment_card">
+          <div class="comment_info">
+            <h5>Name</h5>
+            <div class="text-right">
+              Date
+            </div>
+          </div>
+          <div class="comment_body">
+            Comment
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -25,7 +88,7 @@
     },
     loader: {load: ['input/asciimath', 'output/chtml']},
   }
-  
+
   window.onload = function() {
     document.querySelector('#content').style.display = 'block';
   }

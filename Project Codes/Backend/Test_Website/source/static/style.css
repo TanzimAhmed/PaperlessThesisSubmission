@@ -588,6 +588,7 @@ height: 100%;
 .user_dashboard {
   position: relative;
   width: 100%;
+  min-height: 100vh;
   padding-top: 3.5rem;
   background-color: rgba(39, 40, 44, 0.5);
 }
@@ -597,7 +598,7 @@ height: 100%;
   padding-top: 2rem;
   padding-bottom: 2rem;
   margin-bottom: 1rem;
-  background-color: rgba(39, 40, 44);
+  background-color: rgb(39, 40, 44);
   /*color: #343a40;*/
   color: white;
   opacity: 0.85;
@@ -620,18 +621,27 @@ height: 100%;
 }
 
 .header .user_info {
+  position: relative;
   margin-top: 5rem;
   width: 100%;
   padding: 1rem 2.4rem 0.5rem 2.4rem;
   margin-bottom: 1rem;
 }
 
+.header .user_info .text-right {
+  display: inline-block;
+  width: auto;
+  position: absolute;
+  right: 2rem;
+}
+
+.header .user_info .btn {
+  width: 8rem;
+}
+
 .dashboard .area {
   width: 38rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  margin-left: 0.5%;
-  margin-right: 0.5%;
+  margin: 1rem 0.5%;
   padding-bottom: 1rem;
 }
 
@@ -668,8 +678,9 @@ height: 100%;
 
   background-color: white;
   
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6),
-              0 6px 20px 0 rgba(0, 0, 0, 0.55);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5),
+              0 6px 20px 0 rgba(0, 0, 0, 0.45);
+  border-radius: 0.4rem;
   /*border: 1px solid rgba(0, 184, 148,1);*/
   padding: 2rem;
   margin: 0.5rem;
@@ -836,5 +847,68 @@ height: 100%;
 .content_display .items_card {
   width: 22rem;
   height: 25rem;
+}
+
+.content_area_container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.content_area {
+  background-color: #f1f1f1;
+  width: 100%;
+  min-height: 50vh;
+  padding: 4rem;
+  margin-bottom: 2rem;
+  text-align: justify;
+}
+
+.comment_section {
+  width: 100%;
+}
+
+.comment_section .comment_header {
+  margin: 2rem 0.5rem;
+  padding: 1.5rem 0;
+  color: #f1f1f1;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+}
+
+.comment_header h2 {
+  padding-left: 3rem;
+}
+
+.comment_section .comment_container {
+  padding: 0 2.5rem 2rem;
+  width: 100%;
+}
+
+.comment_section .comment_card {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+.comment_container .comment_info {
+  position: relative;
+  color: #f1f1f1;
+  margin-bottom: 1rem;
+}
+
+.comment_info .text-right {
+  display: inline-block;
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0;
+}
+
+.comment_container .comment_body {
+  width: 100%;
+  padding: 1rem;
+  text-align: justify;
+  background-color: white;
+  border-radius: 0.25rem;
 }
 /* endsection Student Dashboard by Tanzim*/
