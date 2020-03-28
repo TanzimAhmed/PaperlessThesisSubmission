@@ -46,27 +46,89 @@
         <h2>Discussion</h2>
       </div>
       <div class="comment_container">
-        <div class="comment_card">
-          <div class="comment_info">
-            <h5>Name</h5>
-            <div class="text-right">
-              Date
+        <form action="" id="replies_form">
+          {% csrf_token %}
+          <div class="comment_card">
+            <div class="comment_info">
+              <h5>Name</h5>
+              <div class="text-right">
+                Date
+              </div>
+            </div>
+            <div class="comment_body">
+              Comment
+            </div>
+            <div class="actions text-right">
+              <a href="" class="reply_buttons" id="card_1">Reply</a>
             </div>
           </div>
-          <div class="comment_body">
-            Comment
+          <div id="replies_card_1">
+            <div class="comment_card comment_replies">
+              <div class="comment_info">
+                <h5>Name</h5>
+                <div class="text-right">
+                  Date
+                </div>
+              </div>
+              <div class="comment_body">
+                Replies
+              </div>
+            </div>
+            <!--
+            <div class="comment_card comment_form" id="reply_area">
+              <div class="comment_info">
+                <h5>Write your reply</h5>
+              </div>
+              <div class="comment_body">
+                <textarea name="reply_input" id="reply_input" cols="30" rows="10"></textarea>
+              </div>
+              <div class="actions text-right">
+                <button type="submit" class="btn btn-outline-light">Reply</button>
+              </div>
+            </div>
+            -->
           </div>
-        </div>
-        <div class="comment_card">
-          <div class="comment_info">
-            <h5>Name</h5>
-            <div class="text-right">
-              Date
+          <div class="comment_card">
+            <div class="comment_info">
+              <h5>Name</h5>
+              <div class="text-right">
+                Date
+              </div>
+            </div>
+            <div class="comment_body">
+              Comment
+            </div>
+            <div class="actions text-right">
+              <a href="" class="reply_buttons" id="card_2">Reply</a>
             </div>
           </div>
-          <div class="comment_body">
-            Comment
+          <div id="replies_card_2">
+            <div class="comment_card comment_replies">
+              <div class="comment_info">
+                <h5>Name</h5>
+                <div class="text-right">
+                  Date
+                </div>
+              </div>
+              <div class="comment_body">
+                Replies
+              </div>
+            </div>
           </div>
+        </form>
+        <div class="comment_card comment_form">
+          <div class="comment_info">
+            <h5>Write your queries</h5>
+          </div>
+          <form action="" method="POST" id="comment_form">
+            {% csrf_token %}
+            <div class="comment_body">
+              <textarea name="" id="comment_input" cols="30" rows="10"></textarea>
+            </div>
+            <div class="actions text-right">
+              <button type="submit" class="btn btn-outline-light">Post</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -74,23 +136,107 @@
 </div>
 
 
+<!-- CK Editor JS includes-->
+<script src="//cdn.ckeditor.com/4.13.1/standard-all/ckeditor.js"></script>
 <!-- MathJax JS includes -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <script>
-  MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']]
-    },
-    svg: {
-      fontCache: 'global'
-    },
-    loader: {load: ['input/asciimath', 'output/chtml']},
-  }
+    CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
+    function load_editor(id) {
+        CKEDITOR.replace(id, {
+            // For now, MathType is incompatible with CKEditor file upload plugins.
+            extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
+            removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
+            height: 200,
+            mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+            allowedContent: true
+        });
+    }
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        svg: {
+            fontCache: 'global'
+        },
+        loader: {load: ['input/asciimath', 'output/chtml']},
+    };
 
-  window.onload = function() {
-    document.querySelector('#content').style.display = 'block';
-  }
+    // DOM Objects
+    const reply_buttons = document.querySelectorAll('.reply_buttons');
+    const reply_form = document.querySelector('#replies_form');
+    const comment_form = document.querySelector('#comment_form');
+
+    // Websocket Actions
+    const end_point = 'ws://' + window.location.host + window.location.pathname;
+    const web_socket = new WebSocket(end_point);
+
+    web_socket.onopen = function(event) {
+      console.log('Websocket Connection established');
+    };
+
+    web_socket.onclose = function(event) {
+        console.log('Websocket closed');
+    };
+
+    web_socket.onerror = function(event) {
+        console.log('Websocket Error', event);
+    };
+
+    // DOM Modifications
+    reply_buttons.forEach(reply_button => {
+        reply_button.addEventListener('click', (event) => {
+            load_reply_form(event);
+        })
+    });
+
+    function load_reply_form(event) {
+        event.preventDefault();
+        const reply_area = document.querySelector('#reply_area');
+        if (reply_area) {
+            console.log(reply_area);
+            reply_area.remove();
+        }
+        const target_node = document.querySelector(`#replies_${event.target.id}`);
+        target_node.appendChild(load_reply_area());
+        load_editor('reply_input');
+    }
+
+    function load_reply_area() {
+        const card_node = document.createElement('div');
+        card_node.className = 'comment_card comment_form';
+        card_node.id = 'reply_area';
+        const info_node = document.createElement('div');
+        info_node.className = 'comment_info';
+        const text_node = document.createElement('h5');
+        text_node.innerHTML = 'Write your reply';
+        const body_node = document.createElement('div');
+        body_node.className = 'comment_body';
+        const input_node = document.createElement('textarea');
+        input_node.name = 'reply_input';
+        input_node.id = 'reply_input';
+        input_node.rows = 10;
+        const actions_node = document.createElement('div');
+        actions_node.className = 'actions text-right';
+        const action_node = document.createElement('button');
+        action_node.className = 'btn btn-outline-light';
+        action_node.type = 'submit';
+        action_node.innerHTML = 'Reply';
+
+        info_node.appendChild(text_node);
+        body_node.appendChild(input_node);
+        actions_node.appendChild(action_node);
+        card_node.append(info_node, body_node, actions_node);
+        return card_node;
+    }
+
+    load_editor('comment_input');
+
+    // MathJax Clean Load
+    window.onload = function() {
+        document.querySelector('#content').style.display = 'block';
+    }
 </script>
 {% endblock %}

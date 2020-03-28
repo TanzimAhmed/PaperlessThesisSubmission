@@ -159,10 +159,8 @@ body {
 
 /* section Forms by Fahad */
 .form_background {
-  background: url('/static/images/bg_2.jpeg');
   background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: url('/static/images/bg_2.jpeg') no-repeat center;
   height: 100vh;
 }
 
@@ -576,7 +574,7 @@ height: 100%;
 /* endsection Student Dashboard by Fahad */
 /* section Student Dashboard by Tanzim*/
 .dashboard_background {
-  background-image: url('/static/images/bg_4.png');
+  background-image: url('/static/images/bg_2.jpeg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -868,7 +866,7 @@ height: 100%;
 }
 
 .comment_section .comment_header {
-  margin: 2rem 0.5rem;
+  margin: 2rem 0.5rem 0;
   padding: 1.5rem 0;
   color: #f1f1f1;
   border-top: 1px solid grey;
@@ -887,6 +885,7 @@ height: 100%;
 .comment_section .comment_card {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 1rem;
+  margin-top: 1.5rem;
   margin-bottom: 0.5rem;
   border-radius: 0.4rem;
 }
@@ -910,5 +909,33 @@ height: 100%;
   text-align: justify;
   background-color: white;
   border-radius: 0.25rem;
+}
+
+.comment_section .comment_replies {
+  margin-top: 0;
+  margin-left: 6rem;
+}
+
+.comment_section .actions {
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  color: white;
+}
+
+.comment_section #reply_area {
+  margin-left: 6rem;
+  margin-top: 0 !important;
+}
+
+.actions .btn {
+  width: 10rem;
+}
+
+.actions a {
+  color: white;
+}
+
+.comment_section .comment_form {
+  margin-top: 3rem;
 }
 /* endsection Student Dashboard by Tanzim*/

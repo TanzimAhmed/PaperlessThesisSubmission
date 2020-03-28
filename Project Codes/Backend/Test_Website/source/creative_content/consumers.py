@@ -4,13 +4,14 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 
 class CommentsConsumer(AsyncWebsocketConsumer):
-    chat_thread = None
+    comment_thread = None
 
     async def connect(self):
         print("Socket Connected")
-        thread = self.scope['url_route']['kwargs']['content_id']
-        print(thread)
+        self.comment_thread = self.scope['url_route']['kwargs']['content_id']
+        print(self.comment_thread)
         await self.accept()
+        await self.close()
 
     async def disconnect(self, code):
         pass

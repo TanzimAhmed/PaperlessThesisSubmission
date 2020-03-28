@@ -30,3 +30,7 @@ class Resource(models.Model):
 
     def __str__(self):
         return self.item.name
+
+
+class DiscussionThread(models.Model):
+    pass
