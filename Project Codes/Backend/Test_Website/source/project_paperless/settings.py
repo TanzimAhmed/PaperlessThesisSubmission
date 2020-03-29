@@ -79,6 +79,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project_paperless.wsgi.application'
 ASGI_APPLICATION = 'project_paperless.asgi_application.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

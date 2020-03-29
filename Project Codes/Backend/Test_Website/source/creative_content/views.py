@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, Http404, HttpResponse
 from django.core.exceptions import PermissionDenied
 from .models import Content, Resource
 from project_paperless.utils import unique_id
-from .forms import ContentForm, ResourceForm
+from .forms import ContentForm, DiscussionForm, RepliesForm, ResourceForm
 
 # Create your views here.
 
@@ -103,9 +103,18 @@ def show(request, link):
         content = Content.objects.get(link=link)
     except Content.DoesNotExist:
         raise Http404('Link does not exist')
-    else:
-        context = {'content': content}
-        return render(request, 'creative_content/content_display.html', context)
+
+    discussions = content.discussion.all()
+    discussion_form = DiscussionForm()
+    replies_form = RepliesForm()
+    context = {
+        'content': content,
+        'discussions': discussions,
+        'discussion_form': discussion_form,
+        'replies_form': replies_form
+    }
+    print(context)
+    return render(request, 'creative_content/content_display.html', context)
 
 
 def content_display(request):

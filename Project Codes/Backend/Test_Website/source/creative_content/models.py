@@ -33,4 +33,14 @@ class Resource(models.Model):
 
 
 class DiscussionThread(models.Model):
-    pass
+    text = models.TextField()
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='discussion')
+    date = models.DateTimeField(auto_now=True)
+
+
+class RepliesThread(models.Model):
+    text = models.TextField()
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    discussion = models.ForeignKey(DiscussionThread, on_delete=models.CASCADE, related_name='response')
+    date = models.DateTimeField(auto_now=True)
