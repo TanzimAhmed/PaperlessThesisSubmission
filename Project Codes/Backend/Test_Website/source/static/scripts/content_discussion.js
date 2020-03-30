@@ -32,12 +32,12 @@ const reply_delete_buttons = document.querySelectorAll('.replies_delete');
 const comments = document.querySelector('#comments');
 const reply_form = document.querySelector('#replies_form');
 const discussion_form = document.querySelector('#comment_form');
-const discussion_editor = load_editor('comment_input');
 const comment_form_header = document.querySelector('#comment_form_header');
 const comment_button = document.querySelector('#comment_button');
 const exit_comment_button = document.querySelector('#exit_comment_button');
 const cancel_button = document.querySelector('#prompt_cancel');
 const continue_button = document.querySelector('#prompt_continue');
+let discussion_editor = null;
 let reply_editor = null;
 let target_node = null;
 let edit_node = null;
@@ -75,7 +75,8 @@ web_socket.onmessage = function(event) {
             data['node_id'],
             data['user_name'],
             data['date'],
-            data['text']
+            data['text'],
+            data['user']
         ));
     } else if (data['request_type'] == 'new_reply') {
         document.querySelector(`#${data['target_id']} .replies`).appendChild(load_reply(
@@ -83,7 +84,8 @@ web_socket.onmessage = function(event) {
             data['node_id'],
             data['user_name'],
             data['date'],
-            data['text']
+            data['text'],
+            data['user']
         ));
     } else if (data['request_type'] == 'edit_discussion') {
         const node = document.querySelector(`#comment_time_${data['node_id']}`);
@@ -103,7 +105,29 @@ web_socket.onmessage = function(event) {
     load_math();
 };
 
+
 // DOM Modifications
+
+//Event Handler functions
+const comment_delete_handler = function (event) {
+    event.preventDefault();
+    delete_node = event.target.id;
+    delete_node_type = 'comment';
+    document.querySelector('#prompt').style.display = 'flex';
+    document.querySelector('#prompt_message').innerHTML = 'Your entire conversation for this ' +
+        'thread would be deleted. This action can NOT be undone. Do you wish to continue?';
+};
+
+const reply_delete_handler = function (event) {
+    event.preventDefault();
+    delete_node = event.target.id;
+    delete_node_type = 'reply';
+    document.querySelector('#prompt').style.display = 'flex';
+    document.querySelector('#prompt_message').innerHTML = 'Your reply would be deleted. ' +
+        'This action can NOT be undone. Do you wish to continue?';
+};
+
+// Event Listeners
 if (reply_buttons) {
     reply_buttons.forEach(reply_button => {
         reply_button.addEventListener('click', (event) => {
@@ -123,14 +147,7 @@ if (comment_edit_buttons) {
 
 if (comment_delete_buttons) {
     comment_delete_buttons.forEach(delete_button => {
-        delete_button.addEventListener('click', (event) => {
-            event.preventDefault();
-            delete_node = event.target.id;
-            delete_node_type = 'comment';
-            document.querySelector('#prompt').style.display = 'flex';
-            document.querySelector('#prompt_message').innerHTML = 'Your entire conversation for this' +
-                'thread would be deleted. This action can NOT be undone. Do you wish to continue?';
-        });
+        delete_button.addEventListener('click', comment_delete_handler);
     });
 }
 
@@ -144,76 +161,76 @@ if (reply_edit_buttons) {
 
 if (reply_delete_buttons) {
     reply_delete_buttons.forEach(delete_button => {
-        delete_button.addEventListener('click', (event) => {
-            event.preventDefault();
-            delete_node = event.target.id;
-            delete_node_type = 'reply';
-            document.querySelector('#prompt').style.display = 'flex';
-            document.querySelector('#prompt_message').innerHTML = 'Your reply would be deleted. ' +
-                'This action can NOT be undone. Do you wish to continue?';
-        });
+        delete_button.addEventListener('click', reply_delete_handler);
     });
 }
 
-discussion_form.onsubmit = function (event) {
-    event.preventDefault();
-    console.log(event.target.id, edit_node);
-    const text = discussion_editor.getData();
-    if (text.length == 0)
-        return;
-    if (edit_node) {
-        web_socket.send(JSON.stringify({
-            'request_type': 'edit_discussion',
-            'node_id': edit_node,
-            'text': text
-        }));
-        edit_node = null;
-        comment_form_header.innerHTML = 'Write your query';
-        comment_button.innerHTML = 'Post';
-        exit_comment_button.style.display = 'none';
-    } else {
-        web_socket.send(JSON.stringify({
-            'request_type': 'new_discussion',
-            'text': text
-        }));
-    }
-    discussion_editor.setData('');
-};
+if (discussion_form) {
+    discussion_editor = load_editor('comment_input');
 
-reply_form.onsubmit = function (event) {
-    event.preventDefault();
-    console.log(event.target.id, edit_node);
-    const text = reply_editor.getData();
-    if (text.length == 0)
-        return;
-    if (edit_node) {
-        web_socket.send(JSON.stringify({
-            'request_type': 'edit_reply',
-            'node_id': edit_node,
-            'text': text
-        }));
-        edit_node = null;
-        document.querySelector('#reply_form_header').innerHTML = 'Write your reply';
-        document.querySelector('#reply_button').innerHTML = 'Reply';
-    } else {
-        web_socket.send(JSON.stringify({
-            'request_type': 'new_reply',
-            'target_id': target_node.id,
-            'text': text
-        }));
-    }
-    reply_editor.setData('');
-};
-
-exit_comment_button.onclick = function (event) {
-    if (edit_node != null) {
-        comment_form_header.innerHTML = 'Write your query';
-        comment_button.innerHTML = 'Post';
-        exit_comment_button.style.display = 'none';
+    discussion_form.onsubmit = function (event) {
+        event.preventDefault();
+        console.log(event.target.id, edit_node);
+        const text = discussion_editor.getData();
+        if (text.length == 0)
+            return;
+        if (edit_node) {
+            web_socket.send(JSON.stringify({
+                'request_type': 'edit_discussion',
+                'node_id': edit_node,
+                'text': text
+            }));
+            edit_node = null;
+            comment_form_header.innerHTML = 'Write your query';
+            comment_button.innerHTML = 'Post';
+            exit_comment_button.style.display = 'none';
+        } else {
+            web_socket.send(JSON.stringify({
+                'request_type': 'new_discussion',
+                'text': text
+            }));
+        }
         discussion_editor.setData('');
-        edit_node = null;
-    }
-};
+    };
+
+
+    exit_comment_button.onclick = function (event) {
+        if (edit_node != null) {
+            comment_form_header.innerHTML = 'Write your query';
+            comment_button.innerHTML = 'Post';
+            exit_comment_button.style.display = 'none';
+            discussion_editor.setData('');
+            edit_node = null;
+        }
+    };
+}
+
+if (reply_form) {
+    reply_form.onsubmit = function (event) {
+        event.preventDefault();
+        console.log(event.target.id, edit_node);
+        const text = reply_editor.getData();
+        if (text.length == 0)
+            return;
+        if (edit_node) {
+            web_socket.send(JSON.stringify({
+                'request_type': 'edit_reply',
+                'node_id': edit_node,
+                'text': text
+            }));
+            edit_node = null;
+            document.querySelector('#reply_form_header').innerHTML = 'Write your reply';
+            document.querySelector('#reply_button').innerHTML = 'Reply';
+        } else {
+            web_socket.send(JSON.stringify({
+                'request_type': 'new_reply',
+                'target_id': target_node.id,
+                'text': text
+            }));
+        }
+        reply_editor.setData('');
+    };
+}
 
 cancel_button.onclick = function (event) {
     event.preventDefault();
@@ -317,7 +334,7 @@ function load_reply_area() {
     return card_node;
 }
 
-function load_comment(node_id, user_name, date, text) {
+function load_comment(node_id, user_name, date, text, user) {
     const card_node = document.createElement('div');
     card_node.className = 'comment_card';
     card_node.id = `comment_card_${node_id}`;
@@ -337,42 +354,66 @@ function load_comment(node_id, user_name, date, text) {
     replies_card_node.id = `replies_card_${node_id}`;
     const replies_node = document.createElement('div');
     replies_node.className = 'replies';
-    const actions_node = document.createElement('div');
-    actions_node.className = 'actions text-right';
-    const reply_node = document.createElement('a');
-    reply_node.className = 'reply_buttons';
-    reply_node.id = `card_${node_id}`;
-    reply_node.href = '';
-    reply_node.innerHTML = 'Reply';
-    const edit_node = document.createElement('a');
-    edit_node.className = 'comments_edit';
-    edit_node.id = node_id;
-    edit_node.href = '';
-    edit_node.innerHTML = 'Edit';
-    const delete_node = document.createElement('a');
-    delete_node.className = 'comments_delete';
-    delete_node.id = node_id;
-    delete_node.href = '';
-    delete_node.innerHTML = 'Delete';
 
-    info_node.append(text_node, date_node);
-    replies_card_node.appendChild(replies_node);
-    actions_node.append(delete_node, edit_node, reply_node);
-    card_node.append(info_node, body_node, replies_card_node, actions_node);
+    if (user == 'self') {
+        const actions_node = document.createElement('div');
+        actions_node.className = 'actions text-right';
+        const reply_node = document.createElement('a');
+        reply_node.className = 'reply_buttons';
+        reply_node.id = `card_${node_id}`;
+        reply_node.href = '';
+        reply_node.innerHTML = 'Reply';
+        const edit_node = document.createElement('a');
+        edit_node.className = 'comments_edit';
+        edit_node.id = node_id;
+        edit_node.href = '';
+        edit_node.innerHTML = 'Edit';
+        const del_node = document.createElement('a');
+        del_node.className = 'comments_delete';
+        del_node.id = node_id;
+        del_node.href = '';
+        del_node.innerHTML = 'Delete';
 
-    reply_node.addEventListener('click', (event) => {
-        load_reply_form(event);
-    });
-    edit_node.addEventListener('click', (event) => {
-        edit_thread(event, 'comment');
-    });
-    delete_node.addEventListener('click', (event) => {
-        delete_thread(event, 'comment');
-    });
+        info_node.append(text_node, date_node);
+        replies_card_node.appendChild(replies_node);
+        actions_node.append(del_node, edit_node, reply_node);
+        card_node.append(info_node, body_node, replies_card_node, actions_node);
+
+        reply_node.addEventListener('click', (event) => {
+            load_reply_form(event);
+        });
+        edit_node.addEventListener('click', (event) => {
+            edit_thread(event, 'comment');
+        });
+        del_node.addEventListener('click', comment_delete_handler);
+    } else if (user == 'user') {
+        const actions_node = document.createElement('div');
+        actions_node.className = 'actions text-right';
+        const reply_node = document.createElement('a');
+        reply_node.className = 'reply_buttons';
+        reply_node.id = `card_${node_id}`;
+        reply_node.href = '';
+        reply_node.innerHTML = 'Reply';
+
+        info_node.append(text_node, date_node);
+        replies_card_node.appendChild(replies_node);
+        actions_node.append(reply_node);
+        card_node.append(info_node, body_node, replies_card_node, actions_node);
+
+        reply_node.addEventListener('click', (event) => {
+            load_reply_form(event);
+        });
+    } else {
+        info_node.append(text_node, date_node);
+        replies_card_node.appendChild(replies_node);
+        card_node.append(info_node, body_node, replies_card_node);
+    }
+
+
     return card_node;
 }
 
-function load_reply(target_id, node_id, user_name, date, text) {
+function load_reply(target_id, node_id, user_name, date, text, user) {
     const card_node = document.createElement('div');
     card_node.className = 'comment_card comment_replies';
     card_node.id = `reply_card_${target_id}_${node_id}`;
@@ -388,29 +429,33 @@ function load_reply(target_id, node_id, user_name, date, text) {
     body_node.className = 'comment_body';
     body_node.id = `reply_${target_id}_${node_id}`;
     body_node.innerHTML = text;
-    const actions_node = document.createElement('div');
-    actions_node.className = 'actions text-right';
-    const edit_node = document.createElement('a');
-    edit_node.className = 'replies_edit';
-    edit_node.id = `${target_id}_${node_id}`;
-    edit_node.href = '';
-    edit_node.innerHTML = 'Edit';
-    const delete_node = document.createElement('a');
-    delete_node.className = 'replies_delete';
-    delete_node.id = `${target_id}_${node_id}`;
-    delete_node.href = '';
-    delete_node.innerHTML = 'Delete';
 
-    info_node.append(text_node, date_node);
-    actions_node.append(delete_node, edit_node);
-    card_node.append(info_node, body_node, actions_node);
+    if (user == 'self') {
+        const actions_node = document.createElement('div');
+        actions_node.className = 'actions text-right';
+        const edit_node = document.createElement('a');
+        edit_node.className = 'replies_edit';
+        edit_node.id = `${target_id}_${node_id}`;
+        edit_node.href = '';
+        edit_node.innerHTML = 'Edit';
+        const del_node = document.createElement('a');
+        del_node.className = 'replies_delete';
+        del_node.id = `${target_id}_${node_id}`;
+        del_node.href = '';
+        del_node.innerHTML = 'Delete';
 
-    edit_node.addEventListener('click', (event) => {
-        edit_thread(event, 'reply');
-    });
-    delete_node.addEventListener('click', (event) => {
-        delete_thread(event, 'reply');
-    });
+        info_node.append(text_node, date_node);
+        actions_node.append(del_node, edit_node);
+        card_node.append(info_node, body_node, actions_node);
+
+        edit_node.addEventListener('click', (event) => {
+            edit_thread(event, 'reply');
+        });
+        del_node.addEventListener('click', reply_delete_handler);
+    } else {
+        info_node.append(text_node, date_node);
+        card_node.append(info_node, body_node);
+    }
     return card_node;
 }
 

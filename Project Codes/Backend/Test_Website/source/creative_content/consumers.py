@@ -30,6 +30,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
             return
 
         user_name = self.scope['user'].get_full_name()
+        user_id = self.scope['user'].username
         json_data = json.loads(text_data)
         request_type = json_data['request_type']
 
@@ -43,6 +44,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                     {
                         'type': 'discussion_message',
                         'node_id': discussion.id,
+                        'user_id': user_id,
                         'user_name': user_name,
                         'date': date,
                         'text': text
@@ -60,6 +62,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                         'type': 'reply_message',
                         'target_id': thread_id,
                         'node_id': response.id,
+                        'user_id': user_id,
                         'user_name': user_name,
                         'date': date,
                         'text': text
@@ -122,6 +125,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'request_type': 'new_discussion',
             'node_id': event['node_id'],
+            'user': self.user_type(event['user_id']),
             'user_name': event['user_name'],
             'date': event['date'],
             'text': event['text']
@@ -146,6 +150,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
             'request_type': 'new_reply',
             'target_id': event['target_id'],
             'node_id': event['node_id'],
+            'user': self.user_type(event['user_id']),
             'user_name': event['user_name'],
             'date': event['date'],
             'text': event['text']
@@ -218,3 +223,11 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
         if response.user != self.scope['user']:
             raise PermissionDenied
         response.delete()
+
+    def user_type(self, user_id):
+        if self.scope['user'].is_authenticated and user_id == self.scope['user'].username:
+            return 'self'
+        elif self.scope['user'].is_authenticated:
+            return 'user'
+        else:
+            return 'anonymous'
