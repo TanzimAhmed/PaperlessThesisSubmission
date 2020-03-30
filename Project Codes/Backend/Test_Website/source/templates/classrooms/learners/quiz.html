@@ -148,7 +148,7 @@
     }
 
     function load_math() {
-        let node = document.querySelector('#question_area')
+        let node = document.querySelector('#question_area');
         MathJax.texReset();
         MathJax.typesetClear();
         MathJax.typesetPromise([node]).catch(function (err) {

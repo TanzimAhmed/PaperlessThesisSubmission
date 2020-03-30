@@ -51,44 +51,53 @@
           <div id="comments">
             {% for discussion in discussions %}
               <!--Comments-->
-              <div class="comment_card">
+              <div class="comment_card" id="comment_card_{{ discussion.id }}">
                 <div class="comment_info">
                   <h5>{{ discussion.user.get_full_name }}</h5>
-                  <div class="text-right">
-                    {{ discussion.date | timesince }}
+                  <div class="text-right" id="comment_time_{{ discussion.id }}">
+                    {{ discussion.date}}
                   </div>
                 </div>
-                <div class="comment_body">
+                <div class="comment_body" id="comment_{{ discussion.id }}">
                   {{ discussion.text | safe }}
                 </div>
+                <!--Comment Replies-->
+                <div id="replies_card_{{ discussion.id }}">
+                  <div class="replies">
+                    {% for response in discussion.response.all %}
+                      <div class="comment_card comment_replies" id="reply_card_{{ discussion.id }}_{{ response.id }}">
+                        <div class="comment_info">
+                          <h5>{{ response.user.get_full_name }}</h5>
+                          <div class="text-right" id="reply_time_{{ discussion.id }}_{{ response.id }}">
+                            {{ response.date}}
+                          </div>
+                        </div>
+                        <div class="comment_body" id="reply_{{ discussion.id }}_{{ response.id }}">
+                          {{ response.text | safe }}
+                        </div>
+                        <!--Reply Actions-->
+                        <div class="actions text-right">
+                          <a href="" class="replies_delete" id="{{ discussion.id }}_{{ response.id }}">Delete</a>
+                          <a href="" class="replies_edit" id="{{ discussion.id }}_{{ response.id }}">Edit</a>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <!--Comment Actions-->
                 <div class="actions text-right">
+                  <a href="" class="comments_delete" id="{{ discussion.id }}">Delete</a>
+                  <a href="" class="comments_edit" id="{{ discussion.id }}">Edit</a>
                   <a href="" class="reply_buttons" id="card_{{ discussion.id }}">Reply</a>
                 </div>
               </div>
-              <!--Comment Replies-->
-              <div id="replies_card_{{ discussion.id }}">
-                <div class="replies">
-                  {% for response in discussion.response.all %}
-                    <div class="comment_card comment_replies">
-                      <div class="comment_info">
-                        <h5>{{ response.user.get_full_name }}</h5>
-                        <div class="text-right">
-                          {{ response.date | timesince }}
-                        </div>
-                      </div>
-                      <div class="comment_body">
-                        {{ response.text | safe }}
-                      </div>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
+              
             {% endfor %}
           </div>
         </form>
         <div class="comment_card comment_form">
           <div class="comment_info">
-            <h5>Write your queries</h5>
+            <h5 id="comment_form_header">Write your query</h5>
           </div>
           <form action="" method="POST" id="comment_form">
             {% csrf_token %}
@@ -97,7 +106,8 @@
               {{ discussion_form.text.errors }}
             </div>
             <div class="actions text-right">
-              <button type="submit" class="btn btn-outline-light">Post</button>
+              <button type="button" class="btn btn-outline-warning" id="exit_comment_button">Exit</button>
+              <button type="submit" class="btn btn-outline-light" id="comment_button">Post</button>
             </div>
           </form>
         </div>
