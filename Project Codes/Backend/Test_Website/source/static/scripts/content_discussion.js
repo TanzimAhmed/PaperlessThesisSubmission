@@ -36,9 +36,13 @@ const discussion_editor = load_editor('comment_input');
 const comment_form_header = document.querySelector('#comment_form_header');
 const comment_button = document.querySelector('#comment_button');
 const exit_comment_button = document.querySelector('#exit_comment_button');
+const cancel_button = document.querySelector('#prompt_cancel');
+const continue_button = document.querySelector('#prompt_continue');
 let reply_editor = null;
 let target_node = null;
 let edit_node = null;
+let delete_node = null;
+let delete_node_type = null;
 
 // Websocket Actions
 const end_point = 'ws://' + window.location.host + window.location.pathname;
@@ -50,10 +54,18 @@ web_socket.onopen = function(event) {
 
 web_socket.onclose = function(event) {
     console.log('Websocket closed');
+    if (event.code == 4001) {
+        document.querySelector('#error_message').innerHTML = 'You do NOT have the required permissions to ' +
+            'perform this operation.';
+    } else {
+        document.querySelector('#error_message').innerHTML = 'An Error Occurred. Please Reload this page.';
+    }
+    document.querySelector('#prompt').style.display = 'none';
+    document.querySelector('#error').style.display = 'flex';
 };
 
 web_socket.onerror = function(event) {
-    console.log('Websocket Error', event);
+    console.log('Websocket Error', event.code);
 };
 
 web_socket.onmessage = function(event) {
@@ -112,7 +124,12 @@ if (comment_edit_buttons) {
 if (comment_delete_buttons) {
     comment_delete_buttons.forEach(delete_button => {
         delete_button.addEventListener('click', (event) => {
-            delete_thread(event, 'comment');
+            event.preventDefault();
+            delete_node = event.target.id;
+            delete_node_type = 'comment';
+            document.querySelector('#prompt').style.display = 'flex';
+            document.querySelector('#prompt_message').innerHTML = 'Your entire conversation for this' +
+                'thread would be deleted. This action can NOT be undone. Do you wish to continue?';
         });
     });
 }
@@ -128,7 +145,12 @@ if (reply_edit_buttons) {
 if (reply_delete_buttons) {
     reply_delete_buttons.forEach(delete_button => {
         delete_button.addEventListener('click', (event) => {
-            delete_thread(event, 'reply');
+            event.preventDefault();
+            delete_node = event.target.id;
+            delete_node_type = 'reply';
+            document.querySelector('#prompt').style.display = 'flex';
+            document.querySelector('#prompt_message').innerHTML = 'Your reply would be deleted. ' +
+                'This action can NOT be undone. Do you wish to continue?';
         });
     });
 }
@@ -193,18 +215,33 @@ exit_comment_button.onclick = function (event) {
     }
 };
 
-function delete_thread(event, type) {
+cancel_button.onclick = function (event) {
     event.preventDefault();
-    console.log(type, event.target.id);
-    if (type == 'comment') {
+    delete_node = null;
+    delete_node_type = null;
+    document.querySelector('#prompt').style.display = 'none';
+};
+
+continue_button.onclick = function (event) {
+    event.preventDefault();
+    if (delete_node) {
+        delete_thread();
+        delete_node = null;
+        delete_node_type = null;
+    }
+    document.querySelector('#prompt').style.display = 'none';
+};
+
+function delete_thread() {
+    if (delete_node_type == 'comment') {
         web_socket.send(JSON.stringify({
             'request_type': 'delete_discussion',
-            'node_id': event.target.id,
+            'node_id': delete_node,
         }));
-    } else if (type == 'reply') {
+    } else if (delete_node_type == 'reply') {
         web_socket.send(JSON.stringify({
             'request_type': 'delete_reply',
-            'node_id': event.target.id
+            'node_id': delete_node
         }));
     }
 }

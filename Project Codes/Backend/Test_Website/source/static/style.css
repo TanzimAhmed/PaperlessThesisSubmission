@@ -963,4 +963,44 @@ height: 100%;
 .comment_section .comment_form {
   margin-top: 3rem;
 }
+
+#error,
+#prompt{
+  background-color: rgba(0, 0, 0, 0.95);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.error_message {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 40rem;
+  text-align: center;
+  padding: 0.5rem 0 1rem;
+}
+
+.error_message h4{
+  border-bottom: 1px solid grey;
+  padding-bottom: 0.5rem;
+}
+
+.error_message p{
+  width: 100%;
+  padding: 1rem;
+}
+
+.error_message .btn{
+  margin-top: 4rem;
+  padding: 0.7rem 1.5rem;
+}
+
+#prompt .btn {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+}
 /* endsection Student Dashboard by Tanzim*/

@@ -5,6 +5,23 @@
 {% endblock %}
 
 {% block body %}
+<div id="error">
+  <div class="error_message">
+    <h4> Error </h4>
+    <p id="error_message"> Error Message </p>
+    <a href="" class="btn btn-outline-light">Reload Page</a>
+  </div>
+</div>
+
+<div id="prompt">
+  <div class="error_message">
+    <h4> Warning </h4>
+    <p id="prompt_message"> Prompt Message </p>
+    <a href="" id="prompt_cancel" class="btn btn-outline-light">Cancel</a>
+    <a href="" id="prompt_continue" class="btn btn-warning">Delete</a>
+  </div>
+</div>
+
 <div class="user_dashboard">
   <div class="header container">
     <div class="text-right welcome">
