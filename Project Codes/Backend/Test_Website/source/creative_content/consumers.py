@@ -246,9 +246,9 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
 
     def user_type(self, user_id, author_id):
         if self.scope['user'].is_authenticated:
-            if user_id == self.scope['user'].username:
+            if self.scope['user'].username == user_id:
                 return 'self'
-            elif user_id == author_id:
+            elif self.scope['user'].username == author_id:
                 return 'author'
             else:
                 return 'user'
