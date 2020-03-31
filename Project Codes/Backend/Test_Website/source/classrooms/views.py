@@ -113,13 +113,14 @@ class ShowQuizView(UserViews):
 
     def teacher_view(self):
         quiz = self.get_quiz()
-        question_form = QuestionForm(self.request.POST)
-        quiz_form = QuizForm(self.request.POST)
-        if question_form.is_valid():
-            question = question_form.save(commit=False)
-            question.quiz = quiz
-            question.save()
+
+        if 'add_question' in self.request.POST and self.add_question(quiz):
             return redirect('classrooms:show_quiz', class_id=self.class_id, quiz_id=self.quiz_id)
+        elif 'update_quiz' in self.request.POST and self.update_quiz(quiz):
+            return redirect('classrooms:show_quiz', class_id=self.class_id, quiz_id=self.quiz_id)
+
+        quiz_form = QuizForm(instance=quiz)
+        question_form = QuestionForm()
         questions = quiz.question.all()
         context = {
             'quiz': quiz,
@@ -127,7 +128,6 @@ class ShowQuizView(UserViews):
             'question_form': question_form,
             'quiz_form': quiz_form
         }
-        print(context)
         return render(self.request, self.teacher_template, context)
 
     def get_quiz(self):
@@ -140,49 +140,26 @@ class ShowQuizView(UserViews):
             raise Http404('Quiz Not found')
         return quiz
 
+    def add_question(self, quiz):
+        question_form = QuestionForm(self.request.POST)
+        if question_form.is_valid():
+            question = question_form.save(commit=False)
+            question.quiz = quiz
+            question.save()
+            return True
+        return False
 
-class UpdateQuizView(View):
-    template_name = 'classrooms/update.html'
-
-    @method_decorator(login_required(login_url='users:login'))
-    @method_decorator(educator_required)
-    def get(self, request, class_id, quiz_id):
-        quiz = self.get_quiz(class_id, quiz_id)
-        form = QuizForm(instance=quiz)
-        context = {
-            'quiz': quiz,
-            'form': form
-        }
-        return render(request, self.template_name, context)
-
-    @method_decorator(login_required(login_url='users:login'))
-    @method_decorator(educator_required)
-    def post(self, request, class_id, quiz_id):
-        quiz = self.get_quiz(class_id, quiz_id)
-        form = QuizForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
+    def update_quiz(self, quiz):
+        quiz_form = QuizForm(self.request.POST)
+        if quiz_form.is_valid():
+            data = quiz_form.cleaned_data
             quiz.title = data['title']
             quiz.due_date = data['due_date']
             quiz.is_open = data['is_open']
+            quiz.is_running = data['is_running']
             quiz.save()
-            return redirect('classrooms:show_quiz', class_id=class_id, quiz_id=quiz_id)
-        context = {
-            'quiz': quiz,
-            'form': form
-        }
-        return render(request, self.template_name, context)
-
-    def get_quiz(self, class_id, quiz_id):
-        try:
-            classroom = self.request.user.classroom.get(id=class_id)
-            quiz = classroom.quiz.get(id=quiz_id)
-
-        except Classroom.DoesNotExist:
-            raise Http404('Classroom Not found')
-        except Quiz.DoesNotExist:
-            raise Http404('Quiz Not found')
-        return quiz
+            return True
+        return False
 
 
 class UpdateQuestionView(View):

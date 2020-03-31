@@ -83,7 +83,14 @@
                 </div>
                 {{ quiz_form.is_open.errors }}
               </div>
-              <button type="submit" class="btn btn-dark">Update Quiz</button>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label for=""><strong>Is Running:</strong></label>
+                  {{ quiz_form.is_running }}
+                </div>
+                {{ quiz_form.is_running.errors }}
+              </div>
+              <button type="submit" name="update_quiz" class="btn btn-dark">Update Quiz</button>
             </form>
           </div>
         </div>
@@ -127,7 +134,7 @@
                 </div>  
                 {{ question_form.time.errors }} 
               </div>
-              <button type="submit" class="btn btn-dark">Add Question</button>
+              <button type="submit" name="add_question" class="btn btn-dark">Add Question</button>
             </form>
           </div>
         </div>

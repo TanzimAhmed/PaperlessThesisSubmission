@@ -22,13 +22,14 @@ class CreateClassForm(forms.ModelForm):
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['title', 'due_date', 'is_open']
+        fields = ['title', 'due_date', 'is_open', 'is_running']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'placeholder': 'Quiz Title', 'class': 'input'})
         self.fields['due_date'].widget.attrs.update({'placeholder': 'Due Date', 'class': 'input'})
         self.fields['is_open'].widget.attrs.update({'placeholder': 'Open Quiz', 'class': 'input'})
+        self.fields['is_running'].widget.attrs.update({'placeholder': 'Quiz Running', 'class': 'input'})
 
 
 class QuestionForm(forms.ModelForm):
