@@ -9,9 +9,9 @@ import json
 
 class DiscussionConsumer(AsyncWebsocketConsumer):
     discussion_thread = None
+    content = None
 
     async def connect(self):
-        print("Socket Connected")
         self.discussion_thread = self.scope['url_route']['kwargs']['content_id']
 
         await self.channel_layer.group_add(
@@ -20,9 +20,14 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+        print("User Connected")
 
     async def disconnect(self, code):
-        print('Socket Closed', code)
+        await self.channel_layer.group_discard(
+            self.discussion_thread,
+            self.channel_name
+        )
+        print('User Disconnected', code)
 
     async def receive(self, text_data=None, bytes_data=None):
         if not self.scope['user'].is_authenticated:
@@ -35,6 +40,8 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
         request_type = json_data['request_type']
 
         try:
+            author_id = await self.get_content_author()
+
             if request_type == 'new_discussion':
                 text = json_data['text']
                 discussion = await self.save_discussion_message(text)
@@ -44,6 +51,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                     {
                         'type': 'discussion_message',
                         'node_id': discussion.id,
+                        'author_id': author_id,
                         'user_id': user_id,
                         'user_name': user_name,
                         'date': date,
@@ -62,6 +70,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                         'type': 'reply_message',
                         'target_id': thread_id,
                         'node_id': response.id,
+                        'author_id': author_id,
                         'user_id': user_id,
                         'user_name': user_name,
                         'date': date,
@@ -77,6 +86,8 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                     self.discussion_thread,
                     {
                         'type': 'update_discussion',
+                        'author_id': author_id,
+                        'user_id': user_id,
                         'node_id': thread_id,
                         'date': date,
                         'text': text
@@ -91,6 +102,8 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                     self.discussion_thread,
                     {
                         'type': 'update_reply',
+                        'author_id': author_id,
+                        'user_id': user_id,
                         'node_id': thread_id,
                         'date': date,
                         'text': text
@@ -103,6 +116,8 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                     self.discussion_thread,
                     {
                         'type': 'remove_discussion',
+                        'author_id': author_id,
+                        'user_id': user_id,
                         'node_id': thread_id,
                     }
                 )
@@ -113,6 +128,8 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
                     self.discussion_thread,
                     {
                         'type': 'remove_reply',
+                        'author_id': author_id,
+                        'user_id': user_id,
                         'node_id': thread_id,
                     }
                 )
@@ -125,7 +142,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'request_type': 'new_discussion',
             'node_id': event['node_id'],
-            'user': self.user_type(event['user_id']),
+            'user': self.user_type(event['user_id'], event['author_id']),
             'user_name': event['user_name'],
             'date': event['date'],
             'text': event['text']
@@ -135,6 +152,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'request_type': 'edit_discussion',
             'node_id': event['node_id'],
+            'user': self.user_type(event['user_id'], event['author_id']),
             'date': event['date'],
             'text': event['text']
         }))
@@ -142,6 +160,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
     async def remove_discussion(self, event):
         await self.send(text_data=json.dumps({
             'request_type': 'delete_discussion',
+            'user': self.user_type(event['user_id'], event['author_id']),
             'node_id': event['node_id'],
         }))
 
@@ -150,7 +169,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
             'request_type': 'new_reply',
             'target_id': event['target_id'],
             'node_id': event['node_id'],
-            'user': self.user_type(event['user_id']),
+            'user': self.user_type(event['user_id'], event['author_id']),
             'user_name': event['user_name'],
             'date': event['date'],
             'text': event['text']
@@ -160,6 +179,7 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'request_type': 'edit_reply',
             'node_id': event['node_id'],
+            'user': self.user_type(event['user_id'], event['author_id']),
             'date': event['date'],
             'text': event['text']
         }))
@@ -167,19 +187,18 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
     async def remove_reply(self, event):
         await self.send(text_data=json.dumps({
             'request_type': 'delete_reply',
+            'user': self.user_type(event['user_id'], event['author_id']),
             'node_id': event['node_id'],
         }))
 
     @database_sync_to_async
     def save_discussion_message(self, text):
-        content = Content.objects.get(link=self.discussion_thread)
-        discussion = content.discussion.create(text=text, user=self.scope['user'])
+        discussion = self.content.discussion.create(text=text, user=self.scope['user'])
         return discussion
 
     @database_sync_to_async
     def update_discussion_message(self, thread_id, text):
-        content = Content.objects.get(link=self.discussion_thread)
-        discussion = content.discussion.get(id=thread_id)
+        discussion = self.content.discussion.get(id=thread_id)
         if discussion.user != self.scope['user']:
             raise PermissionDenied
         discussion.text = text
@@ -188,25 +207,22 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def remove_discussion_message(self, thread_id):
-        content = Content.objects.get(link=self.discussion_thread)
-        discussion = content.discussion.get(id=thread_id)
-        if discussion.user != self.scope['user']:
+        discussion = self.content.discussion.get(id=thread_id)
+        if not (self.scope['user'] == discussion.user or self.scope['user'] == self.content.user):
             raise PermissionDenied
         discussion.delete()
 
     @database_sync_to_async
     def save_reply_message(self, thread_id, text):
         thread_id = thread_id.split('_')[-1]
-        content = Content.objects.get(link=self.discussion_thread)
-        discussion = content.discussion.get(id=thread_id)
+        discussion = self.content.discussion.get(id=thread_id)
         response = discussion.response.create(text=text, user=self.scope['user'])
         return response
 
     @database_sync_to_async
     def update_reply_message(self, thread_id, text):
         thread_id = thread_id.split('_')
-        content = Content.objects.get(link=self.discussion_thread)
-        discussion = content.discussion.get(id=thread_id[0])
+        discussion = self.content.discussion.get(id=thread_id[0])
         response = discussion.response.get(id=thread_id[1])
         if response.user != self.scope['user']:
             raise PermissionDenied
@@ -217,17 +233,24 @@ class DiscussionConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def remove_reply_message(self, thread_id):
         thread_id = thread_id.split('_')
-        content = Content.objects.get(link=self.discussion_thread)
-        discussion = content.discussion.get(id=thread_id[0])
+        discussion = self.content.discussion.get(id=thread_id[0])
         response = discussion.response.get(id=thread_id[1])
-        if response.user != self.scope['user']:
+        if not (self.scope['user'] == response.user or self.scope['user'] == self.content.user):
             raise PermissionDenied
         response.delete()
 
-    def user_type(self, user_id):
-        if self.scope['user'].is_authenticated and user_id == self.scope['user'].username:
-            return 'self'
-        elif self.scope['user'].is_authenticated:
-            return 'user'
+    @database_sync_to_async
+    def get_content_author(self):
+        self.content = Content.objects.get(link=self.discussion_thread)
+        return self.content.user.username
+
+    def user_type(self, user_id, author_id):
+        if self.scope['user'].is_authenticated:
+            if user_id == self.scope['user'].username:
+                return 'self'
+            elif user_id == author_id:
+                return 'author'
+            else:
+                return 'user'
         else:
             return 'anonymous'

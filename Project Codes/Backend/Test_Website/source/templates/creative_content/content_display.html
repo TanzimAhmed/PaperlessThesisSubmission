@@ -93,11 +93,17 @@
                           {{ response.text | safe }}
                         </div>
                         <!--Reply Actions-->
-                        {% if request.user.is_authenticated and response.user == request.user %}
-                        <div class="actions text-right">
-                          <a href="" class="replies_delete" id="{{ discussion.id }}_{{ response.id }}">Delete</a>
-                          <a href="" class="replies_edit" id="{{ discussion.id }}_{{ response.id }}">Edit</a>
-                        </div>
+                        {% if request.user.is_authenticated %}
+                          {% if request.user == response.user %}
+                            <div class="actions text-right">
+                              <a href="" class="replies_delete" id="{{ discussion.id }}_{{ response.id }}">Delete</a>
+                              <a href="" class="replies_edit" id="{{ discussion.id }}_{{ response.id }}">Edit</a>
+                            </div>
+                          {% elif request.user == content.user %}
+                            <div class="actions text-right">
+                              <a href="" class="replies_delete" id="{{ discussion.id }}_{{ response.id }}">Delete</a>
+                            </div>
+                          {% endif %}
                         {% endif %}
                       </div>
                     {% endfor %}
@@ -106,35 +112,36 @@
                 <!--Comment Actions-->
                 <div class="actions text-right">
                   {% if request.user.is_authenticated %}
-                  {% if discussion.user == request.user %}
-                  <a href="" class="comments_delete" id="{{ discussion.id }}">Delete</a>
-                  <a href="" class="comments_edit" id="{{ discussion.id }}">Edit</a>
-                  {% endif %}
-                  <a href="" class="reply_buttons" id="card_{{ discussion.id }}">Reply</a>
+                    {% if discussion.user == request.user %}
+                      <a href="" class="comments_delete" id="{{ discussion.id }}">Delete</a>
+                      <a href="" class="comments_edit" id="{{ discussion.id }}">Edit</a>
+                    {% elif request.user == content.user %}
+                      <a href="" class="comments_delete" id="{{ discussion.id }}">Delete</a>
+                    {% endif %}
+                    <a href="" class="reply_buttons" id="card_{{ discussion.id }}">Reply</a>
                   {% endif %}
                 </div>
               </div>
-              
             {% endfor %}
           </div>
         </form>
         {% if request.user.is_authenticated %}
-        <div class="comment_card comment_form">
-          <div class="comment_info">
-            <h5 id="comment_form_header">Write your query</h5>
+          <div class="comment_card comment_form">
+            <div class="comment_info">
+              <h5 id="comment_form_header">Write your query</h5>
+            </div>
+            <form action="" method="POST" id="comment_form">
+              {% csrf_token %}
+              <div class="comment_body">
+                {{ discussion_form.text }}
+                {{ discussion_form.text.errors }}
+              </div>
+              <div class="actions text-right">
+                <button type="button" class="btn btn-outline-warning" id="exit_comment_button">Exit</button>
+                <button type="submit" class="btn btn-outline-light" id="comment_button">Post</button>
+              </div>
+            </form>
           </div>
-          <form action="" method="POST" id="comment_form">
-            {% csrf_token %}
-            <div class="comment_body">
-              {{ discussion_form.text }}
-              {{ discussion_form.text.errors }}
-            </div>
-            <div class="actions text-right">
-              <button type="button" class="btn btn-outline-warning" id="exit_comment_button">Exit</button>
-              <button type="submit" class="btn btn-outline-light" id="comment_button">Post</button>
-            </div>
-          </form>
-        </div>
         {% endif %}
       </div>
     </div>
