@@ -113,7 +113,8 @@ class ShowQuizView(UserViews):
 
     def teacher_view(self):
         quiz = self.get_quiz()
-        question_form = QuestionForm(self.request.POST or None)
+        question_form = QuestionForm(self.request.POST)
+        quiz_form = QuizForm(self.request.POST)
         if question_form.is_valid():
             question = question_form.save(commit=False)
             question.quiz = quiz
@@ -123,7 +124,8 @@ class ShowQuizView(UserViews):
         context = {
             'quiz': quiz,
             'questions': questions,
-            'question_form': question_form
+            'question_form': question_form,
+            'quiz_form': quiz_form
         }
         print(context)
         return render(self.request, self.teacher_template, context)

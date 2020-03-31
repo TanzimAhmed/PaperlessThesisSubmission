@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="user_dashboard form_page">
+<div class="user_dashboard form_dashboard">
   <div class="header container">
     <div class="text-right welcome">
       <h1><strong>Classroom</strong></h1>
@@ -24,38 +24,52 @@
       </p>
     </div>
   </div>
-  <div class="form_container container">
-    <div class="form">
-      <div>
-        <h1 class="form_header">Update Quiz</h1>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Update Question </h2>
       </div>
-      <form action="" method="POST">
-        {% csrf_token %}
-        <br>
-        <p><strong>Question Text:</strong></p>
-        {{ form.text }}
-        {{ form.text.errors }}
-        <br>
-        <br>
-        <p><strong>Options </strong>(Seperate each option with // characters in a new line):</p>
-        {{ form.options }}
-        {{ form.options.errors }}
-        <br>
-        <br>
-        <p><strong>Correct Choice:</strong></p>
-        {{ form.answer }}
-        {{ form.answer.errors }}
-        <br>
-        <p><strong>Points:</strong></p>
-        {{ form.points }}
-        {{ form.points.errors }}
-        <br>
-        <p><strong>Time (in seconds):</strong></p>
-        {{ form.time }}
-        {{ form.time.errors }}
-        <br>
-        <button type="submit" class="btn btn-dark">Update</button>
-      </form>
+      <div class="card_container">
+        <div class="forms_card educator_forms">
+          <div class="items">
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div class="input_groups">
+                <label><strong>Question Text:</strong></label> <br>
+                {{ form.text }}
+                {{ form.text.errors }}
+              </div>
+              <div class="input_groups">
+                <label><strong>Options </strong>(Seperate each option with // characters in a new line):</label> <br>
+                {{ form.options }}
+                {{ form.options.errors }}  
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label><strong>Correct Choice:</strong></label>
+                  {{ form.answer }}
+                </div>  
+                {{ form.answer.errors }}
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label><strong>Points:</strong></label>
+                  {{ form.points }}
+                </div> 
+                {{ form.points.errors }}   
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label><strong>Time (in seconds):</strong></label>
+                  {{ form.time }} 
+                </div>  
+                {{ form.time.errors }} 
+              </div>
+              <button type="submit" class="btn btn-dark">Update Question</button>
+            </form>
+          </div>
+        </div>
+      </div>      
     </div>
   </div>
   <div class="footer container"></div>

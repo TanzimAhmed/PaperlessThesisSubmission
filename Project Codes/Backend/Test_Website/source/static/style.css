@@ -334,7 +334,7 @@ nav {
 }
 
 .dashboard .items_card,
-.dashboard .educator_forms {
+.dashboard .forms_card {
   width: 18rem;
   height: 20rem;
   /*background-color: rgba(48, 48, 48, 1);*/
@@ -395,7 +395,6 @@ nav {
 .dashboard .educator_forms {
   width: 100%;
   text-align: center;
-  padding: 1rem 2rem 2rem;
   height: auto;
 }
 
@@ -406,14 +405,46 @@ nav {
   top: 0rem;
 }
 
+.dashboard .input_groups {
+  margin-bottom: 2rem;
+}
+
+.input_groups .input_group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.input_group label {
+  text-align: left;
+  width: 10rem;
+  margin-right: 1rem;
+}
+
+.educator_forms #update_quiz_form label {
+  width: 6rem;
+}
+
+#question_form_header {  
+  margin-top: 2.5rem;
+}
+
+.form_dashboard .area {
+  width: 700px;
+}
+
+.form_dashboard .dashboard {
+  background-color: rgba(39, 40, 44, 0.15);
+}
+
 .dashboard .input,
 .form_container .input {
   background: transparent;
   border: 1px solid #343a40;
   border-radius: 0.25rem;
   padding: 1.2rem;
-  margin: 1%;
-  width: 75%;
+  width: 50%;
 }
 
 .dashboard .paper_submission .input {

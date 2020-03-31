@@ -28,7 +28,6 @@
     <div class="area">
       <div class="area_header">
         <h2> Questions </h2>
-        <br>
       </div>
       <div class="card_container">
         {% for question in questions %}
@@ -56,41 +55,83 @@
     </div>
     <div class="area">
       <div class="area_header">
-        <h2> Add Question </h2>
-        <br>
+        <h2> Update Quiz </h2>
       </div>
       <div class="card_container">
-        <div class="educator_forms dashboard_forms">
+        <div class="forms_card educator_forms">
+          <div class="items">
+            <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST" id="update_quiz_form">
+              {% csrf_token %}
+              <div class="input_groups">
+                <div class="input_group">
+                  <label for=""><strong>Title:</strong></label>
+                  {{ quiz_form.title }}
+                </div>
+                {{ quiz_form.title.errors }}
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label for=""><strong>Due Date:</strong></label>
+                  {{ quiz_form.due_date }}
+                </div>
+                {{ quiz_form.due_date.errors }}
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label for=""><strong>Open for all:</strong></label>
+                  {{ quiz_form.is_open }}
+                </div>
+                {{ quiz_form.is_open.errors }}
+              </div>
+              <button type="submit" class="btn btn-dark">Update Quiz</button>
+            </form>
+          </div>
+        </div>
+      </div>  
+      <div class="area_header" id="question_form_header">
+        <h2> Add Question </h2>
+      </div>
+      <div class="card_container">
+        <div class="forms_card educator_forms">
           <div class="items">
             <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST">
               {% csrf_token %}
-              <br>
-              <p><strong>Question Text:</strong></p>
-              {{ question_form.text }}
-              {{ question_form.text.errors }}
-              <br>
-              <br>
-              <p><strong>Options </strong>(Seperate each option with // characters in a new line):</p>
-              {{ question_form.options }}
-              {{ question_form.options.errors }}
-              <br>
-              <br>
-              <p><strong>Correct Choice:</strong></p>
-              {{ question_form.answer }}
-              {{ question_form.answer.errors }}
-              <br>
-              <p><strong>Points:</strong></p>
-              {{ question_form.points }}
-              {{ question_form.points.errors }}
-              <br>
-              <p><strong>Time (in seconds):</strong></p>
-              {{ question_form.time }}
-              {{ question_form.time.errors }}
+              <div class="input_groups">
+                <label><strong>Question Text:</strong></label> <br>
+                {{ question_form.text }}
+                {{ question_form.text.errors }}
+              </div>
+              <div class="input_groups">
+                <label><strong>Options </strong>(Seperate each option with // characters in a new line):</label> <br>
+                {{ question_form.options }}
+                {{ question_form.options.errors }}  
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label><strong>Correct Choice:</strong></label>
+                  {{ question_form.answer }}
+                </div>  
+                {{ question_form.answer.errors }}
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label><strong>Points:</strong></label>
+                  {{ question_form.points }}
+                </div> 
+                {{ question_form.points.errors }}   
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label><strong>Time (in seconds):</strong></label>
+                  {{ question_form.time }} 
+                </div>  
+                {{ question_form.time.errors }} 
+              </div>
               <button type="submit" class="btn btn-dark">Add Question</button>
             </form>
           </div>
         </div>
-      </div>
+      </div>      
     </div>
   </div>
 </div>
