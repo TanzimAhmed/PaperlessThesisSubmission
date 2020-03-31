@@ -1,26 +1,28 @@
 {% extends 'layout.html' %}
 
+{% block background_class %}
+  dashboard_background
+{% endblock %}
+
 {% block body %}
-  <div class="form_background">
-    <div class="forms">
-      <form action="" method="POST">
-        {% csrf_token %}
-        <div class="input-fields">
-          <h1 class="form_header">Login</h1>
-          {{ form.non_field_errors }}
-          {{ form.username }}
-          {{ form.username.errors }}
-          {{ form.password }}
-          {{ form.password.errors }}
-          <!--
-          <input type="text" class="input" name="user_id" placeholder="Student ID">
-          <input type="password" class="input" name="password" placeholder="Password">
-          -->
-        </div>
-        <div class="submit_button_container">
-          <button class="btn btn-info" type="submit">Login</button>
-        </div>
-      </form>
-    </div>
+  <div class="forms">
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="input-fields">
+        <h1 class="form_header">Login</h1>
+        {{ form.non_field_errors }}
+        {{ form.username }}
+        {{ form.username.errors }}
+        {{ form.password }}
+        {{ form.password.errors }}
+        <!--
+        <input type="text" class="input" name="user_id" placeholder="Student ID">
+        <input type="password" class="input" name="password" placeholder="Password">
+        -->
+      </div>
+      <div class="submit_button_container">
+        <button class="btn btn-info" type="submit">Login</button>
+      </div>
+    </form>
   </div>
 {% endblock %}
