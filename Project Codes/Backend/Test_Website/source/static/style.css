@@ -301,6 +301,7 @@ nav {
   width: auto;
   position: absolute;
   right: 2rem;
+  bottom: 0;
 }
 
 .header .user_info .btn {
@@ -311,10 +312,6 @@ nav {
   width: 38rem;
   margin: 1rem 0.5%;
   padding-bottom: 1rem;
-}
-
-.dashboard .quiz_area {
-  width: 75%;
 }
 
 .dashboard .area_header {
@@ -426,6 +423,15 @@ nav {
   width: 6rem;
 }
 
+.forms_card #add_group_form .input_groups {
+  margin-bottom: 1.2rem;
+}
+
+.forms_card #add_group_form button {
+  width: 25% !important;
+  padding: 0.7rem 1rem;
+}
+
 #question_form_header {  
   margin-top: 2.5rem;
 }
@@ -516,8 +522,21 @@ nav {
   height: auto;
 }
 
+.form_dashboard .quiz_area {
+  width: 90% !important;
+}
+
+.quiz_area #question_area {
+  text-align: left;
+}
+
+.quiz_area #question_tag {
+  padding-top: 4rem;
+  margin-bottom: 4rem;
+}
+
 .quiz_area .button_right button {
-  width: 10rem;
+  width: 15rem !important;
 }
 
 .quiz_area .button_right {

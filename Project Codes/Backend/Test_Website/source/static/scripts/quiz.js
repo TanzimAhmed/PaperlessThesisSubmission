@@ -1,6 +1,8 @@
+const number_tag = document.querySelector('#question_number');
 const question_tag = document.querySelector('#question_tag');
 const option_tag = document.querySelector('#options_tag');
 const points_tag = document.querySelector('#points_tag');
+const timer_display = document.querySelector('#timer_display');
 const timer_tag = document.querySelector('#timer_tag');
 const form = document.querySelector('form');
 let ques_no = 1;
@@ -11,10 +13,11 @@ function set_question() {
         clearInterval(timer);
         console.log('Interval Cleared');
     }
-    timer_tag.style.color = 'black';
+    timer_display.style.color = 'black';
 
     let question = questions.shift();
-    question_tag.innerHTML = `${ques_no}. ${question.fields.text}`;
+    number_tag.innerHTML = ques_no.toString();
+    question_tag.innerHTML = question.fields.text;
     points_tag.innerHTML = question.fields.points;
     timer_tag.innerHTML = question.fields.time;
     option_tag.innerHTML = '';
@@ -41,7 +44,7 @@ function set_question() {
             time_left--;
             timer_tag.innerHTML = time_left;
             if (time_left < 20)
-                timer_tag.style.color = 'red';
+                timer_display.style.color = 'red';
         } else {
             next_question();
         }

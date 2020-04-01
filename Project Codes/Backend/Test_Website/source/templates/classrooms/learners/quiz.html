@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="user_dashboard">
+<div class="user_dashboard form_dashboard">
   <div class="header container">
     <div class="text-right welcome">
       <h1><strong>Classroom</strong></h1>
@@ -30,19 +30,17 @@
         <h2> Questions </h2>
       </div>
       <div class="card_container">
-        <div class="items_card items_card_fluid paper_list question_list">
+        <div class="forms_card educator_forms">
           <div class="items">
             <form action="" method="POST">
               {% csrf_token %}
               {{ form.answers }}
               <div class="text-right">
                 <strong>Points: </strong><span id="points_tag"></span> <br>
-                <strong>Time Remaining: </strong><span id="timer_tag"></span> seconds
+                <span id="timer_display"><strong>Time Remaining: </strong><span id="timer_tag"></span> seconds</span>
               </div>
               <div id="question_area">
-                <br>
-                <br>
-                <br>
+                <h4>Question Number: <span id="question_number"></span></h4>
                 <p id="question_tag"></p>
                 <p id="options_tag"></p>
                 <br>
@@ -58,6 +56,7 @@
       </div>
     </div>
   </div>
+  <div class="footer container"></div>
 </div>
 
 <!-- CK Editor JS includes-->

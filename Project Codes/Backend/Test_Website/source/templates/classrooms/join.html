@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block body %}
-<div class="user_dashboard form_page">
+<div class="user_dashboard form_dashboard">
   <div class="header container">
     <div class="text-right welcome">
-      <h1><strong>Classrooms</strong></h1>
+      <h1>Classroom</strong></h1>
     </div>
     <div class="user_info">
       <h3>
@@ -18,17 +18,25 @@
       </h3>
     </div>
   </div>
-  <div class="form_container container">
-    <div>
-      <div>
-        <h1 class="form_header">Join A Class</h1>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Join Classroom </h2>
       </div>
-      <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.classroom }}
-        {{ form.classroom.errors }}
-        <button type="submit" class="btn btn-dark">Join</button>
-      </form>
+      <div class="card_container">
+        <div class="forms_card educator_forms">
+          <div class="items">
+            <form action="" method="POST" id="add_group_form">
+              {% csrf_token %}
+              <div class="input_groups">
+                {{ form.classroom }}
+                {{ form.classroom.errors }}
+              </div>
+              <button type="submit" class="btn btn-dark">Join</button>
+            </form>
+          </div>
+        </div>
+      </div>      
     </div>
   </div>
   <div class="footer container"></div>

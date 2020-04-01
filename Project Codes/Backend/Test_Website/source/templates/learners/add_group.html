@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="user_dashboard form_page">
+<div class="user_dashboard form_dashboard">
   <div class="header container">
     <div class="text-right welcome">
       <h1>Hello <strong>{{ request.user.first_name }}</strong></h1>
@@ -18,31 +18,53 @@
       </h3>
     </div>
   </div>
-  <div class="form_container container">
-    <div class="form">
-      <div>
-        <h1 class="form_header">Create New Group</h1>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Create Group </h2>
       </div>
-      <form action="" method="POST">
-        {% csrf_token %}
-        {{ group_form.course }}
-        {{ group_form.course.errors }}
-        {{ group_form.name }}
-        {{ group_form.name.errors }}
-        {{ group_form.instructor }}
-        {{ group_form.instructor.errors }}
-        {{ group_form.member_1 }}
-        {{ group_form.member_1.errors }}
-        {{ group_form.member_2 }}
-        {{ group_form.member_2.errors }}
-        {{ group_form.member_3 }}
-        {{ group_form.member_3.errors }}
-        {{ group_form.member_4 }}
-        {{ group_form.member_4.errors }}
-        {{ group_form.member_5 }}
-        {{ group_form.member_5.errors }}
-        <button type="submit" class="btn btn-dark">Add Members</button>
-      </form>
+      <div class="card_container">
+        <div class="forms_card educator_forms">
+          <div class="items">
+            <form action="" method="POST" id="add_group_form">
+              {% csrf_token %}
+              <div class="input_groups">
+                {{ group_form.course }}
+                {{ group_form.course.errors }}
+              </div>
+              <div class="input_groups">
+                {{ group_form.name }}
+                {{ group_form.name.errors }}
+              </div>
+              <div class="input_groups">
+                {{ group_form.instructor }}
+                {{ group_form.instructor.errors }}
+              </div>
+              <div class="input_groups">
+                {{ group_form.member_1 }}
+                {{ group_form.member_1.errors }}
+              </div>
+              <div class="input_groups">
+                {{ group_form.member_2 }}
+                {{ group_form.member_2.errors }}
+              </div>
+              <div class="input_groups">
+                {{ group_form.member_3 }}
+                {{ group_form.member_3.errors }}
+              </div>
+              <div class="input_groups">
+                {{ group_form.member_4 }}
+                {{ group_form.member_4.errors }}
+              </div>
+              <div class="input_groups">
+                {{ group_form.member_5 }}
+                {{ group_form.member_5.errors }}
+              </div>
+              <button type="submit" class="btn btn-dark">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>      
     </div>
   </div>
   <div class="footer container"></div>

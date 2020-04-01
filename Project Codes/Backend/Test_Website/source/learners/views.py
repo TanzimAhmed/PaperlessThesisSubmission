@@ -12,7 +12,7 @@ from .models import Group
 def dashboard(request):
     # Fetching information
     groups = request.user.group_set.all()
-    classrooms = request.user.classroom.all()
+    classrooms = request.user.classrooms.all()
     papers = []
     for group in groups:
         for paper in group.document.all():
@@ -31,7 +31,7 @@ def dashboard(request):
         'papers': papers,
         'groups_form': groups_form
     }
-    print(papers)
+    print(context)
     return render(request, 'learners/dashboard.html', context)
 
 
@@ -66,7 +66,7 @@ def process_submission(request, group_id):
         return Http404('Requested Group does Not exist')
     if group.status == 'ACCEPTED':
         form = DocumentForm(initial={'group_id': group_id})
-        return render(request, 'documents/demo_submission.html', {'form': form})
+        return render(request, 'documents/submission.html', {'form': form})
     elif group.status == 'REQUESTED':
         messages.info(
             request,

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, Http404
 from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.core.exceptions import PermissionDenied
+from django.db import IntegrityError
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -36,10 +37,11 @@ class ShowView(UserViews):
     @method_decorator(educator_required)
     def post(self, request, class_id):
         self.request = request
+        self.class_id = class_id
         return self.teacher_view()
 
     def student_view(self):
-        classroom = self.get_classroom()
+        classroom = self.get_classroom(learner=True)
         quizzes = classroom.quiz.filter(is_open=True)
         print(quizzes)
         context = {
@@ -51,11 +53,14 @@ class ShowView(UserViews):
     def teacher_view(self):
         classroom = self.get_classroom()
         quiz_form = QuizForm(self.request.POST or None)
-        if quiz_form.is_valid():
-            quiz = quiz_form.save(commit=False)
-            quiz.classroom = classroom
-            quiz.save()
-            return redirect('classrooms:show', class_id=self.class_id)
+        try:
+            if quiz_form.is_valid():
+                quiz = quiz_form.save(commit=False)
+                quiz.classroom = classroom
+                quiz.save()
+                return redirect('classrooms:show', class_id=self.class_id)
+        except IntegrityError:
+            messages.error(self.request, 'Quiz name already exists')
         quizzes = classroom.quiz.all()
         context = {
             'classroom': classroom,
@@ -64,9 +69,12 @@ class ShowView(UserViews):
         }
         return render(self.request, self.teacher_template, context)
 
-    def get_classroom(self):
+    def get_classroom(self, learner=False):
         try:
-            classroom = self.request.user.classroom.get(id=self.class_id)
+            if learner:
+                classroom = self.request.user.classrooms.get(id=self.class_id)
+            else:
+                classroom = self.request.user.classroom.get(id=self.class_id)
         except Classroom.DoesNotExist:
             raise Http404('Classroom Not found')
         return classroom
@@ -114,10 +122,13 @@ class ShowQuizView(UserViews):
     def teacher_view(self):
         quiz = self.get_quiz()
 
-        if 'add_question' in self.request.POST and self.add_question(quiz):
-            return redirect('classrooms:show_quiz', class_id=self.class_id, quiz_id=self.quiz_id)
-        elif 'update_quiz' in self.request.POST and self.update_quiz(quiz):
-            return redirect('classrooms:show_quiz', class_id=self.class_id, quiz_id=self.quiz_id)
+        try:
+            if 'add_question' in self.request.POST and self.add_question(quiz):
+                return redirect('classrooms:show_quiz', class_id=self.class_id, quiz_id=self.quiz_id)
+            elif 'update_quiz' in self.request.POST and self.update_quiz(quiz):
+                return redirect('classrooms:show_quiz', class_id=self.class_id, quiz_id=self.quiz_id)
+        except IntegrityError:
+            messages.error(self.request, 'Quiz name already exists')
 
         quiz_form = QuizForm(instance=quiz)
         question_form = QuestionForm()
@@ -226,7 +237,7 @@ class QuizView(View):
         except Performance.DoesNotExist:
             quiz.students.add(request.user)
         else:
-            raise PermissionDenied('Quiz already given')
+            pass
         questions = quiz.question.all()
         questions = serialize('json', questions, fields=('text', 'options', 'time', 'points'))
         context = {
@@ -318,10 +329,12 @@ def join_class(request):
     if form.is_valid():
         try:
             classroom = Classroom.objects.get(id=form.cleaned_data['classroom'])
+            print(classroom)
         except Classroom.DoesNotExist:
             raise Http404('Classroom Not Found')
         classroom.students.add(request.user)
         classroom.save()
+        return redirect('users:dashboard')
     return render(request, 'classrooms/join.html', {'form': form})
 
 

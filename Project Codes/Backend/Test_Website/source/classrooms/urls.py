@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, ShowView, ShowQuizView, UpdateQuizView, UpdateQuestionView, QuizView, \
+from .views import IndexView, ShowView, ShowQuizView, UpdateQuestionView, QuizView, \
     create, quiz_status, participate_quiz, test_api, join_class
 
 
@@ -10,7 +10,6 @@ urlpatterns = [
     path('<str:class_id>/<str:quiz_id>/quiz/', ShowQuizView.as_view(), name='show_quiz'),
     path('join/', join_class, name='join_class'),
     path('create/', create, name='create'),
-    path('<str:class_id>/<str:quiz_id>/quiz/update/', UpdateQuizView.as_view(), name='update_quiz'),
     path(
         '<str:class_id>/<str:quiz_id>/<str:question_id>/quiz/question/update/',
         UpdateQuestionView.as_view(),

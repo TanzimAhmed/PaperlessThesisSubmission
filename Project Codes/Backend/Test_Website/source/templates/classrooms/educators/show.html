@@ -52,28 +52,39 @@
     <div class="area">
       <div class="area_header">
         <h2> Add Quiz </h2>
-        <br>
-        <p>Session</p>
       </div>
       <div class="card_container">
-        <div class="items_card paper_submission dashboard_forms">
+        <div class="forms_card educator_forms">
           <div class="items">
-            <h3 class="item_header">Add Quiz</h3>
-            <form action="" method="POST">
+            <form action="" method="POST" id="update_quiz_form">
               {% csrf_token %}
-              {{ quiz_form.title }}
-              {{ quiz_form.title.errors }}
-              {{ quiz_form.due_date }}
-              {{ quiz_form.due_date.errors }}
-              <br>
-              {{ quiz_form.is_open.label }}
-              {{ quiz_form.is_open }}
-              {{ quiz_form.is_open.errors }}
+              {{ form.non_field_errors }}
+              <div class="input_groups">
+                <div class="input_group">
+                  <label for=""><strong>Title:</strong></label>
+                  {{ quiz_form.title }}
+                </div>
+                {{ quiz_form.title.errors }}
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label for=""><strong>Due Date:</strong></label>
+                  {{ quiz_form.due_date }}
+                </div>
+                {{ quiz_form.due_date.errors }}
+              </div>
+              <div class="input_groups">
+                <div class="input_group">
+                  <label for=""><strong>Open for all:</strong></label>
+                  {{ quiz_form.is_open }}
+                </div>
+                {{ quiz_form.is_open.errors }}
+              </div>
               <button type="submit" class="btn btn-dark">Add Quiz</button>
             </form>
           </div>
         </div>
-      </div>
+      </div>     
     </div>
   </div>
 </div>
