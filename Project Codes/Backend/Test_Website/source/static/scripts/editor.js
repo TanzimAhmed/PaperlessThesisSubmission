@@ -41,7 +41,7 @@ let editor = CKEDITOR.replace('input', {
         'https://ckeditor.com/docs/vendors/4.13.1/ckeditor/assets/css/widgetstyles.css'
     ],
     // Setup content provider. See https://ckeditor.com/docs/ckeditor4/latest/features/media_embed
-    embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}'
+    embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&_horizontal=true&_height=300&callback={callback}'
 
     // Update the ACF configuration with MathML syntax.
     //extraAllowedContent: mathElements.join(' ') + '(*)[*]{*};img[data-mathml,data-custom-editor,role](Wirisformula)'
