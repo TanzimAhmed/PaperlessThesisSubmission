@@ -2,6 +2,7 @@
 // CK Editor initialization
 CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugins/ckeditor/', 'plugin.js');
 
+// CK Editor configurations
 let editor = CKEDITOR.replace('input', {
     // For now, MathType is incompatible with CKEditor file upload plugins.
     extraPlugins: 'image2,mathjax,codesnippet,embed,autoembed,ckeditor_wiris',
@@ -40,6 +41,7 @@ let editor = CKEDITOR.replace('input', {
         'http://cdn.ckeditor.com/4.13.1/full-all/contents.css',
         'https://ckeditor.com/docs/vendors/4.13.1/ckeditor/assets/css/widgetstyles.css'
     ],
+    // Embed Content provider (Iframely API)
     // Setup content provider. See https://ckeditor.com/docs/ckeditor4/latest/features/media_embed
     embed_provider: '//ckeditor.iframe.ly/api/oembed?url={url}&_horizontal=true&_height=300&callback={callback}'
 
@@ -52,6 +54,7 @@ let editor = CKEDITOR.replace('input', {
 let output = document.querySelector('#output');
 let form = document.querySelector('#image_upload_form');
 
+// Submit Editor data
 form.onsubmit = function(event) {
     event.preventDefault();
     let form_data = new FormData(form);
@@ -70,8 +73,14 @@ form.onsubmit = function(event) {
     console.log('File Uploaded');
 };
 
-editor.on( 'change', function(event) {
+// Editor Change Listeners
+editor.on( 'change', (event) => {
     // getData() returns CKEditor's HTML content.
+    load_math(event);
+    load_code();
+});
+
+editor.on('dialogHide', (event) => {
     load_math(event);
     load_code();
 });
