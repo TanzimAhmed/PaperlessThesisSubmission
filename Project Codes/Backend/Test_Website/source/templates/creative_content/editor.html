@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% block extra_stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dark.min.css">
+{% endblock %}
+
 {% block body %}
 <div class="editor_wrapper">
   <div class="editor_items" id="left">
@@ -13,7 +17,7 @@
           <option value="CSE 499B.15">CSE 499B.15</option>
         </select>
         <input type="text" class="input" id="right" name="title" 
-        value="{% if edit %} {{ content.title }} {% endif %}" placeholder="Title">
+        value="" placeholder="Title">
         -->
         {{ content_form.course }}
         {{ content_form.course.errors }}
@@ -59,8 +63,12 @@
   </ul>
 </div>
 
+<!-- Code Highlighting-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+
 <!-- CK Editor JS includes-->
 <script src="//cdn.ckeditor.com/4.13.1/full-all/ckeditor.js"></script>
+
 <!-- MathJax JS includes -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

@@ -4,10 +4,10 @@ CKEDITOR.plugins.addExternal('ckeditor_wiris', 'https://www.wiris.net/demo/plugi
 
 let editor = CKEDITOR.replace('input', {
     // For now, MathType is incompatible with CKEditor file upload plugins.
-    extraPlugins: 'image2,mathjax,embed,autoembed,ckeditor_wiris',
+    extraPlugins: 'image2,mathjax,codesnippet,embed,autoembed,ckeditor_wiris',
     removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
     height: 400,
-    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+    mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML',
 
     //filebrowserBrowseUrl: '/apps/ckfinder/3.4.5/ckfinder.html',
     //filebrowserImageBrowseUrl: '/apps/ckfinder/3.4.5/ckfinder.html?type=Images',
@@ -34,6 +34,7 @@ let editor = CKEDITOR.replace('input', {
         { name: 'insert', groups: [ 'insert' ] }
     ],
     removeButtons: 'Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CreateDiv',
+    codeSnippet_theme: 'dark',
     // Load the default contents.css file plus customizations for this sample.
     contentsCss: [
         'http://cdn.ckeditor.com/4.13.1/full-all/contents.css',
@@ -72,6 +73,7 @@ form.onsubmit = function(event) {
 editor.on( 'change', function(event) {
     // getData() returns CKEditor's HTML content.
     load_math(event);
+    load_code();
 });
 
 function load_math(event) {
@@ -85,6 +87,12 @@ function load_math(event) {
     }).then(function () {
     });
     document.querySelector('#right').style.borderLeft = '1px solid grey';
+}
+
+function load_code() {
+    document.querySelectorAll('pre code').forEach((code) => {
+        hljs.highlightBlock(code);
+    });
 }
 
 // MathJax initialization
