@@ -7,7 +7,7 @@ let editor = CKEDITOR.replace('input', {
     // For now, MathType is incompatible with CKEditor file upload plugins.
     extraPlugins: 'image2,mathjax,codesnippet,embed,autoembed,ckeditor_wiris',
     removePlugins: 'image,uploadimage,uploadwidget,uploadfile,filetools,filebrowser',
-    height: 400,
+    height: 700,
     mathJaxLib: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML',
 
     //filebrowserBrowseUrl: '/apps/ckfinder/3.4.5/ckfinder.html',
@@ -51,27 +51,112 @@ let editor = CKEDITOR.replace('input', {
 
 
 // DOM Modifications
-let output = document.querySelector('#output');
-let form = document.querySelector('#image_upload_form');
+const output = document.querySelector('#output');
+const asset_display = document.querySelector('#asset_display_button');
+const overlays = document.querySelectorAll('.overlays');
+const close_icon = document.querySelector('#close_icon');
+const asset_form_container = document.querySelector('#asset_form_container');
+const asset_form = document.querySelector('#asset_form');
+const asset_delete_form = document.querySelector('#asset_delete_form');
+const asset_delete_buttons = document.querySelectorAll('.asset_delete_buttons');
+const asset_area = document.querySelector('#asset_area');
 
-// Submit Editor data
-form.onsubmit = function(event) {
+// Event Listeners
+asset_delete_buttons.forEach((delete_button) => {
+   delete_button.addEventListener('click', delete_asset);
+});
+
+asset_display.onclick = function(event) {
     event.preventDefault();
-    let form_data = new FormData(form);
+    overlays.forEach((overlay) => {
+        overlay.style.display = 'block';
+    });
 
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', form.getAttribute('action'), true);
+};
+
+close_icon.onclick = function(event) {
+    event.preventDefault();
+    overlays.forEach((overlay) => {
+        overlay.style.display = 'none';
+    });
+};
+
+// Asset Upload form submit
+asset_form.onsubmit = function(event) {
+    event.preventDefault();
+    const xhr = new XMLHttpRequest();
+    const form_data = new FormData(asset_form);
+
+    xhr.open('POST', asset_form.getAttribute('action'), true);
     console.log(form_data.get('upload_file'));
     xhr.onload = function() {
         if (this.status == 200) {
-            let item_node = document.createElement('li');
-            item_node.innerHTML = this.responseText;
-            document.querySelector('#resources').appendChild(item_node);
+            const data = JSON.parse(this.responseText)
+
+            const card_node = create_node('div', 'asset_card');
+            const delete_node = create_node(
+                'a',
+                'btn btn-danger asset_delete_buttons',
+                data.id
+            );
+            delete_node.href = '';
+            delete_node.innerHTML = 'Delete';
+            const resource_node = create_node('a');
+            resource_node.href = data.url;
+            const image_node = create_node('img', 'rounded');
+            image_node.src = data.url;
+            const info_node = create_node('p', 'resource_url');
+            info_node.title = 'Copy this URL';
+            info_node.setAttribute('data-toggle', 'tooltip');
+            const helper_text = create_node('strong');
+            helper_text.innerHTML = 'URL';
+            const line_break = create_node('br');
+            const url_node = create_node('span');
+            url_node.innerHTML = data.url;
+
+            resource_node.appendChild(image_node);
+            info_node.append(helper_text, line_break, url_node);
+            card_node.append(delete_node, resource_node, info_node);
+
+            delete_node.addEventListener('click', delete_asset);
+
+            asset_area.insertBefore(card_node, asset_form_container);
+            asset_form.reset();
+        } else {
+            alert(this.status + ' ' + this.responseText);
         }
     };
     xhr.send(form_data);
     console.log('File Uploaded');
 };
+
+function delete_asset(event) {
+    event.preventDefault();
+    const xhr = new XMLHttpRequest();
+    const form_data = new FormData(asset_delete_form);
+    const target_node = event.target;
+
+    form_data.set('resource_id', target_node.id);
+
+    xhr.open('POST', asset_delete_form.getAttribute('action'), true);
+    xhr.onload = function() {
+        if (this.status == 200) {
+            target_node.parentElement.remove();
+        } else {
+            alert(this.status + ' ' + this.responseText);
+        }
+    };
+    xhr.send(form_data);
+}
+
+function create_node(node_tag, class_name=null, id=null) {
+    const node = document.createElement(node_tag);
+    if (class_name)
+        node.className = class_name;
+    if (id)
+        node.id = id;
+    return node;
+}
 
 // Editor Change Listeners
 editor.on( 'change', (event) => {

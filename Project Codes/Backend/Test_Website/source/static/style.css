@@ -49,56 +49,6 @@ body {
 }
 /* endsection Forms by Fahad */
 
-/* section Demo Editor by Tanzim */
-.editor_wrapper {
-  display: flex;
-  width: 100%;
-  padding-top: 3.5rem;
-}
-
-.editor_wrapper #right {
-  border-left: 1px solid rgb(185, 185, 185);
-}
-
-.editor_items {
-  width: 100%;
-  min-height: 100vh;
-  padding: 2rem;
-}
-
-.editor_items h1 {
-  margin-bottom: 5rem;
-}
-
-.editor_inputs {
-  margin-left: 2%;
-  margin-right: 2%;
-  margin-bottom: 2rem;
-}
-
-.editor_inputs .input {
-  background: transparent;
-  border: 1px solid grey;
-  padding: 1.2rem;
-  margin: 1%;
-  width: 75%;
-}
-
-.editor_inputs #left {
-  width: 20%;
-}
-
-@media screen and (max-width: 1150px) {
-  .editor_wrapper {
-    flex-direction: column;
-  }
-
-  .editor_items {
-    min-height: 0;
-  }
-}
-/* endsection Demo Editor by Tanzim */
-
 /* section Navigation Bar by Tanzim */
 /*
 nav {
@@ -241,6 +191,19 @@ nav {
   z-index: 4;
 }
 /* endsection Error Messages by Tanzim */
+
+/* section Icons by Tanzim*/
+#close_icon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 4rem;
+}
+
+#close_icon img {
+  width: 100%;
+}
+/* endsection Icons by Tanzim*/
 
 /* section Dashboard by Tanzim*/
 .dashboard_background {
@@ -445,7 +408,8 @@ nav {
 }
 
 .dashboard .input,
-.form_container .input {
+.form_container .input,
+.asset_card .input {
   background: transparent;
   border: 1px solid #343a40;
   border-radius: 0.25rem;
@@ -573,12 +537,16 @@ nav {
 }
 
 .content_area {
-  background-color: #f1f1f1;
+  background-color: white /**/;
   width: 100%;
   min-height: 50vh;
   padding: 4rem;
   margin-bottom: 2rem;
   text-align: justify;
+}
+
+.editor_area {
+  padding: 1rem;
 }
 
 .comment_section {
@@ -588,7 +556,7 @@ nav {
 .comment_section .comment_header {
   margin: 2rem 0.5rem 0;
   padding: 1.5rem 0;
-  color: #f1f1f1;
+  color: white /**/;
   border-top: 1px solid grey;
   border-bottom: 1px solid grey;
 }
@@ -612,7 +580,7 @@ nav {
 
 .comment_container .comment_info {
   position: relative;
-  color: #f1f1f1;
+  color: white /**/;
   margin-bottom: 1rem;
 }
 
@@ -685,7 +653,7 @@ nav {
 }
 
 #error,
-#prompt{
+#prompt {
   background-color: rgba(0, 0, 0, 0.95);
   position: fixed;
   width: 100vw;
@@ -723,4 +691,151 @@ nav {
   margin-right: 0.5rem;
   margin-left: 0.5rem;
 }
+
+
 /* endsection Student Dashboard by Tanzim*/
+
+/* section Demo Editor by Tanzim */
+.overlay {
+  background-color: rgba(0, 0, 0, 0.85);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  display: none;
+}
+
+.asset_container_wrapper {
+  position: absolute;
+  width: 100%;
+  justify-content: center;
+  z-index: 2;
+  display: none;
+}
+
+.asset_container {
+  margin-top: 10rem;
+  padding: 0;
+  background-color: rgba(128, 128, 128, 0.4);
+}
+
+.asset_container h3 {
+  position: relative;
+  border-bottom: 1px solid grey;
+  padding: 0.75rem 2rem;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.asset_container #close_icon {
+  bottom: 0.32rem;
+}
+
+.asset_area {
+  background-color: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: space-between;
+}
+
+.asset_card {
+  position: relative;
+  padding: 2rem 1rem;
+  width: 320px;
+  height: 350px;
+}
+
+.asset_delete_buttons {
+  position: absolute;
+  right: 1rem;
+  opacity: 0.3;
+}
+
+.asset_delete_buttons:hover {
+  opacity: 1;
+}
+
+.asset_form {
+  width: 300px;
+  height: 300px;
+  text-align: center;
+  margin: 2rem 1rem 0;
+  border: 1px solid grey;
+  border-radius: 0.25rem;
+}
+
+.asset_form .input {
+  width: 100%;
+}
+
+.asset_form .btn {
+  padding: 0.75rem 1rem;
+  margin-top: 7rem;
+}
+
+.asset_card img {
+  width: 100%;
+}
+
+.asset_card p {
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+  word-wrap: break-word;
+  border-bottom: 1px solid grey;
+}
+
+.editor_wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.editor_wrapper #right {
+  border-left: 1px solid rgb(185, 185, 185);
+}
+
+.editor_items {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.editor_items h1 {
+  margin-bottom: 5rem;
+}
+
+.editor_inputs {
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.editor_inputs .input {
+  background: transparent;
+  border: 1px solid grey;
+  padding: 1.2rem;
+  margin: 1%;
+  width: 100%;
+}
+
+.editor_inputs #left {
+  width: 50%;
+}
+
+@media screen and (max-width: 1150px) {
+  .editor_wrapper {
+    flex-direction: column;
+  }
+
+  .editor_items {
+    min-height: 0;
+  }
+}
+/* endsection Demo Editor by Tanzim */

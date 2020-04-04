@@ -47,7 +47,7 @@
         {% if request.user == content.user %}
           <div class="text-right">
             <a href="#" class="btn btn-danger">Delete</a>
-            <a href="#" class="btn btn-outline-info">Edit</a>
+            <a href="{% url 'creative_contents:edit' content.link %}" class="btn btn-outline-info">Edit</a>
           </div>
         {% endif %}
       </h4>

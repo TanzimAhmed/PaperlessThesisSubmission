@@ -1,65 +1,135 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block extra_stylesheets %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dark.min.css">
 {% endblock %}
 
+{% block background_class %}
+  dashboard_background
+{% endblock %}
+
 {% block body %}
-<div class="editor_wrapper">
-  <div class="editor_items" id="left">
-    <form action="" method="POST">
-      {% csrf_token %}
-      <div class="editor_inputs">
-        <!--
-        <select name="course_id" id="left" class="input">
-          <option value="default.default" selected>Select Course</option>
-          <option value="CSE 499A.21">CSE 499A.21</option>
-          <option value="CSE 499B.15">CSE 499B.15</option>
-        </select>
-        <input type="text" class="input" id="right" name="title" 
-        value="" placeholder="Title">
-        -->
-        {{ content_form.course }}
-        {{ content_form.course.errors }}
-        {{ content_form.title }}
-        {{ content_form.title.errors }}
+<div class="overlay overlays"></div>
+<div class="asset_container_wrapper overlays">
+  <div class="asset_container container">
+    <h3>
+      Your Assets
+      <div id="close_icon">
+        <a href="#"><img src="{% static 'images/exit_icon.svg' %}" alt=""></a>
       </div>
-      {{ content_form.content }}
-      {{ content_form.content.errors }}
-      <!--
-      <textarea name="content" id="input" cols="80" rows="10" data-sample-short>
-        {% if edit %}
-          {{ content.content }}
-        {% endif %}
-      </textarea>
-      -->
-      <input type="submit" style="display: none;">
-    </form>
-    <form action="/content/upload/" id="image_upload_form" method="POST" enctype="multipart/form-data">
+    </h3>
+    <form action="{% url 'creative_contents:resource_delete' %}" method="POST" id="asset_delete_form">
       {% csrf_token %}
-      <div class="editor_inputs">
-        {{ resource_form.item }}
-        <button type="submit" class="btn btn-outline-dark">Upload Image / Video</button>
-      </div>
+      <input type="hidden" name="resource_id">  
     </form>
-  </div>
-  <div class="editor_items" id="right">
-    <h3>Preview Here</h3>
-    <hr>
-    <p id="output"></p>
+    <div class="asset_area" id="asset_area">
+      {% for resource in resources %}
+        <div class="asset_card">
+          <a href="" class="btn btn-danger asset_delete_buttons" id="{{ resource.id }}">Delete</a>
+          <a href="#"><img src="{{ resource.item.url }}" class="rounded" alt=""></a>
+          <p data-toggle="tooltip" title="Copy this URL"  class="resource_url">
+            <strong>URL:</strong> <br>
+            <span>{{ resource.item.url }} </span>
+          </p>
+        </div>
+      {% endfor %}
+      <div class="asset_card asset_form" id="asset_form_container">
+        <form action="/content/upload/" id="asset_form" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="">
+            {{ resource_form.item }}
+            <button type="submit" class="btn btn-dark">Upload Image / Video</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
-<div>
-  <h1>Your Images</h1>
-  <h2>Recently Uploaded</h2>
-  <ul id="resources"></ul>
-  <h2>Previous Uploads</h2>
-  <ul>
-    {% for resource in resources %}
-      <li>{{ resource.item.url }}</li>
-    {% endfor %}
-  </ul>
+<div class="user_dashboard">
+  <div class="header">
+    {% if content %}
+      <div class="text-right welcome">
+        <h1><strong>{{ content.title }}</strong></h1>
+      </div>
+      <div class="user_info">
+        <h3>
+          <strong>{{ content.user.get_full_name }}</strong>
+          <br>
+        </h3>
+        <strong>Created: </strong> {{ content.date_created }} <br>
+        <strong>Updated:  </strong> {{ content.date_updated }} <br>
+        <br>
+        <h4>
+          <strong>
+            {{ content.course_code }},
+            Section: {{ content.section }}
+          </strong>
+          <div class="text-right">
+            <a href="#" id="asset_display_button" class="btn btn-outline-info">Yours Assets</a>
+            <a href="{% url 'creative_contents:display' content.link %}" class="btn btn-outline-info">View</a>
+            <a href="#" class="btn btn-danger">Delete</a>
+          </div>
+        </h4>
+      </div>
+    {% else %}
+      <div class="text-right welcome">
+        <h1><strong>Content Editor</strong></h1>
+      </div>
+      <div class="user_info">
+        <h3>
+          <strong>{{ request.user.get_full_name }}</strong>
+          <div class="text-right">
+            <a href="#" id="asset_display_button" class="btn btn-outline-info">Yours Assets</a>
+          </div>
+        </h3>
+      </div>
+    {% endif %}
+  </div>
+  <div class="dashboard content_area_container">
+    <div class="content_area editor_area">
+      <div id="content">
+        <div class="editor_wrapper">
+          <div class="editor_items" id="left">
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div class="editor_inputs">
+                <!--
+                <select name="course_id" id="left" class="input">
+                  <option value="default.default" selected>Select Course</option>
+                  <option value="CSE 499A.21">CSE 499A.21</option>
+                  <option value="CSE 499B.15">CSE 499B.15</option>
+                </select>
+                <input type="text" class="input" id="right" name="title" 
+                value="" placeholder="Title">
+                -->
+                {{ content_form.title }}
+                {{ content_form.title.errors }}
+                {{ content_form.course }}
+                {{ content_form.course.errors }}
+              </div>
+              {{ content_form.content }}
+              {{ content_form.content.errors }}
+              <!--
+              <textarea name="content" id="input" cols="80" rows="10" data-sample-short>
+                {% if edit %}
+                  {{ content.content }}
+                {% endif %}
+              </textarea>
+              -->
+              <input type="submit" style="display: none;">
+            </form>
+          </div>
+          <div class="editor_items" id="right">
+            <h3>Preview Here</h3>
+            <hr>
+            <p id="output"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Code Highlighting-->
@@ -73,7 +143,6 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <!-- Defined JS includes -->
-{% load static %}
 <script src="{% static 'scripts/editor.js' %}"></script>
 
 {% endblock %}

@@ -10,7 +10,7 @@ class Content(models.Model):
     content = models.TextField()
     link = models.CharField(max_length=50, primary_key=True)
     title = models.CharField(max_length=200)
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='content')
     course_code = models.CharField(max_length=15)
     section = models.IntegerField()
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -21,7 +21,7 @@ class Content(models.Model):
 
 
 class Resource(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='resource')
     item = models.FileField(upload_to=user_directory_path)
 
     def delete(self, using=None, keep_parents=False):

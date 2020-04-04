@@ -1,12 +1,12 @@
 from django.urls import path
-from . import views
+from .views import index, show, EditView, DeleteResourceView, upload_file, editor
 
 app_name = 'creative_contents'
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('<str:link>/show/', views.show, name='content_display'),
-    path('<str:link>/edit/', views.edit, name='content_edit'),
-    path('upload/', views.upload_file, name='upload_file'),
-    path('demo_editor/', views.demo_editor, name='demo_editor'),
-    path('editor/', views.editor, name='editor'),
+    path('', index, name='index'),
+    path('<str:link>/show/', show, name='display'),
+    path('<str:link>/edit/', EditView.as_view(), name='edit'),
+    path('editor/', editor, name='editor'),
+    path('upload/', upload_file, name='upload_file'),
+    path('delete/', DeleteResourceView.as_view(), name='resource_delete')
 ]
