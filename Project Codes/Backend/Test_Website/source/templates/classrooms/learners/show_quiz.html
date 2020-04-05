@@ -1,25 +1,81 @@
 {% extends 'layout.html' %}
 
+{% block background_class %}
+  dashboard_background
+{% endblock %}
+
 {% block body %}
-  <div class="ceiling"></div>
-  <h1>Your Classroom</h1>
-  <p>{{ quiz.classroom.get_string }}</p>
-  <h1>{{ quiz }}</h1>
-  {% if quiz %}
-    <h1>Questions</h1>
-    {% for question in questions %}
-      <ul>
-        <li>
-          Question: {{ question }} <br>
-          Options: {{ question.options }} <br>
-          Points: {{ question.points }} points <br>
-          Time: {{ question.time }} seconds <br>
-          Correct Answer: {{ question.answer }} <br>
-          Your Answer: 
-        </li>
-      </ul>
-    {% endfor %}
-    <h2>Your Answers: </h2>
-    {{ answers }}
-  {% endif %}
+<div class="user_dashboard">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1><strong>Classroom</strong></h1>
+    </div>
+    <div class="user_info">
+      <h3>
+        <strong>{{ quiz.title }}</strong>
+        <br>
+        <br>
+        {{ quiz.classroom.name }}
+      </h3>
+      <p>
+        {{ quiz.classroom.course_code }},
+        Section: {{ quiz.classroom.section }} <br>
+        Session: {{ quiz.classroom.semester }}
+
+        <div class="text-right">
+          <a href="#" class="btn btn-danger">Delete</a>
+        </div>
+      </p>
+    </div>
+  </div>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Questions </h2>
+      </div>
+      {% if quiz.is_taken %}
+        <div class="card_container">
+          <div class="items_card items_card_fluid paper_list question_list">
+            <div class="items">
+              <strong>Total Points: </strong> <br>
+              <strong>Points Obtained: </strong> <br>
+              <strong>Correct Answers: </strong>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      <div class="card_container">
+        {% for question in questions %}
+          <div class="items_card items_card_fluid paper_list question_list">
+            <div class="items {{ question.class_name }}">
+              <strong>Question: </strong>{{ question.text | safe }}
+              <strong>Options: </strong><br>
+              {% for option in question.options %}
+                {{ option | safe }}
+              {% endfor %}
+              {% if response %}
+                <strong>Your Answer: </strong>{{ question.response }} <br>
+              {% endif %}
+              <strong>Correct Answer: </strong>{{ question.answer }} <br>
+              <div class="text-right">
+                <strong>Points: </strong>{{ question.points }} <br>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CK Editor JS includes-->
+<script src="//cdn.ckeditor.com/4.13.1/standard-all/ckeditor.js"></script>
+<!-- MathJax JS includes -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!-- Defined JS includes -->
+{% load static %}
+<script src="{% static 'scripts/update_quiz_editors.js' %}"></script>
+
 {% endblock %}

@@ -347,7 +347,7 @@ nav {
   margin-left: 2rem;
   display: inline-block;
 }
-.dashboard .items_card_fluid h5 {
+.dashboard .items_card_fluid h6 {
   margin-top: 1rem;
 }
 
@@ -360,9 +360,11 @@ nav {
 
 .items .text-right {
   position: absolute;
-  display: inline-block;
+  height: 100%;
+  display: flex;
+  align-items: center;
   right: 0;
-  top: 0rem;
+  top: 0;
 }
 
 .dashboard .input_groups {
@@ -437,10 +439,6 @@ nav {
 .paper_submission a {
   width: 40% !important;
   padding: 1rem;
-}
-
-.paper_list a {
-  margin-top: 1rem;
 }
 
 .form_container {

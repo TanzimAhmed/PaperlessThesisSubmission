@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, Http404
 from documents.forms import DocumentForm
 from project_paperless.decorators import learner_required
+from classrooms.models import Performance
 from .forms import CreateGroupForm, GroupSelectForm
 from .models import Group
 
@@ -12,11 +13,26 @@ from .models import Group
 def dashboard(request):
     # Fetching information
     groups = request.user.group_set.all()
-    classrooms = request.user.classrooms.all()
+    classrooms = request.user.class_room.all()
+    quizzes = []
     papers = []
     for group in groups:
         for paper in group.document.all():
             papers.append(paper)
+
+    for classroom in classrooms:
+        for quiz in classroom.quiz.all():
+            if quiz.is_open:
+                try:
+                    quiz.performance_set.get(student=request.user)
+                except Performance.DoesNotExist:
+                    points = None
+                else:
+                    points = quiz.performance.points
+                quizzes.append({
+                    'fields': quiz,
+                    'points': points
+                })
 
     # Creating forms
     groups_form = GroupSelectForm(request.POST or None)
@@ -27,11 +43,11 @@ def dashboard(request):
 
     context = {
         'classrooms': classrooms,
+        'quizzes': quizzes,
         'groups': groups,
         'papers': papers,
         'groups_form': groups_form
     }
-    print(context)
     return render(request, 'learners/dashboard.html', context)
 
 

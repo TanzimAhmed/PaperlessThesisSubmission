@@ -51,74 +51,26 @@
         <p>Session</p>
       </div>
       <div class="card_container">
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
-                <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
+        {% for quiz in quizzes %}
+          <div class="items_card items_card_fluid">
+            <div class="items">
+              <p>
+                <strong>{{ quiz.fields.title }}</strong>
+                <br>
+                <br>
+                {{ quiz.fields.classroom.course_code }},
+                {{ quiz.fields.classroom.section }}
+              </p>
+              <div class="text-right">
+                {% if quiz.points %}
+                  Points: {{ quiz.points }}
+                {% endif %}
+                <a href="{% url 'classrooms:show_quiz' quiz.fields.classroom.id quiz.fields.id %}"
+                   class="btn btn-outline-dark"> View </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
-                <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
-            </div>
-          </div>
-        </div>
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
-                <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
-            </div>
-          </div>
-        </div>
-        <div class="items_card items_card_fluid">
-          <div class="items">
-            <p>
-              <strong>Quiz Title</strong> 
-              <br>
-              <br>
-              Course Code,
-              Section
-            </p>
-            <div class="text-right">
-              <h5>
-                Marks: xx 
-                <a href="" class="btn btn-outline-dark"> View</a>
-              </h5>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
     <div class="area">

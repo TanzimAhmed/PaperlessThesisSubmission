@@ -72,7 +72,7 @@ class ShowView(UserViews):
     def get_classroom(self, learner=False):
         try:
             if learner:
-                classroom = self.request.user.classrooms.get(id=self.class_id)
+                classroom = self.request.user.class_room.get(id=self.class_id)
             else:
                 classroom = self.request.user.classroom.get(id=self.class_id)
         except Classroom.DoesNotExist:
@@ -102,20 +102,41 @@ class ShowQuizView(UserViews):
         return self.teacher_view()
 
     def student_view(self):
-        quiz = self.get_quiz()
-        if quiz.is_open:
-            return render(self.request, self.student_template)
-        questions = quiz.question.all()
+        quiz = self.get_quiz(learner=True)
+        if not quiz.is_open:
+            raise PermissionDenied
+
+        questions = []
         try:
             performance = quiz.performance_set.get(student=self.request.user)
         except Performance.DoesNotExist:
-            answers = 'You didnot appear in the quiz'
+            for question in quiz.question.all():
+                questions.append({
+                    'text': question.text,
+                    'options': question.options.split('<p>//</p>'),
+                    'answer': question.answer,
+                    'points': question.points,
+                    'response': None,
+                })
         else:
-            answers = performance.response
+            response = performance.response.split(', ')
+            i = 0
+            for question in quiz.question.all():
+                if response[i] == question.answer:
+                    class_name = 'text-success'
+                else:
+                    class_name = 'text-danger'
+                questions.append({
+                    'text': question.text,
+                    'options': question.options.split('<p>//</p'),
+                    'answer': question.answer,
+                    'points': question.points,
+                    'response': response[i],
+                    'class_name': class_name
+                })
         context = {
             'quiz': quiz,
             'questions': questions,
-            'answers': answers
         }
         return render(self.request, self.student_template, context)
 
@@ -141,9 +162,12 @@ class ShowQuizView(UserViews):
         }
         return render(self.request, self.teacher_template, context)
 
-    def get_quiz(self):
+    def get_quiz(self, learner=False):
         try:
-            classroom = self.request.user.classroom.get(id=self.class_id)
+            if learner:
+                classroom = self.request.user.class_room.get(id=self.class_id)
+            else:
+                classroom = self.request.user.classroom.get(id=self.class_id)
             quiz = classroom.quiz.get(id=self.quiz_id)
         except Classroom.DoesNotExist:
             raise Http404('Classroom Not found')
@@ -260,7 +284,7 @@ class QuizView(View):
 
     def get_quiz(self, class_id, quiz_id):
         try:
-            classroom = self.request.user.classroom.get(id=class_id)
+            classroom = self.request.user.class_room.get(id=class_id)
             quiz = classroom.quiz.get(id=quiz_id)
             if not quiz.is_running:
                 raise PermissionDenied

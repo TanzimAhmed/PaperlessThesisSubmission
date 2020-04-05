@@ -8,7 +8,7 @@ class Classroom(models.Model):
     semester = models.CharField(max_length=12)
     course_code = models.CharField(max_length=30)
     section = models.IntegerField()
-    students = models.ManyToManyField('users.User', related_name='classrooms')
+    students = models.ManyToManyField('users.User', related_name='class_room')
     instructor = models.ForeignKey('users.User', related_name='classroom', on_delete=models.CASCADE)
 
     class Meta:
@@ -29,6 +29,7 @@ class Quiz(models.Model):
     students = models.ManyToManyField('users.User', related_name='quizzes', through='Performance')
     is_open = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
+    is_taken = models.BooleanField(default=False)
     due_date = models.DateField()
 
     class Meta:
