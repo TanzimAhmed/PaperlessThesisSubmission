@@ -1,9 +1,5 @@
 {% extends 'layout.html' %}
 
-{% block background_class %}
-  dashboard_background
-{% endblock %}
-
 {% block body %}
 <div class="user_dashboard">
   <div class="header container">
@@ -23,6 +19,14 @@
         Session: {{ quiz.classroom.semester }}
 
         <div class="text-right">
+          <form action="{% url 'classrooms:show_quiz_stats' %}"
+                id="quiz_stats_form"
+                method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="class_id" value="{{ quiz.classroom.id }}">
+            <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
+          </form>
+          <a href="" class="btn btn-outline-info" id="quiz_stats">Show Statistics</a>
           <a href="#" class="btn btn-danger">Delete</a>
         </div>
       </p>
@@ -156,5 +160,6 @@
 <!-- Defined JS includes -->
 {% load static %}
 <script src="{% static 'scripts/update_quiz_editors.js' %}"></script>
+<script src="{% static 'scripts/show_quiz_stats.js' %}"></script>
 
 {% endblock %}
