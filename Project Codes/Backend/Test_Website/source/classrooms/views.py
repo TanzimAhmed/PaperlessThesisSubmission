@@ -1,16 +1,19 @@
-from django.shortcuts import render, redirect, Http404
+from django.shortcuts import render, redirect, Http404, HttpResponse
 from django.http import JsonResponse
 from django.core.serializers import serialize
+from django.core.files.base import ContentFile
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views import View
-from .models import Classroom, Quiz, Performance
+from .models import Classroom, Quiz, Performance, Resource
 from .forms import CreateClassForm, QuizForm, QuestionForm, JoinClassForm, TakeQuizForm
 from project_paperless.utils import unique_id, UserViews
 from project_paperless.decorators import educator_required, learner_required
+import matplotlib.pyplot as plot
+from io import BytesIO
 
 
 # Create your views here.
@@ -134,6 +137,8 @@ class ShowQuizView(UserViews):
                     'response': response[i],
                     'class_name': class_name
                 })
+                i += 1
+
         context = {
             'quiz': quiz,
             'questions': questions,
@@ -292,6 +297,71 @@ class QuizView(View):
             raise Http404('Classroom Not found')
         except Quiz.DoesNotExist:
             raise Http404('Quiz Not found')
+        return quiz
+
+
+class GenerateGraphView(View):
+    def get(self, request):
+        raise Http404('Page Not Found')
+
+    def post(self, request):
+        if not 'class_id' and 'quiz_id' in request.POST:
+            return HttpResponse('No quiz specified', status=400)
+        class_id = request.POST['class_id']
+        quiz_id = request.POST['quiz_id']
+        try:
+            quiz = self.get_quiz(class_id, quiz_id)
+        except PermissionDenied as error:
+            return HttpResponse(error, status=403)
+        for resource in quiz.resource.all():
+            resource.delete()
+
+        positions = []
+        questions = []
+        correct_answers = []
+        i = 1
+        for question in quiz.question.all():
+            positions.append(i-1)
+            questions.append(f'Question {i}')
+            correct_answers.append(question.correct_responses)
+            total_responses = question.total_responses
+            i += 1
+
+        print(positions, questions, correct_answers)
+
+        figure, axis = plot.subplots()
+
+        axis.barh(positions, correct_answers, align='center')
+        axis.set_yticks(positions)
+        axis.set_yticklabels(questions)
+        axis.invert_yaxis()
+        axis.set_xlabel('Correct Responses')
+        axis.set_title(quiz.title)
+
+        figure.show()
+
+        image_file = BytesIO()
+        figure.savefig(image_file, format='png')
+        image_file.seek(0)
+        print(image_file.read())
+
+        image_file.seek(0)
+        content_file = ContentFile(image_file.read())
+        resource = Resource()
+        resource.quiz = quiz
+        resource.item.save('quiz_statistics.png', content_file)
+        resource.save()
+        print(resource)
+        return JsonResponse({'url': resource.item.url})
+
+    def get_quiz(self, class_id, quiz_id):
+        try:
+            classroom = self.request.user.classroom.get(id=class_id)
+            quiz = classroom.quiz.get(id=quiz_id)
+        except Classroom.DoesNotExist:
+            raise PermissionDenied('Classroom Not found')
+        except Quiz.DoesNotExist:
+            raise PermissionDenied('Quiz Not found')
         return quiz
 
 

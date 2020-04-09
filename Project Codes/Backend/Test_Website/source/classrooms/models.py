@@ -2,6 +2,10 @@ from django.db import models
 
 
 # Create your models here.
+def user_directory_path(instance, file_name):
+    return f'uploads/{instance.quiz.classroom.id}/{instance.quiz.id}/{file_name}'
+
+
 class Classroom(models.Model):
     id = models.CharField(max_length=128, primary_key=True)
     name = models.CharField(max_length=128)
@@ -89,3 +93,15 @@ class Question(models.Model):
 
     def __str__(self):
         return f'{self.text}'
+
+
+class Resource(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='resource')
+    item = models.FileField(upload_to=user_directory_path)
+
+    def delete(self, using=None, keep_parents=False):
+        self.item.storage.delete(self.item.name)
+        super().delete(using=using, keep_parents=keep_parents)
+
+    def __str__(self):
+        return self.item.name
