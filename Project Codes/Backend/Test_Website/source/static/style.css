@@ -242,11 +242,13 @@ nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 .user_dashboard .container {
   max-width: 1275px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .header .user_info {
@@ -269,6 +271,17 @@ nav {
   width: 8rem;
 }
 
+.dashboard .area_wrapper {
+  padding-top: 2rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  background-color: rgba(39, 40, 44, 0.5);
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.25),
+              0 6px 20px 0 rgba(0, 0, 0, 0.20);
+  border-radius: 0.4rem;
+}
+
 .dashboard .area {
   width: 38rem;
   margin: 1rem 0.5%;
@@ -289,6 +302,16 @@ nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-content: space-between;
+}
+
+.dashboard .card_group_header {
+  width: 100%;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgb(76, 94, 70);
+  color: rgb(76, 94, 70);
+  text-align: center;
 }
 
 .dashboard .items_card,
@@ -403,8 +426,13 @@ nav {
   width: 700px;
 }
 
+.form_dashboard .area_header {
+  border-top: none;
+  margin-bottom: 1.5rem;
+}
+
 .form_dashboard .dashboard {
-  background-color: rgba(39, 40, 44, 0.15);
+  background-color: rgba(142, 165, 148, 0.40);
 }
 
 .dashboard .input,
@@ -436,34 +464,6 @@ nav {
 
 .paper_submission a {
   width: 40% !important;
-  padding: 1rem;
-}
-
-.form_container {
-  padding-top: 4rem;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-}
-
-.form_container .form {
-  width: 700px;
-  text-align: center;
-}
-
-.form_container form {
-  width: 700px;
-  text-align: center;
-  padding-bottom: 4rem;
-}
-
-.form_container .input {
-  width: 50%;
-}
-
-.form_container button {
-  width: 50% !important;
-  margin-top: 4rem;
   padding: 1rem;
 }
 
@@ -518,13 +518,14 @@ nav {
 }
 
 .content_display {
-  margin: 1rem 0.5%;
-  padding-bottom: 1rem;
+  padding: 0 1rem 3rem;
+  background-color: rgba(142, 165, 148, 0.40);
 }
 
 .content_display .items_card {
   width: 22rem;
   height: 25rem;
+  background-color: rgba(255, 255, 255, 0.65);
 }
 
 .content_area_container {
@@ -537,7 +538,6 @@ nav {
   width: 100%;
   min-height: 50vh;
   padding: 4rem;
-  margin-bottom: 2rem;
   text-align: justify;
 }
 
@@ -552,7 +552,7 @@ nav {
 .comment_section .comment_header {
   margin: 2rem 0.5rem 0;
   padding: 1.5rem 0;
-  color: white /**/;
+  color: rgba(39, 40, 44, 0.85); /**/
   border-top: 1px solid grey;
   border-bottom: 1px solid grey;
 }
@@ -567,7 +567,7 @@ nav {
 }
 
 .comment_section .comment_card {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(39, 40, 44, 0.8);
   padding: 1rem;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;

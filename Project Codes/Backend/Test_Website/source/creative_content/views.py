@@ -13,7 +13,7 @@ from .forms import ContentForm, DiscussionForm, RepliesForm, ResourceForm
 
 def index(request):
     print(Resource.objects.all())
-    contents = Content.objects.all()
+    contents = Content.objects.all().order_by('course_code')
     context = {'contents': contents}
     return render(request, 'creative_content/index.html', context)
 

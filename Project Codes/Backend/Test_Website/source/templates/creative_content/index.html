@@ -24,25 +24,25 @@
   </div>
   <div class="dashboard container">
     <div class="content_display">
-      <div class="area_header">
-        <h2> Course Materials </h2>
-        <br>
-      </div>
       <div class="card_container">
-        {% for content in contents %}
-          <div class="items_card">
-            <div class="items">
-              <h3>{{ content.title }}</h3>
-              <div class="card_info">
-                <p>
-                  Course: {{ content.course_code }} <br>
-                  Section: {{ content.section }} <br>
-                </p>
-                <h5>{{ content.user.get_full_name }}</h5>
-                <a href="/content/{{ content.link }}/show/" class="btn btn-outline-dark"> View</a>
+        {% regroup contents by course_code as content_list %}
+        {% for course, contents in content_list %}
+          <h2 class="card_group_header">Course: {{ course }} </h2>
+          {% for content in contents %}
+            <div class="items_card">
+              <div class="items">
+                <h3>{{ content.title }}</h3>
+                <div class="card_info">
+                  <p>
+                    Course: {{ content.course_code }} <br>
+                    Section: {{ content.section }} <br>
+                  </p>
+                  <h5>{{ content.user.get_full_name }}</h5>
+                  <a href="/content/{{ content.link }}/show/" class="btn btn-outline-dark"> View</a>
+                </div>
               </div>
             </div>
-          </div>
+          {% endfor %}
         {% endfor %}
       </div>
     </div>

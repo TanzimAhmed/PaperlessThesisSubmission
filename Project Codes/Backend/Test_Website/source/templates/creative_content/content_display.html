@@ -50,12 +50,14 @@
     </div>
   </div>
   <div class="dashboard container content_area_container">
-    <div class="content_area">
-      <div class="container" id="content">
-        {% if content %}
-          {{ content.content | safe }}
-          <!-- Add HTML for Comment Section HERE -->
-        {% endif %}
+    <div class="area_wrapper">
+      <div class="content_area">
+        <div class="container" id="content">
+          {% if content %}
+            {{ content.content | safe }}
+            <!-- Add HTML for Comment Section HERE -->
+          {% endif %}
+        </div>
       </div>
     </div>
     <div class="comment_section">
