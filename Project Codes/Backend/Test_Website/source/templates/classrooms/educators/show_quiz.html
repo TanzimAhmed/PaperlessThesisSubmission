@@ -1,6 +1,23 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block body %}
+<div class="overlay overlays"></div>
+<div class="asset_container_wrapper overlays">
+  <div class="asset_container container">
+    <h3>
+      {{ quiz.title }}
+      <div id="close_icon">
+        <a href="#"><img src="{% static 'images/exit_icon.svg' %}" alt=""></a>
+      </div>
+    </h3>
+    <div class="asset_area" id="asset_area">
+      <div class="quiz_statistics">
+        <img src="" id="statistics_image" alt="">
+      </div>
+    </div>
+  </div>
+</div>
 <div class="user_dashboard">
   <div class="header container">
     <div class="text-right welcome">
@@ -26,7 +43,7 @@
             <input type="hidden" name="class_id" value="{{ quiz.classroom.id }}">
             <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
           </form>
-          <a href="" class="btn btn-outline-info" id="quiz_stats">Show Statistics</a>
+          <a href="" class="btn btn-outline-info" id="quiz_stats">Statistics</a>
           <a href="#" class="btn btn-danger">Delete</a>
         </div>
       </p>
@@ -52,7 +69,8 @@
               <strong>Total Responses: </strong>{{ question.total_responses }} <br>
               <strong>Correct Responses: </strong>{{ question.correct_responses }} <br>
               <div class="text-right">
-                <a href="{% url 'classrooms:update_question' quiz.classroom.id quiz.id question.id %}" class="btn btn-outline-dark">
+                <a href="{% url 'classrooms:update_question' quiz.classroom.id quiz.id question.id %}"
+                   class="btn btn-outline-dark">
                   Update
                 </a>
               </div>
@@ -68,7 +86,8 @@
       <div class="card_container">
         <div class="forms_card educator_forms">
           <div class="items">
-            <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST" id="update_quiz_form">
+            <form action="{% url 'classrooms:show_quiz' quiz.classroom.id quiz.id %}" method="POST"
+                  id="update_quiz_form">
               {% csrf_token %}
               <div class="input_groups">
                 <div class="input_group">
@@ -158,7 +177,6 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <!-- Defined JS includes -->
-{% load static %}
 <script src="{% static 'scripts/update_quiz_editors.js' %}"></script>
 <script src="{% static 'scripts/show_quiz_stats.js' %}"></script>
 

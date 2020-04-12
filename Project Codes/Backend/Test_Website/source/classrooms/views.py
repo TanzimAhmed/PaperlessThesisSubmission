@@ -313,6 +313,8 @@ class GenerateGraphView(View):
             quiz = self.get_quiz(class_id, quiz_id)
         except PermissionDenied as error:
             return HttpResponse(error, status=403)
+
+        # Refreshing image files
         for resource in quiz.resource.all():
             resource.delete()
 
@@ -338,20 +340,16 @@ class GenerateGraphView(View):
         axis.set_xlabel('Correct Responses')
         axis.set_title(quiz.title)
 
-        figure.show()
-
         image_file = BytesIO()
-        figure.savefig(image_file, format='png')
         image_file.seek(0)
-        print(image_file.read())
+        figure.savefig(image_file, format='svg', bbox_inches='tight')
 
         image_file.seek(0)
         content_file = ContentFile(image_file.read())
         resource = Resource()
         resource.quiz = quiz
-        resource.item.save('quiz_statistics.png', content_file)
+        resource.item.save('quiz_statistics.svg', content_file)
         resource.save()
-        print(resource)
         return JsonResponse({'url': resource.item.url})
 
     def get_quiz(self, class_id, quiz_id):

@@ -787,6 +787,14 @@ nav {
   border-bottom: 1px solid grey;
 }
 
+.quiz_statistics {
+  width: 80%;
+}
+
+.quiz_statistics img {
+  width: 100%;
+}
+
 .editor_wrapper {
   display: flex;
   width: 100%;
