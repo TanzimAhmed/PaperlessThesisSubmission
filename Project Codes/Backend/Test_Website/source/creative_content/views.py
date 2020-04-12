@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import render, redirect, Http404, HttpResponse
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
@@ -8,9 +9,8 @@ from .models import Content, Resource
 from project_paperless.utils import unique_id
 from .forms import ContentForm, DiscussionForm, RepliesForm, ResourceForm
 
+
 # Create your views here.
-
-
 def index(request):
     print(Resource.objects.all())
     contents = Content.objects.all().order_by('course_code')
@@ -98,6 +98,24 @@ class EditView(View):
         except Content.DoesNotExist:
             raise Http404('Link does not exist')
         return self.content
+
+
+class DeleteView(View):
+    def get(self, request):
+        raise Http404('URL does not exist')
+
+    def post(self, request):
+        if 'content_id' in request.POST:
+            content_id = request.POST['content_id']
+        else:
+            raise PermissionDenied('Invalid Request')
+        try:
+            content = request.user.content.get(link=content_id)
+        except Content.DoesNotExist:
+            raise PermissionDenied('Content does Not exist')
+        content.delete()
+        messages.success(request, 'Content removed Successfully')
+        return redirect('users:dashboard')
 
 
 class DeleteResourceView(View):

@@ -5,22 +5,9 @@
 {% endblock %}
 
 {% block body %}
-<div id="error">
-  <div class="error_message">
-    <h4> Error </h4>
-    <p id="error_message"> Error Message </p>
-    <a href="" class="btn btn-outline-light">Reload Page</a>
-  </div>
-</div>
 
-<div id="prompt">
-  <div class="error_message">
-    <h4> Warning </h4>
-    <p id="prompt_message"> Prompt Message </p>
-    <a href="" id="prompt_cancel" class="btn btn-outline-light">Cancel</a>
-    <a href="" id="prompt_continue" class="btn btn-warning">Delete</a>
-  </div>
-</div>
+{% include 'includes/_error_dialog.html' %}
+{% include 'includes/_prompt.html' %}
 
 <div class="user_dashboard">
   <div class="header container">
@@ -42,7 +29,11 @@
         </strong>
         {% if request.user == content.user %}
           <div class="text-right">
-            <a href="#" class="btn btn-danger">Delete</a>
+            <form action="{% url 'creative_contents:delete' %}" method="POST" id="delete_content_form">
+              {% csrf_token %}
+              <input type="hidden" name="content_id" value="{{ content.link }}">
+            </form>
+            <a href="" class="btn btn-danger" id="delete_content_button">Delete</a>
             <a href="{% url 'creative_contents:edit' content.link %}" class="btn btn-outline-info">Edit</a>
           </div>
         {% endif %}

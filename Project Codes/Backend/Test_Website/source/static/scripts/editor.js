@@ -55,6 +55,12 @@ const output = document.querySelector('#output');
 const asset_display = document.querySelector('#asset_display_button');
 const overlays = document.querySelectorAll('.overlays');
 const close_icon = document.querySelector('#close_icon');
+const prompt = document.querySelector('#prompt');
+const prompt_message = document.querySelector('#prompt_message');
+const delete_button = document.querySelector('#delete_button');
+const cancel_button = document.querySelector('#prompt_cancel');
+const continue_button = document.querySelector('#prompt_continue');
+const delete_form = document.querySelector('#delete_form');
 const asset_form_container = document.querySelector('#asset_form_container');
 const asset_form = document.querySelector('#asset_form');
 const asset_delete_form = document.querySelector('#asset_delete_form');
@@ -80,6 +86,27 @@ close_icon.onclick = function(event) {
         overlay.style.display = 'none';
     });
 };
+
+if (delete_button) {
+    delete_button.onclick = function (event) {
+        event.preventDefault();
+        prompt_message.innerHTML = 'Your content, along with all discussions, ' +
+            'would be deleted. This action can NOT be undone. Do you wish to continue?';
+        prompt.style.display = 'flex';
+    }
+
+    cancel_button.onclick = function (event) {
+        event.preventDefault();
+        prompt.style.display = 'none';
+    };
+
+    continue_button.onclick = function (event) {
+        event.preventDefault();
+        prompt.style.display = 'none';
+
+        delete_form.submit();
+    };
+}
 
 // Asset Upload form submit
 asset_form.onsubmit = function(event) {
@@ -165,7 +192,7 @@ editor.on( 'change', (event) => {
     load_code();
 });
 
-editor.on('dialogHide', (event) => {
+editor.on('dataReady', (event) => {
     load_math(event);
     load_code();
 });

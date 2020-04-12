@@ -35,6 +35,12 @@ const discussion_form = document.querySelector('#comment_form');
 const comment_form_header = document.querySelector('#comment_form_header');
 const comment_button = document.querySelector('#comment_button');
 const exit_comment_button = document.querySelector('#exit_comment_button');
+const delete_content_form = document.querySelector('#delete_content_form');
+const delete_content = document.querySelector('#delete_content_button');
+const prompt = document.querySelector('#prompt');
+const prompt_message = document.querySelector('#prompt_message');
+const error_dialog = document.querySelector('#error');
+const error_message = document.querySelector('#error_message')
 const cancel_button = document.querySelector('#prompt_cancel');
 const continue_button = document.querySelector('#prompt_continue');
 let discussion_editor = null;
@@ -55,13 +61,13 @@ web_socket.onopen = function(event) {
 web_socket.onclose = function(event) {
     console.log('Websocket closed');
     if (event.code == 4001) {
-        document.querySelector('#error_message').innerHTML = 'You do NOT have the required permissions to ' +
+        error_message.innerHTML = 'You do NOT have the required permissions to ' +
             'perform this operation.';
     } else {
-        document.querySelector('#error_message').innerHTML = 'An Error Occurred. Please Reload this page.';
+        error_message.innerHTML = 'An Error Occurred. Please Reload this page.';
     }
-    document.querySelector('#prompt').style.display = 'none';
-    document.querySelector('#error').style.display = 'flex';
+    prompt.style.display = 'none';
+    error_dialog.style.display = 'flex';
 };
 
 web_socket.onerror = function(event) {
@@ -115,8 +121,8 @@ function comment_delete_handler (event) {
     event.preventDefault();
     delete_node = event.target.id;
     delete_node_type = 'comment';
-    document.querySelector('#prompt').style.display = 'flex';
-    document.querySelector('#prompt_message').innerHTML = 'Your entire conversation for this ' +
+    prompt.style.display = 'flex';
+    prompt_message.innerHTML = 'Your entire conversation for this ' +
         'thread would be deleted. This action can NOT be undone. Do you wish to continue?';
 }
 
@@ -124,8 +130,8 @@ function reply_delete_handler (event) {
     event.preventDefault();
     delete_node = event.target.id;
     delete_node_type = 'reply';
-    document.querySelector('#prompt').style.display = 'flex';
-    document.querySelector('#prompt_message').innerHTML = 'Your reply would be deleted. ' +
+    prompt.style.display = 'flex';
+    prompt_message.innerHTML = 'Your reply would be deleted. ' +
         'This action can NOT be undone. Do you wish to continue?';
 }
 
@@ -231,21 +237,45 @@ if (reply_form) {
     };
 }
 
+if (delete_content) {
+    delete_content.onclick = function (event) {
+        event.preventDefault();
+        cancel_button.setAttribute('content', 'content');
+        continue_button.setAttribute('content', 'content');
+        prompt_message.innerHTML = 'Your content, along with all discussions, ' +
+            'would be deleted. This action can NOT be undone. Do you wish to continue?';
+        prompt.style.display = 'flex';
+    }
+}
+
 cancel_button.onclick = function (event) {
     event.preventDefault();
-    delete_node = null;
-    delete_node_type = null;
-    document.querySelector('#prompt').style.display = 'none';
+    if (cancel_button.getAttribute('content') == 'content') {
+        cancel_button.removeAttribute('content');
+        continue_button.removeAttribute('content');
+        prompt.style.display = 'none';
+    } else {
+        delete_node = null;
+        delete_node_type = null;
+        prompt.style.display = 'none';
+    }
 };
 
 continue_button.onclick = function (event) {
     event.preventDefault();
-    if (delete_node) {
-        delete_thread();
-        delete_node = null;
-        delete_node_type = null;
+    if (continue_button.getAttribute('content') == 'content') {
+        cancel_button.removeAttribute('content');
+        continue_button.removeAttribute('content');
+        prompt.style.display = 'none';
+        delete_content_form.submit();
+    } else {
+        if (delete_node) {
+            delete_thread();
+            delete_node = null;
+            delete_node_type = null;
+        }
+        prompt.style.display = 'none';
     }
-    document.querySelector('#prompt').style.display = 'none';
 };
 
 function delete_thread() {

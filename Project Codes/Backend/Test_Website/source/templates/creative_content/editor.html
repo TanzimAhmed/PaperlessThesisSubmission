@@ -6,6 +6,9 @@
 {% endblock %}
 
 {% block body %}
+
+{% include 'includes/_prompt.html' %}
+
 <div class="overlay overlays"></div>
 <div class="asset_container_wrapper overlays">
   <div class="asset_container container">
@@ -63,9 +66,13 @@
             Section: {{ content.section }}
           </strong>
           <div class="text-right">
+            <form action="{% url 'creative_contents:delete' %}" method="POST" id="delete_form">
+              {% csrf_token %}
+              <input type="hidden" name="content_id" value="{{ content.link }}">
+            </form>
             <a href="#" id="asset_display_button" class="btn btn-outline-info">Yours Assets</a>
             <a href="{% url 'creative_contents:display' content.link %}" class="btn btn-outline-info">View</a>
-            <a href="#" class="btn btn-danger">Delete</a>
+            <a href="" class="btn btn-danger" id="delete_button">Delete</a>
           </div>
         </h4>
       </div>
