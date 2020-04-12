@@ -24,11 +24,11 @@ def dashboard(request):
         for quiz in classroom.quiz.all():
             if quiz.is_open:
                 try:
-                    quiz.performance_set.get(student=request.user)
+                    performance = quiz.performance_set.get(student=request.user)
                 except Performance.DoesNotExist:
                     points = None
                 else:
-                    points = quiz.performance.points
+                    points = performance.points
                 quizzes.append({
                     'fields': quiz,
                     'points': points

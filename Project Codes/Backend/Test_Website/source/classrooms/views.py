@@ -110,6 +110,7 @@ class ShowQuizView(UserViews):
             raise PermissionDenied
 
         questions = []
+        summary = None
         try:
             performance = quiz.performance_set.get(student=self.request.user)
         except Performance.DoesNotExist:
@@ -124,24 +125,38 @@ class ShowQuizView(UserViews):
         else:
             response = performance.response.split(', ')
             i = 0
+            total_points = 0
+            points_obtained = 0
+            correct_answers = 0
+
             for question in quiz.question.all():
                 if response[i] == question.answer:
-                    class_name = 'text-success'
+                    class_name = 'correct_response'
+                    points_obtained += question.points
+                    correct_answers += 1
                 else:
-                    class_name = 'text-danger'
+                    class_name = 'wrong_response'
                 questions.append({
                     'text': question.text,
-                    'options': question.options.split('<p>//</p'),
+                    'options': question.options.split('<p>//</p>'),
                     'answer': question.answer,
                     'points': question.points,
                     'response': response[i],
-                    'class_name': class_name
+                    'class_name': class_name,
                 })
                 i += 1
+                total_points += question.points
+
+            summary = {
+                'total_points': total_points,
+                'points_obtained': points_obtained,
+                'correct_answers': correct_answers
+            }
 
         context = {
             'quiz': quiz,
             'questions': questions,
+            'summary': summary
         }
         return render(self.request, self.student_template, context)
 
@@ -256,7 +271,7 @@ class QuizView(View):
     request = None
 
     @method_decorator(login_required(login_url='users:login'))
-    @method_decorator(educator_required)
+    @method_decorator(learner_required)
     def get(self, request, class_id, quiz_id):
         self.request = request
         form = TakeQuizForm()
@@ -266,7 +281,7 @@ class QuizView(View):
         except Performance.DoesNotExist:
             quiz.students.add(request.user)
         else:
-            pass
+            raise PermissionDenied('Quiz already giver')
         questions = quiz.question.all()
         questions = serialize('json', questions, fields=('text', 'options', 'time', 'points'))
         context = {
@@ -278,7 +293,7 @@ class QuizView(View):
         return render(request, self.template_name, context)
 
     @method_decorator(login_required(login_url='users:login'))
-    @method_decorator(educator_required)
+    @method_decorator(learner_required)
     def post(self, request, class_id, quiz_id):
         form = TakeQuizForm(request.POST)
         quiz = self.get_quiz(class_id, quiz_id)
@@ -403,7 +418,7 @@ def quiz_status(request, class_id, quiz_id, status):
 @login_required(login_url='users:login')
 def participate_quiz(request, class_id, quiz_id):
     try:
-        classroom = request.user.classroom.get(id=class_id)
+        classroom = request.user.class_room.get(id=class_id)
         quiz = classroom.quiz.get(id=quiz_id)
     except Classroom.DoesNotExist:
         raise Http404('Classroom Not found')

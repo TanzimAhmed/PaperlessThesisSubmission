@@ -486,6 +486,11 @@ nav {
   width: 90% !important;
 }
 
+.quiz_area .text-right {
+  display: block;
+  height: auto;
+}
+
 .quiz_area #question_area {
   text-align: left;
 }
@@ -515,6 +520,22 @@ nav {
 .quiz_area label p,
 .quiz_area #question_tag p {
   display: inline;
+}
+
+.dashboard .correct_response {
+  border: 1px solid limegreen;
+}
+
+.dashboard .wrong_response {
+  border: 1px solid lightcoral;
+}
+
+.dashboard #quiz_area {
+  width: 60rem;
+}
+
+.dashboard #quiz_area table td {
+  width: 10rem;
 }
 
 .content_display {

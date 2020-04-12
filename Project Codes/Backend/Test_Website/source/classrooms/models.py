@@ -33,7 +33,6 @@ class Quiz(models.Model):
     students = models.ManyToManyField('users.User', related_name='quizzes', through='Performance')
     is_open = models.BooleanField(default=False)
     is_running = models.BooleanField(default=False)
-    is_taken = models.BooleanField(default=False)
     due_date = models.DateField()
 
     class Meta:

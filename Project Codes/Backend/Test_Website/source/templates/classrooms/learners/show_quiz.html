@@ -17,39 +17,46 @@
         {{ quiz.classroom.course_code }},
         Section: {{ quiz.classroom.section }} <br>
         Session: {{ quiz.classroom.semester }}
-
-        <div class="text-right">
-          <a href="#" class="btn btn-danger">Delete</a>
-        </div>
       </p>
     </div>
   </div>
   <div class="dashboard container">
-    <div class="area">
+    <div class="area" id="quiz_area">
       <div class="area_header">
         <h2> Questions </h2>
       </div>
-      {% if quiz.is_taken %}
+      {% if summary %}
         <div class="card_container">
           <div class="items_card items_card_fluid paper_list question_list">
             <div class="items">
-              <strong>Total Points: </strong> <br>
-              <strong>Points Obtained: </strong> <br>
-              <strong>Correct Answers: </strong>
+              <table>
+                <tr>
+                  <td><strong>Total Points: </strong></td>
+                  <td>{{ summary.total_points }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Points Obtained: </strong></td>
+                  <td>{{ summary.points_obtained }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Correct Answers: </strong></td>
+                  <td>{{ summary.correct_answers }}</td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
       {% endif %}
       <div class="card_container">
         {% for question in questions %}
-          <div class="items_card items_card_fluid paper_list question_list">
-            <div class="items {{ question.class_name }}">
+          <div class="items_card items_card_fluid paper_list question_list {{ question.class_name }}">
+            <div class="items">
               <strong>Question: </strong>{{ question.text | safe }}
               <strong>Options: </strong><br>
               {% for option in question.options %}
                 {{ option | safe }}
               {% endfor %}
-              {% if response %}
+              {% if question.response %}
                 <strong>Your Answer: </strong>{{ question.response }} <br>
               {% endif %}
               <strong>Correct Answer: </strong>{{ question.answer }} <br>
