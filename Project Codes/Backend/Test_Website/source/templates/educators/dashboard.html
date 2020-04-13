@@ -74,15 +74,15 @@
         <p>Session</p>
       </div>
       <div class="card_container">
-        {% for paper in papers %}
+        {% for group in paper_requests %}
           <div class="items_card items_card_fluid paper_list">
             <div class="items">
               <p>
-                <strong>{{ paper.group.name }}</strong> 
+                <strong>{{ group.name }}</strong>
                 <br>
                 <br>
-                {{ paper.group.course_code }},
-                Section: {{ paper.group.section }}
+                {{ group.course_code }},
+                Section: {{ group.section }}
               </p>
               <div class="text-right paper_request_buttons">
                 <a href="" class="btn btn-danger">Reject</a>

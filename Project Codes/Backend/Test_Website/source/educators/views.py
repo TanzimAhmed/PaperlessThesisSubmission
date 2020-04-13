@@ -9,7 +9,7 @@ from project_paperless.decorators import educator_required
 @login_required(login_url='users:login')
 def dashboard(request):
     # Fetching information
-    groups = request.user.group_set.all()
+    groups = request.user.submission_group.all()
     classrooms = request.user.classroom.all()
     quizzes = []
     papers = []
@@ -19,8 +19,7 @@ def dashboard(request):
             for paper in group.document.all():
                 papers.append(paper)
         elif group.status == 'REQUESTED':
-            for paper in group.document.all():
-                paper_requests.append(paper)
+            paper_requests.append(group)
     for classroom in classrooms:
         for quiz in classroom.quiz.all():
             quizzes.append(quiz)

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, Http404
 from django.http import FileResponse
 from django.core.exceptions import PermissionDenied
 from django.views import View
+from .models import Document
 from .forms import DocumentForm
 from .pages import PdfDocumentTest
 from learners.models import Group
@@ -45,7 +46,14 @@ class ShowView(View):
         else:
             raise PermissionDenied('Unauthorized')
 
-        document = request.user.group_set.first().document.first()
-        print(document.paper.path)
+        try:
+            if request.user.is_educator:
+                group = request.user.submission_group.get(id=group_id)
+            else:
+                group = request.user.group_set.get(id=group_id)
+            document = group.document.get(id=document_id)
+        except (Group.DoesNotExist, Document.DoesNotExist):
+            raise PermissionDenied('Matching group and document Not found')
+
         file = open(document.paper.path, 'rb')
         return FileResponse(file, filename=document.paper.name, as_attachment=False)
