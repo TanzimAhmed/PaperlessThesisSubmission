@@ -22,8 +22,10 @@
       <div class="card_container">
         <div class="forms_card educator_forms">
           <div class="items">
-            <form action="{% url 'documents:upload_paper' %}" method="POST" id="add_group_form">
+            <form action="{% url 'documents:upload_paper' %}" method="POST" enctype="multipart/form-data"
+                  id="add_group_form">
               {% csrf_token %}
+              {{ form.group_id }}
               <div class="input_groups">
                 {{ form.paper }}
                 {{ form.paper.errors }}

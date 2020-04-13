@@ -526,8 +526,17 @@ nav {
   border: 1px solid limegreen;
 }
 
-.dashboard .wrong_response {
+.dashboard .wrong_response,
+.dashboard .error_list {
   border: 1px solid lightcoral;
+}
+
+.dashboard .error_list {
+  text-align: left;
+}
+
+.error_log .dashboard {
+  background-color: #fff3cd;
 }
 
 .dashboard #quiz_area {
@@ -540,7 +549,8 @@ nav {
 
 .content_display {
   padding: 0 1rem 3rem;
-  background-color: rgba(142, 165, 148, 0.40);
+  /* background-color: rgba(142, 165, 148, 0.40); */
+  background-color: #fff3cd;
 }
 
 .content_display .items_card {

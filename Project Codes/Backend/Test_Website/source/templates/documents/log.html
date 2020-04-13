@@ -1,11 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="container" style="padding-top: 10rem;">
-  {% for error in errors %}
-    <div class="alert alert-danger">
-      {{ error }}
+<div class="user_dashboard form_dashboard error_log">
+  <div class="header container">
+    <div class="text-right welcome">
+      <h1>Thesis Submission</h1>
     </div>
-  {% endfor %}
+    <div class="user_info">
+      <h3>
+        <strong>{{ request.user.get_full_name }}</strong> 
+        <br>
+        {{ request.user.username }}
+      </h3>
+    </div>
+  </div>
+  <div class="dashboard container">
+    <div class="area">
+      <div class="area_header">
+        <h2> Your paper contains errors </h2>
+      </div>
+      <div class="card_container">
+        <div class="forms_card educator_forms error_list text-danger">
+          <div class="items">
+            <ul>
+              {% for error in errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>      
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -1,7 +1,8 @@
 from django.contrib import messages
-from django.shortcuts import render, Http404
+from django.shortcuts import render, redirect, Http404
 from django.http import FileResponse
 from django.core.exceptions import PermissionDenied
+from django.views import View
 from .forms import DocumentForm
 from .pages import PdfDocumentTest
 from learners.models import Group
@@ -25,7 +26,7 @@ def upload_paper(request):
         document_test = PdfDocumentTest(document.paper.path)
         if document_test.is_valid_format():
             messages.success(request, "Your Paper is SUCCESSFULLY uploaded, thank you!")
-            return render(request, 'documents/log.html')
+            return redirect('users:dashboard')
         else:
             messages.warning(request, "Your paper contains errors")
             document.delete()
@@ -33,8 +34,18 @@ def upload_paper(request):
     return render(request, 'documents/submission.html', {'form': form})
 
 
-def show(request):
-    document = request.user.group_set.first().document.first()
-    print(document.paper.path)
-    file = open(document.paper.path, 'rb')
-    return FileResponse(file, filename=document.paper.name, as_attachment=False)
+class ShowView(View):
+    def get(self, request):
+        raise Http404('URL Not found')
+
+    def post(self, request):
+        if 'document_id' and 'group_id' in request.POST:
+            document_id = request.POST['document_id']
+            group_id = request.POST['group_id']
+        else:
+            raise PermissionDenied('Unauthorized')
+
+        document = request.user.group_set.first().document.first()
+        print(document.paper.path)
+        file = open(document.paper.path, 'rb')
+        return FileResponse(file, filename=document.paper.name, as_attachment=False)
