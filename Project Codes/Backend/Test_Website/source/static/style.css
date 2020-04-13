@@ -49,6 +49,27 @@ body {
 }
 /* endsection Forms by Fahad */
 
+/* section Loading Screen by Tanzim */
+#content_block {
+  display: none;
+}
+
+#spinner_block {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner-border {
+  width: 7em;
+  height: 7em;
+  border: 0.8em solid rgba(0, 184, 148,0.8);
+  border-right-color: transparent;
+}
+/* endsection Loading Screen by Tanzim*/
+
 /* section Navigation Bar by Tanzim */
 /*
 nav {
@@ -549,8 +570,7 @@ nav {
 
 .content_display {
   padding: 0 1rem 3rem;
-  /* background-color: rgba(142, 165, 148, 0.40); */
-  background-color: #fff3cd;
+  background-color: rgba(142, 165, 148, 0.40);
 }
 
 .content_display .items_card {
