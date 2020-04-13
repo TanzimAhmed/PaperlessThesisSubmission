@@ -52,7 +52,7 @@ def dashboard(request):
 
 
 @login_required(login_url='users:login')
-
+@learner_required
 def add_group(request):
     group_form = CreateGroupForm(request.POST or None)
     group_form.set_user(request.user.username)

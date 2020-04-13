@@ -1,3 +1,7 @@
+// DOM Elements
+const content_block = document.querySelector('#content_block');
+const spinner_block = document.querySelector('#spinner_block');
+
 /*
 window.addEventListener('scroll', stick_nav_bar);
 
@@ -18,3 +22,9 @@ function stick_nav_bar() {
 
 // to auto stick navbar after reload
 // stick_nav_bar();
+
+// Spinner
+window.onload = function () {
+    content_block.style.display = 'block';
+    spinner_block.style.display = 'none';
+}

@@ -7,8 +7,9 @@ class DocumentForm(forms.ModelForm):
 
     class Meta:
         model = Document
-        fields = ['paper']
+        fields = ['title', 'paper']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'placeholder': 'Paper Title', 'class': 'input'})
         self.fields['paper'].widget.attrs.update({'placeholder': 'Upload Paper', 'class': 'input'})

@@ -27,6 +27,10 @@
               {% csrf_token %}
               {{ form.group_id }}
               <div class="input_groups">
+                {{ form.title }}
+                {{ form.title.errors }}
+              </div>
+              <div class="input_groups">
                 {{ form.paper }}
                 {{ form.paper.errors }}
               </div>

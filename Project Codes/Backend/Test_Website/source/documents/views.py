@@ -3,13 +3,17 @@ from django.shortcuts import render, redirect, Http404
 from django.http import FileResponse
 from django.core.exceptions import PermissionDenied
 from django.views import View
+from django.utils.decorators import method_decorator
 from .models import Document
 from .forms import DocumentForm
 from .pages import PdfDocumentTest
 from learners.models import Group
+from project_paperless.utils import login_required, learner_required, educator_required
 
 
 # Create your views here.
+@login_required(login_url='users:login')
+@learner_required
 def upload_paper(request):
     form = DocumentForm(request.POST or None, request.FILES or None)
     if form.is_valid():
@@ -39,6 +43,7 @@ class ShowView(View):
     def get(self, request):
         raise Http404('URL Not found')
 
+    @method_decorator(login_required(login_url='users:login'))
     def post(self, request):
         if 'document_id' and 'group_id' in request.POST:
             document_id = request.POST['document_id']

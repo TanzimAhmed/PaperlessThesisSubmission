@@ -74,6 +74,11 @@
         <p>Session</p>
       </div>
       <div class="card_container">
+        <form action="{% url 'educators:process_request' %}" method="POST" id="process_request">
+          {% csrf_token %}
+          <input type="hidden" name="group_id">
+          <input type="hidden" name="request_type">
+        </form>
         {% for group in paper_requests %}
           <div class="items_card items_card_fluid paper_list">
             <div class="items">
@@ -85,8 +90,8 @@
                 Section: {{ group.section }}
               </p>
               <div class="text-right paper_request_buttons">
-                <a href="" class="btn btn-danger">Reject</a>
-                <a href="" class="btn btn-outline-dark">Accept</a>
+                <a href="" class="btn btn-danger reject_request_buttons" group="{{ group.id }}">Reject</a>
+                <a href="" class="btn btn-outline-dark accept_request_buttons" group="{{ group.id }}">Accept</a>
               </div>
             </div>
           </div>
@@ -116,9 +121,9 @@
                 Section: {{ paper.group.section }}
               </p>
               <div class="text-right">
-                <a href="" class="btn btn-outline-dark"
+                <a href="" class="btn btn-outline-dark view_buttons"
                    group="{{ paper.group.id }}"
-                   document="{{ paper.id }}" id="view_button"> View</a>
+                   document="{{ paper.id }}"> View</a>
               </div>
             </div>
           </div>
@@ -130,5 +135,6 @@
 
 {% load static %}
 <script src="{% static 'scripts/dashboard.js' %}"></script>
+<script src="{% static 'scripts/educator_dashboard.js' %}"></script>
 
 {% endblock %}

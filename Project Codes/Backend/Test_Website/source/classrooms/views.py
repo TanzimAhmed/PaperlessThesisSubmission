@@ -319,6 +319,8 @@ class GenerateGraphView(View):
     def get(self, request):
         raise Http404('Page Not Found')
 
+    @method_decorator(login_required(login_url='users:login'))
+    @method_decorator(educator_required)
     def post(self, request):
         if not 'class_id' and 'quiz_id' in request.POST:
             return HttpResponse('No quiz specified', status=400)
@@ -431,6 +433,7 @@ def participate_quiz(request, class_id, quiz_id):
 
 
 @login_required(login_url='users:login')
+@learner_required
 def join_class(request):
     form = JoinClassForm(request.POST or None)
     if form.is_valid():
