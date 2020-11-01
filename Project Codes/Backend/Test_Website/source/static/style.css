@@ -2,6 +2,20 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
+
+  background-image: url('/static/images/nature_background_blur_75.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.background_overlay {
+  position: fixed;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: 100%;
 }
 
 /* section Forms by Fahad */
@@ -205,7 +219,7 @@ nav {
 }
 
 .flash_messages {
-  position: absolute; 
+  position: fixed;
   top: 3.5rem;
   width: 100%; 
   text-align: center;
@@ -264,6 +278,8 @@ nav {
   flex-wrap: wrap;
   justify-content: center;
   padding-top: 1rem;
+  background-color: rgba(255, 255, 255, 0.25);
+  opacity: 0.90;
 }
 
 .user_dashboard .container {
@@ -314,9 +330,12 @@ nav {
   /*background-color: #999484;*/
   padding: 1rem 2.4rem 0.5rem 2.4rem;
   margin-bottom: 1rem;
-  border-top: 1px solid rgb(76, 94, 70);
+  /*border-top: 1px solid rgb(76, 94, 70);
   border-bottom: 1px solid rgb(76, 94, 70);
-  color: rgb(76, 94, 70);
+  color: rgb(76, 94, 70);*/
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  color: black;
 }
 
 .dashboard .card_container {
@@ -452,9 +471,9 @@ nav {
   margin-bottom: 1.5rem;
 }
 
-.form_dashboard .dashboard {
+/*.form_dashboard .dashboard {
   background-color: rgba(142, 165, 148, 0.40);
-}
+}*/
 
 .dashboard .input,
 .form_container .input,

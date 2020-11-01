@@ -1,0 +1,28 @@
+[*.css]
+indent_size = 2
+tab_width = 2
+
+[*.less]
+tab_width = 2
+
+[*.sass]
+tab_width = 2
+
+[*.scss]
+tab_width = 2
+
+[.editorconfig]
+ij_editorconfig_align_group_field_declarations = false
+ij_editorconfig_space_after_colon = false
+ij_editorconfig_space_after_comma = true
+ij_editorconfig_space_before_colon = false
+ij_editorconfig_space_before_comma = false
+ij_editorconfig_spaces_around_assignment_operators = true
+
+[{*.cjs,*.js}]
+indent_size = 2
+tab_width = 2
+
+[{*.htm,*.html,*.ng,*.sht,*.shtm,*.shtml}]
+indent_size = 2
+tab_width = 2
