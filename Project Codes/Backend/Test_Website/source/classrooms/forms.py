@@ -52,5 +52,11 @@ class JoinClassForm(forms.Form):
     classroom.widget.attrs.update({'placeholder': 'Class Code', 'class': 'input'})
 
 
+class JoinQuizForm(forms.Form):
+    quiz = forms.CharField()
+
+    quiz.widget.attrs.update({'placeholder': 'Quiz Code', 'class': 'input'})
+
+
 class TakeQuizForm(forms.Form):
     answers = forms.CharField(widget=forms.HiddenInput)

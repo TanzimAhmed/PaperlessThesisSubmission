@@ -2,6 +2,7 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models
 from os.path import join as join_dir
 from django.conf import settings
+from hashlib import sha3_512
 
 
 # Create your models here.
@@ -26,6 +27,15 @@ class Document(models.Model):
 
     def get_string(self):
         return f'{self.group}_{self.paper.name}'
+
+    def verify(self, uploaded_file):
+        with open(self.paper.path, 'rb') as source_file:
+            source_hash = sha3_512(source_file.read())
+            uploaded_hash = sha3_512(uploaded_file.read())
+            if source_hash.hexdigest() == uploaded_hash.hexdigest():
+                return True
+            else:
+                return False
 
     def __str__(self):
         return f'Paper: {self.paper.name}, submitted by: {self.group}, to {self.group.instructor}'

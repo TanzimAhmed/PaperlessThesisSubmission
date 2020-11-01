@@ -17,7 +17,7 @@
   <div class="dashboard container">
     <div class="area">
       <div class="area_header">
-        <h2> Create Classroom </h2>
+        <h2> Join Classroom </h2>
       </div>
       <div class="card_container">
         <div class="forms_card educator_forms">
@@ -25,24 +25,15 @@
             <form action="" method="POST" id="add_group_form">
               {% csrf_token %}
               <div class="input_groups">
-                {{ create_form.course }}
-                {{ create_form.course.errors }}
+                {{ form.quiz }}
+                {{ form.quiz.errors }}
               </div>
-              <div class="input_groups">
-                {{ create_form.semester }}
-                {{ create_form.semester.errors }}
-              </div>
-              <div class="input_groups">
-                {{ create_form.name }}
-                {{ create_form.name.errors }}
-              </div>
-              <button type="submit" class="btn btn-dark">Create</button>
+              <button type="submit" class="btn btn-dark">Join</button>
             </form>
           </div>
         </div>
       </div>      
     </div>
   </div>
-  <div class="footer container"></div>
 </div>
 {% endblock %}

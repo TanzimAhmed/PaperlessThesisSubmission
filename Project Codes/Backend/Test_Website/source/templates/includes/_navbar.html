@@ -1,17 +1,23 @@
 <nav id="navigation_bar">
-  <h1 id="logo"><a href="/">Project Paperless</a></a></h1>
+  <h1 id="logo"><a href="/">Project Paperless</a></h1>
   <div id="navigation_links">
     <ul>
-      <li><a href="/content/">Content (Trial)</a></li>
-      <li><a href="/content/editor/">Editor (Trial)</a></li>
+      <li><a href="{% url 'creative_contents:index' %}">Content</a></li>
       {% if request.user.is_authenticated %}
-        <li><a href="/classroom/">Classes (Trial)</a></li>
-        <li><a href="/dashboard/">{{ request.user.first_name }}</a></li>
-        <li><a href="/logout/">Logout</a></li>
+        <li><a href="{% url 'creative_contents:editor' %}">Editor</a></li>
+        {% if request.user.is_educator %}
+          <li><a href="{% url 'classrooms:create' %}">Add CLass</a></li>
+        {% else %}
+          <li><a href="{% url 'classrooms:join_class' %}">Join CLass</a></li>
+          <li><a href="{% url 'classrooms:join_quiz' %}">Attend Quiz</a></li>
+        {% endif %}
+        <li><a href="{% url 'users:dashboard' %}">{{ request.user.first_name }}</a></li>
+        <li><a href="{% url 'users:logout' %}">Logout</a></li>
       {% else %}
-        <li><a href="/login/">Login</a></li>
-        <li><a href="/student/register/">Register</a></li>
+        <li><a href="{% url 'users:login' %}">Login</a></li>
+        <li><a href="{% url 'users:register' 'student' %}">Register</a></li>
       {% endif %}
+      <li><a href="{% url 'documents:verify' %}">Verify Document</a></li>
     </ul>
   </div>
 </nav>

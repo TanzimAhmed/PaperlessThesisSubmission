@@ -341,17 +341,20 @@ nav {
 .dashboard .card_container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-content: space-between;
+  max-width: 1104px;
+  /*justify-content: center;
+  align-content: space-between;*/
 }
 
 .dashboard .card_group_header {
   width: 100%;
   margin-top: 3rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgb(76, 94, 70);
-  color: rgb(76, 94, 70);
   text-align: center;
+  border-bottom: 1px solid black;
+  color: black;
+  /*border-bottom: 1px solid rgb(76, 94, 70);
+  color: rgb(76, 94, 70);*/
 }
 
 .dashboard .items_card,
@@ -589,7 +592,7 @@ nav {
 
 .content_display {
   padding: 0 1rem 3rem;
-  background-color: rgba(142, 165, 148, 0.40);
+  /* background-color: rgba(142, 165, 148, 0.40);*/
 }
 
 .content_display .items_card {
@@ -599,8 +602,8 @@ nav {
 }
 
 .content_area_container {
-  padding-left: 0;
-  padding-right: 0;
+  padding-top: 0 !important;
+  border-radius: 0.4rem;
 }
 
 .content_area {

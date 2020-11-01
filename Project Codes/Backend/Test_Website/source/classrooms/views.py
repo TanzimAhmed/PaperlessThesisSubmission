@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from .models import Classroom, Quiz, Performance, Resource
-from .forms import CreateClassForm, QuizForm, QuestionForm, JoinClassForm, TakeQuizForm
+from .forms import CreateClassForm, QuizForm, QuestionForm, JoinClassForm, JoinQuizForm, TakeQuizForm
 from project_paperless.utils import unique_id, UserViews
 from project_paperless.decorators import educator_required, learner_required
 import matplotlib.pyplot as plot
@@ -281,7 +281,7 @@ class QuizView(View):
         except Performance.DoesNotExist:
             quiz.students.add(request.user)
         else:
-            raise PermissionDenied('Quiz already giver')
+            raise PermissionDenied('Quiz already given')
         questions = quiz.question.all()
         questions = serialize('json', questions, fields=('text', 'options', 'time', 'points'))
         context = {
@@ -446,6 +446,19 @@ def join_class(request):
         classroom.save()
         return redirect('users:dashboard')
     return render(request, 'classrooms/join.html', {'form': form})
+
+
+@login_required(login_url='users:login')
+@learner_required
+def join_quiz(request):
+    form = JoinQuizForm(request.POST or None)
+    if form.is_valid():
+        try:
+            quiz = Quiz.objects.get(id=form.cleaned_data['quiz'])
+        except Quiz.DoesNotExist:
+            raise Http404('Classroom Not Found')
+        return redirect('classrooms:take_quiz', quiz.classroom.id, quiz.id)
+    return render(request, 'classrooms/learners/attend_quiz.html', {'form': form})
 
 
 def test_api(request):

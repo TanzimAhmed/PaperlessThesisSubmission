@@ -4,31 +4,34 @@
 <div class="user_dashboard form_dashboard">
   <div class="header container">
     <div class="text-right welcome">
-      <h1><strong>Classroom</strong></h1>
+      <h1>Document Verification</h1>
     </div>
     <div class="user_info">
-      <h3>
-        <strong>{{ request.user.get_full_name }}</strong> 
-        <br>
-        {{ request.user.username }}
-      </h3>
+      {% comment %}<h3>
+        <strong>Document Verification</strong>
+      </h3>{% endcomment %}
     </div>
   </div>
   <div class="dashboard container">
     <div class="area">
       <div class="area_header">
-        <h2> Join Classroom </h2>
+        <h2> Verify Document </h2>
       </div>
       <div class="card_container">
         <div class="forms_card educator_forms">
           <div class="items">
-            <form action="" method="POST" id="add_group_form">
+            <form action="" method="POST" enctype="multipart/form-data"
+                  id="add_group_form">
               {% csrf_token %}
               <div class="input_groups">
-                {{ form.classroom }}
-                {{ form.classroom.errors }}
+                {{ form.document_id }}
+                {{ form.document_id.errors }}
               </div>
-              <button type="submit" class="btn btn-dark">Join</button>
+              <div class="input_groups">
+                {{ form.document }}
+                {{ form.document.errors }}
+              </div>
+              <button type="submit" class="btn btn-dark">Verify</button>
             </form>
           </div>
         </div>

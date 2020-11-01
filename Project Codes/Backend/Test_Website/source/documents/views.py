@@ -1,14 +1,15 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect, Http404
+from django.shortcuts import render, redirect, Http404, get_object_or_404
 from django.http import FileResponse
 from django.core.exceptions import PermissionDenied
 from django.views import View
 from django.utils.decorators import method_decorator
 from .models import Document
-from .forms import DocumentForm
+from .forms import DocumentForm, DocumentVerificationForm
 from .pages import PdfDocumentTest
 from learners.models import Group
 from project_paperless.utils import login_required, learner_required, educator_required
+from hashlib import sha3_512
 
 
 # Create your views here.
@@ -62,3 +63,17 @@ class ShowView(View):
 
         file = open(document.paper.path, 'rb')
         return FileResponse(file, filename=document.paper.name, as_attachment=False)
+
+
+def check_document(request):
+    form = DocumentVerificationForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        document_id = form.cleaned_data['document_id']
+        uploaded_document = request.FILES['document']
+        document = get_object_or_404(Document, id=document_id)
+        if document.verify(uploaded_document):
+            messages.success(request, 'This is the actual copy of the file.')
+        else:
+            messages.warning(request, 'This file is has been Modified or Manipulated Illegally.')
+        form = DocumentVerificationForm()
+    return render(request, 'documents/verification.html', {'form': form})
