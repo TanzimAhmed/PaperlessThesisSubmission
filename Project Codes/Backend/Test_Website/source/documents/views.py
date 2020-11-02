@@ -9,7 +9,6 @@ from .forms import DocumentForm, DocumentVerificationForm
 from .pages import PdfDocumentTest
 from learners.models import Group
 from project_paperless.utils import login_required, learner_required, educator_required
-from hashlib import sha3_512
 
 
 # Create your views here.
