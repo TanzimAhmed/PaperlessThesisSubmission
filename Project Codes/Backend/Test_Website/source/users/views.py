@@ -20,7 +20,7 @@ class RegistrationView(UserAuthenticationViews):
     teacher_form_class = TeacherRegistrationVerificationForm
     email_html = 'emails/verification_email.html'
     email_text = 'emails/verification_email.txt'
-    from_email = 'project.paperless20@gmail.com'
+    from_email = 'Project Paperless <project.paperless20@gmail.com>'
     email_subject = 'Test Verification Code'
 
     def student_form_valid(self):
@@ -28,7 +28,7 @@ class RegistrationView(UserAuthenticationViews):
         print(token)
         student_id = self.student_form.cleaned_data['username']
         Verification.add_token(student_id, token)
-        email_address = f'{student_id}@northsouth.edu'
+        # email_address = f'{student_id}@northsouth.edu'
         # self.send_verification_email(email_address, token)
         form = VerificationForm(initial={'username': student_id})
         messages.success(self.request, 'A Verification Code has been sent to your North South email address.')

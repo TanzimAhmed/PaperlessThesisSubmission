@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.shortcuts import render, redirect, Http404
 from documents.forms import DocumentForm
 from project_paperless.decorators import learner_required
@@ -59,9 +60,8 @@ def add_group(request):
     if group_form.is_valid():
         group = group_form.save(commit=False)
         cleaned_data = group_form.cleaned_data
-        course = cleaned_data['course'].split('.')
-        group.course_code = course[0]
-        group.section = course[1]
+        group.course_code = cleaned_data['course_code']
+        group.section = cleaned_data['section']
         group.status = 'IDLE'
         group.instructor = cleaned_data['instructor']
         group.save()

@@ -56,6 +56,19 @@ class CreateGroupForm(forms.ModelForm):
                         self.add_error(f'member_{i}', f"Student ID: {cleaned_data[f'member_{i}']} is entered before.")
                     cleaned_data['members'].append(member)
 
+        course = cleaned_data['course'].split('.')
+        course_code = course[0]
+        section = course[1]
+        name = self.cleaned_data['name']
+        self.cleaned_data.update({'course_code': course_code})
+        self.cleaned_data.update({'section': section})
+        try:
+            Group.objects.get(course_code=course_code, section=section, name=name)
+        except Group.DoesNotExist:
+            pass
+        else:
+            self.add_error('name', 'This name is already taken.')
+
 
 class GroupSelectForm(forms.Form):
     GROUPS = []
